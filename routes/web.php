@@ -6,6 +6,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\AccountTraceController;
 use App\Http\Controllers\ChartOfAccountController;
+use App\Http\Controllers\WarehouseAccountController;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,10 +85,14 @@ Route::delete('/setting/user/{id}/delete', [AuthController::class, 'destroy'])->
 // Warehouse Area
 
 Route::get('/setting/warehouses', [WarehouseController::class, 'index'])->middleware('auth');
+Route::get('/setting/warehouse/{id}/details', [WarehouseController::class, 'details'])->middleware('auth');
 Route::post('/setting/warehouse/add', [WarehouseController::class, 'store'])->middleware('auth');
 Route::get('/setting/warehouse/{id}/edit', [WarehouseController::class, 'edit'])->middleware('auth');
 Route::put('/setting/warehouse/{id}/edit', [WarehouseController::class, 'update'])->name('warehouse.update')->middleware('auth');
 Route::delete('/setting/warehouse/{id}/delete', [WarehouseController::class, 'destroy'])->name('warehouse.delete')->middleware('auth');
+
+Route::post('/warehouse/addwarehouseaccount', [WarehouseAccountController::class, 'store'])->middleware('auth');
+Route::delete('/warehouse/delete/{id}', [WarehouseAccountController::class, 'destroy'])->name('warehouseaccount.delete')->middleware('auth');
 
 // End Warehouse Area
 // ========================================================================================================

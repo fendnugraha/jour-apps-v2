@@ -6,6 +6,7 @@ use App\Models\AccountTrace;
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\ChartOfAccount;
+use App\Models\WarehouseAccount;
 
 class WarehouseController extends Controller
 {
@@ -84,5 +85,17 @@ class WarehouseController extends Controller
         $warehouse->delete();
 
         return redirect('/setting/warehouses')->with('success', 'Warehouse Deleted');
+    }
+
+    public function details($id)
+    {
+        $warehouse = Warehouse::find($id);
+
+        return view('setting/warehouse/detail', [
+            'title' => 'Warehouse Detail',
+            'warehouse' => $warehouse,
+            'chartofaccounts' => ChartOfAccount::whereIn('account_id', [2])->get(),
+            'warehouseaccount' => WarehouseAccount::where('warehouse_id', $id)->get()
+        ]);
     }
 }

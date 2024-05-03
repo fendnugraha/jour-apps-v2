@@ -32,6 +32,9 @@
                 <td>{{ $w->chartofaccount->acc_name }}</td>
                 <td>{{ $w->created_at }}</td>
                 <td>
+                    <a href="/setting/warehouse/{{ $w->id }}/details" class="btn btn-primary btn-sm">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
                     <a href="/setting/warehouse/{{ $w->id }}/edit" class="btn btn-warning btn-sm">
                         <i class="fa-solid fa-pen-to-square"></i>
                     </a>

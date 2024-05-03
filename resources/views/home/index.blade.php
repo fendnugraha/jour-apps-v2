@@ -129,14 +129,40 @@
         <div class="modal-body">
           <form action="" method="post">
             @csrf
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Email address</label>
-              <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+            <div class="mb-2 row">
+              <label for="date_issued" class="col-sm col-form-label">Tanggal</label>
+              <div class="col-sm-8">
+                  <input type="datetime-local" class="form-control @error('date_issued') is-invalid @enderror" name="date_issued" id="date_issued" value="{{old('date_issued') == null ? date('Y-m-d H:i') : old('date_issued')}}">
+                  @error('date_issued')
+                  <div class="invalid-feedback">
+                      <small>{{ $message }}</small>
+                  </div>
+                  @enderror
+              </div>
             </div>
-            <div class="mb-3">
-              <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
-              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            <div class="mb-2 row">
+              <label for="amount" class="col-sm col-form-label">Jumlah</label>
+              <div class="col-sm-8">
+                  <input type="number" class="form-control @error('amount') is-invalid @enderror" name="amount" id="amount" value="{{old('amount') == null ? 0 : old('amount')}}">
+                  @error('amount')
+                  <div class="invalid-feedback">
+                      <small>{{ $message }}</small>
+                  </div>
+                  @enderror
+              </div>
             </div>
+            <div class="mb-2 row">
+              <label for="fee_amount" class="col-sm col-form-label">Fee Admin</label>
+              <div class="col-sm-8">
+                  <input type="number" class="form-control @error('fee_amount') is-invalid @enderror" name="fee_amount" id="fee_amount" value="{{old('fee_amount') == null ? 0 : old('fee_amount')}}">
+                  @error('fee_amount')
+                  <div class="invalid-feedback">
+                      <small>{{ $message }}</small>
+                  </div>
+                  @enderror
+              </div>
+            </div>
+
           </form>
         </div>
         <div class="modal-footer">

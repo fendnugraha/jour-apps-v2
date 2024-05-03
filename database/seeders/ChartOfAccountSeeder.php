@@ -16,7 +16,7 @@ class ChartOfAccountSeeder extends Seeder
         $acc_coa = [
             ['acc_code' => '10100-001', 'acc_name' => 'Kas Kecil', 'account_id' => 1, 'st_balance' => 0],
             ['acc_code' => '10100-002', 'acc_name' => 'Kas Besar Admin (Dana Belum Disetor)', 'account_id' => 1, 'st_balance' => 0],
-            ['acc_code' => '10200-001', 'acc_name' => 'Bank BCA an GEMILANG SOLUSI MUAMALAH', 'account_id' => 2, 'st_balance' => 0],
+            ['acc_code' => '10200-001', 'acc_name' => 'Bank BCA (1234567890)', 'account_id' => 2, 'st_balance' => 0],
             ['acc_code' => '10400-001', 'acc_name' => 'Piutang Usaha', 'account_id' => 4, 'st_balance' => 0],
             ['acc_code' => '10400-002', 'acc_name' => 'Piutang Karyawan', 'account_id' => 4, 'st_balance' => 0],
             ['acc_code' => '10600-001', 'acc_name' => 'Persediaan Barang', 'account_id' => 6, 'st_balance' => 0],
