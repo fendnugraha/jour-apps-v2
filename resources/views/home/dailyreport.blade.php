@@ -1,5 +1,6 @@
 @extends('include.main')
 
+@include('include.topbar')
 @section('container')
 {{-- Content Start --}}
 <div class="container mt-5">

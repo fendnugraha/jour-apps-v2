@@ -41,4 +41,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function accounttrace()
+    {
+        return $this->hasMany(AccountTrace::class);
+    }
+
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class);
+    }
 }
