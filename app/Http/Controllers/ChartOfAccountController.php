@@ -80,4 +80,13 @@ class ChartOfAccountController extends Controller
         $ChartOfAccount->delete();
         return redirect('/setting/accounts')->with('success', 'Data Deleted Successfully');
     }
+
+    public function updateWarehouse(Request $request)
+    {
+        $ChartOfAccount = ChartOfAccount::find($request->id);
+        $ChartOfAccount->update([
+            'warehouse_id' => $request->warehouse_id,
+        ]);
+        return redirect()->back()->with('success', 'Warehouse Account Updated Successfully');
+    }
 }

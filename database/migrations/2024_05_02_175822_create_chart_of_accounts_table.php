@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('acc_name', 100)->unique()->index();
             $table->foreignId('account_id')->index();
             $table->bigInteger('st_balance')->default(0);
+            $table->integer('warehouse_id')->default(1);
             $table->timestamps();
         });
     }

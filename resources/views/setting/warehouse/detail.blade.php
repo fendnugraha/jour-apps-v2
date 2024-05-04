@@ -16,7 +16,7 @@
         </tr>
         <tr>
             <th>Account</th>
-            <td>{{$warehouse->chartofaccount->acc_name}}</td>
+            <td>{{$warehouse->acc_name}}</td>
         </tr>
         <tr>
             <th>Created at</th>
@@ -45,8 +45,8 @@
             @foreach ($warehouseaccount as $wa)
             <tr>
                 <td>{{ $wa->id }}</td>
-                <td>{{ $wa->chartofaccount->acc_code }}</td>
-                <td>{{ $wa->chartofaccount->acc_name }}</td>
+                <td>{{ $wa->acc_code }}</td>
+                <td>{{ $wa->acc_name }}</td>
                 <td>
                     <form action="{{ route('warehouseaccount.delete', $wa->id) }}" method="POST" class="d-inline">
                         @csrf

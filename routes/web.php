@@ -96,3 +96,12 @@ Route::delete('/warehouse/delete/{id}', [WarehouseAccountController::class, 'des
 
 // End Warehouse Area
 // ========================================================================================================
+
+// Journal Area
+
+Route::post('/addTransfer', [AccountTraceController::class, 'addTransfer'])->middleware('auth');
+Route::post('/addTarikTunai', [AccountTraceController::class, 'addTarikTunai'])->middleware('auth');
+Route::post('/mutasi', [AccountTraceController::class, 'pengeluaran'])->middleware('auth');
+Route::delete('/deleteAccountTrace/{id}', [AccountTraceController::class, 'destroy'])->name('accounttrace.delete')->middleware('auth');
+
+// End Journal Area

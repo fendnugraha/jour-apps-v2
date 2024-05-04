@@ -17,6 +17,7 @@ class ChartOfAccount extends Model
         'acc_code',
         'acc_name',
         'account_id',
+        'warehouse_id',
         'st_balance',
     ];
 
@@ -43,6 +44,11 @@ class ChartOfAccount extends Model
     public function warehouse()
     {
         return $this->hasMany(Warehouse::class);
+    }
+
+    public function warehouseaccount()
+    {
+        return $this->belongsTo(WarehouseAccount::class);
     }
 
     public function acc_code($account_id)

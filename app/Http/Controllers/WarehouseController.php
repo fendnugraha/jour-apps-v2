@@ -94,8 +94,8 @@ class WarehouseController extends Controller
         return view('setting/warehouse/detail', [
             'title' => 'Warehouse Detail',
             'warehouse' => $warehouse,
-            'chartofaccounts' => ChartOfAccount::whereIn('account_id', [2])->get(),
-            'warehouseaccount' => WarehouseAccount::where('warehouse_id', $id)->get()
+            'chartofaccounts' => ChartOfAccount::whereIn('account_id', [1, 2])->where('warehouse_id', 1)->get(),
+            'warehouseaccount' => ChartOfAccount::whereIn('account_id', [1, 2])->where('warehouse_id', $id)->get()
         ]);
     }
 }

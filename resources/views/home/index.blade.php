@@ -20,13 +20,13 @@
         </button>
       </div>
     </div>
-    <div class="col-sm">
+    {{-- <div class="col-sm">
       <div class="d-grid gap-2">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalPemasukan">
           Pemasukan
         </button>
       </div>
-    </div>
+    </div> --}}
     <div class="col-sm">
       <div class="d-grid gap-2">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalPengeluaran">
@@ -40,65 +40,37 @@
       <thead>
         <tr>
           <th scope="col">#</th>
+          <th scope="col">Waktu</th>
           <th scope="col">Account</th>
           <th scope="col">Status</th>
           <th scope="col">Jumlah</th>
+          <th scope="col">Fee Admin</th>
+          <th scope="col">User</th>
           <th scope="col">Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr class="table-success">
-          <th scope="row">1</th>
-          <td>BCA 4343434343</td>
-          <td><span class="badge bg-success">Transfer</span></td>
-          <td>200.000</td>
+        @php($no = 1)
+        @foreach ($accounttrace as $at)
+        @php($warna = $at->description == 'Transfer Uang' ? 'table-danger' : 'table-success')
+        <tr class="{{ $warna }}">
+          <th scope="row">{{ $no++ }}</th>
+          <td>{{ $at->date_issued }}</td>
+          <td>{{ $at->cred->acc_name }}</td>
+          <td><span class="badge bg-success">{{ $at->description }}</span></td>
+          <td>{{ number_format($at->amount) }}</td>
+          <td>{{ number_format($at->fee_amount) }}</td>
+          <td>{{ $at->user->name }}</td>
           <td>
-            <a href="#" class="btn btn-primary">Detail
-            </a>
-            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#ModalEdit">Edit</button>
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#ModalDelete">Delete</button>
-
+            <form action="{{ route('accounttrace.delete', $at->id) }}" method="post">
+              @csrf
+              @method('DELETE')
+              <button type="submit" onclick="return confirm('Are you sure?')" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i>
+              </button>
+            </form>
           </td>
         </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>BCA 4343434343</td>
-          <td><span class="badge bg-success">Tarik Tunai</span></td>
-          <td>200.000</td>
-          <td>
-            <a href="#" class="btn btn-primary">Detail
-            </a>
-            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#ModalEdit">Edit</button>
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#ModalDelete">Delete</button>
-
-          </td>
-        </tr>
-        <tr class="table-success">
-          <th scope="row">3</th>
-          <td>BCA 4343434343</td>
-          <td><span class="badge bg-success">Transfer</span></td>
-          <td>200.000</td>
-          <td>
-            <a href="#" class="btn btn-primary">Detail
-            </a>
-            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#ModalEdit">Edit</button>
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#ModalDelete">Delete</button>
-
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">4</th>
-          <td>BCA 4343434343</td>
-          <td><span class="badge bg-success">Tarik Tunai</span></td>
-          <td>200.000</td>
-          <td>
-            <a href="#" class="btn btn-primary">Detail
-            </a>
-            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#ModalEdit">Edit</button>
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#ModalDelete">Delete</button>
-
-          </td>
-        </tr>
+        @endforeach
       </tbody>
     </table>
   </div>
@@ -127,7 +99,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="" method="post">
+          <form action="/addTransfer" method="post">
             @csrf
             <div class="mb-2 row">
               <label for="date_issued" class="col-sm col-form-label">Tanggal</label>
@@ -138,6 +110,17 @@
                       <small>{{ $message }}</small>
                   </div>
                   @enderror
+              </div>
+            </div>
+            <div class="mb-2 row">
+              <label for="account" class="col-sm col-form-label">Nomor Rekening</label>
+              <div class="col-sm-8">
+                <select name="account" id="account" class="form-select">
+                  <option value="">Pilih Akun</option>
+                  @foreach ($warehouseaccount as $coa)
+                    <option value="{{ $coa->acc_code }}">{{ $coa->acc_name }}</option>
+                  @endforeach
+                </select>
               </div>
             </div>
             <div class="mb-2 row">
@@ -163,12 +146,12 @@
               </div>
             </div>
 
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Transfer</button>
           </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
+          </div>
       </div>
     </div>
   </div>
@@ -182,21 +165,58 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="" method="post">
+          <form action="/addTarikTunai" method="post">
             @csrf
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Email address</label>
-              <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+            <div class="mb-2 row">
+              <label for="date_issued" class="col-sm col-form-label">Tanggal</label>
+              <div class="col-sm-8">
+                  <input type="datetime-local" class="form-control @error('date_issued') is-invalid @enderror" name="date_issued" id="date_issued" value="{{old('date_issued') == null ? date('Y-m-d H:i') : old('date_issued')}}">
+                  @error('date_issued')
+                  <div class="invalid-feedback">
+                      <small>{{ $message }}</small>
+                  </div>
+                  @enderror
+              </div>
             </div>
-            <div class="mb-3">
-              <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
-              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            <div class="mb-2 row">
+              <label for="account" class="col-sm col-form-label">Nomor Rekening</label>
+              <div class="col-sm-8">
+                <select name="account" id="account" class="form-select">
+                  <option value="">Pilih Akun</option>
+                  @foreach ($warehouseaccount as $coa)
+                    <option value="{{ $coa->acc_code }}">{{ $coa->acc_name }}</option>
+                  @endforeach
+                </select>
+              </div>
             </div>
+            <div class="mb-2 row">
+              <label for="amount" class="col-sm col-form-label">Jumlah</label>
+              <div class="col-sm-8">
+                  <input type="number" class="form-control @error('amount') is-invalid @enderror" name="amount" id="amount" value="{{old('amount') == null ? 0 : old('amount')}}">
+                  @error('amount')
+                  <div class="invalid-feedback">
+                      <small>{{ $message }}</small>
+                  </div>
+                  @enderror
+              </div>
+            </div>
+            <div class="mb-2 row">
+              <label for="fee_amount" class="col-sm col-form-label">Fee Admin</label>
+              <div class="col-sm-8">
+                  <input type="number" class="form-control @error('fee_amount') is-invalid @enderror" name="fee_amount" id="fee_amount" value="{{old('fee_amount') == null ? 0 : old('fee_amount')}}">
+                  @error('fee_amount')
+                  <div class="invalid-feedback">
+                      <small>{{ $message }}</small>
+                  </div>
+                  @enderror
+              </div>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Simpan</button>
           </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
         </div>
       </div>
     </div>
@@ -240,21 +260,58 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="" method="post">
+          <form action="/mutasi" method="post">
             @csrf
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Email address</label>
-              <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+            <div class="mb-2 row">
+              <label for="date_issued" class="col-sm col-form-label">Tanggal</label>
+              <div class="col-sm-8">
+                  <input type="datetime-local" class="form-control @error('date_issued') is-invalid @enderror" name="date_issued" id="date_issued" value="{{old('date_issued') == null ? date('Y-m-d H:i') : old('date_issued')}}">
+                  @error('date_issued')
+                  <div class="invalid-feedback">
+                      <small>{{ $message }}</small>
+                  </div>
+                  @enderror
+              </div>
             </div>
-            <div class="mb-3">
-              <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
-              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            <div class="mb-2 row">
+              <label for="cred" class="col-sm col-form-label">Dari</label>
+              <div class="col-sm-8">
+                <select name="cred" id="cred" class="form-select">
+                  <option value="">Pilih Akun</option>
+                  @foreach ($warehouseaccount as $coa)
+                    <option value="{{ $coa->acc_code }}">{{ $coa->acc_name }}</option>
+                  @endforeach
+                </select>
+              </div>
             </div>
+            <div class="mb-2 row">
+              <label for="debt" class="col-sm col-form-label">Ke</label>
+              <div class="col-sm-8">
+                <select name="debt" id="debt" class="form-select">
+                  <option value="">Pilih Akun</option>
+                  @foreach ($hqaccount as $coa)
+                    <option value="{{ $coa->acc_code }}">{{ $coa->acc_name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div class="mb-2 row">
+              <label for="amount" class="col-sm col-form-label">Jumlah</label>
+              <div class="col-sm-8">
+                  <input type="number" class="form-control @error('amount') is-invalid @enderror" name="amount" id="amount" value="{{old('amount') == null ? 0 : old('amount')}}">
+                  @error('amount')
+                  <div class="invalid-feedback">
+                      <small>{{ $message }}</small>
+                  </div>
+                  @enderror
+              </div>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Simpan</button>
           </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
         </div>
       </div>
     </div>

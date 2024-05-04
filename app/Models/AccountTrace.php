@@ -10,6 +10,27 @@ class AccountTrace extends Model
 {
     use HasFactory;
 
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class);
+    }
+
+    public function debt()
+    {
+        return $this->belongsTo(ChartOfAccount::class, 'debt_code', 'acc_code');
+    }
+
+    public function cred()
+    {
+        return $this->belongsTo(ChartOfAccount::class, 'cred_code', 'acc_code');
+    }
+    
     public function invoice_journal()
     {
         $lastInvoice = DB::table('account_traces')
