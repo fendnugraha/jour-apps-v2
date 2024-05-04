@@ -29,7 +29,8 @@ class AuthController extends Controller
             'name' => 'required|max:90|regex:/^[\pL\s\-]+$/u',
             'email' => 'required|unique:users|email',
             'password' => 'required|min:6|max:60',
-            'cpassword' => 'required|same:password'
+            'cpassword' => 'required|same:password',
+            'role' => 'required',
         ]);
 
         User::create($validatedData);

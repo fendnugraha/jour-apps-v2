@@ -40,7 +40,7 @@
                             <div class="col-sm-8">
                                 <select name="warehouse" class="form-control" id="warehouse" @error('warehouse') is-invalid @enderror>
                                     @foreach ($warehouses as $wh)
-                                    <option value="{{ $wh->id }}" {{ old('warehouse') == $wh->id ? 'selected' : '' }}>{{ $wh->w_name }}</option>
+                                    <option value="{{ $wh->id }}" {{ $user->warehouse_id == $wh->id ? 'selected' : '' }}>{{ $wh->w_name }}</option>
                                     @endforeach
                                 </select>
                                 @error('warehouse')
@@ -51,7 +51,7 @@
                             </div>
                         </div>
                         <div class="mb-2 row">
-                            <label for="role" class="col-sm col-form-label">Role</label>
+                            <label for="role" class="col-sm col-form-label">Role</label> 
                             <div class="col-sm-8">
                                 <select name="role" class="form-control" id="role">
                                     <option value="Administrator" {{ $user->role == 'Administrator' ? 'selected' : '' }}>Administrator</option>

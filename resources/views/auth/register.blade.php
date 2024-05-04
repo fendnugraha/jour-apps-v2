@@ -77,8 +77,8 @@
                     <div class="col-sm-8">
                         <select name="role" class="form-control" id="role">
                             <!-- <option value="1">Administrator</option> -->
-                            <option value="2">Kasir</option>
-                            <option value="3">Staff</option>
+                            <option value="Kasir">Kasir</option>
+                            <option value="Staff">Staff</option>
                         </select>
                     </div>
                 </div>

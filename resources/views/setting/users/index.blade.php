@@ -110,9 +110,9 @@
                 <label for="role" class="col-sm col-form-label">Role</label>
                 <div class="col-sm-8">
                     <select name="role" class="form-control" id="role">
-                        <option value="1" {{ old('role') == 1 ? 'selected' : '' }}>Administrator</option>
-                        <option value="2" {{ old('role') == 2 ? 'selected' : '' }}>Kasir</option>
-                        <option value="3" {{ old('role') == 3 ? 'selected' : '' }}>Staff</option>
+                        <option value="Administrator" {{ old('role') == 'Administrator' ? 'selected' : '' }}>Administrator</option>
+                        <option value="Kasir" {{ old('role') == 'Kasir' ? 'selected' : '' }}>Kasir</option>
+                        <option value="Staff" {{ old('role') == 'Staff' ? 'selected' : '' }}>Staff</option>
                     </select>
                 </div>
             </div>

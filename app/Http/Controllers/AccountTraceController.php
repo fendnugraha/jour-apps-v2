@@ -25,6 +25,10 @@ class AccountTraceController extends Controller
 
     public function administrator()
     {
+        if(Auth()->user()->role !== "Administrator") {
+            return abort(403, 'Unauthorized action.');
+        }
+
         $accountTrace = new AccountTrace();
         $startDate = Carbon::now()->startOfDay();
         $endDate = Carbon::now()->endOfDay();
