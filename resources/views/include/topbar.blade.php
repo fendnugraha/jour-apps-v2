@@ -13,6 +13,9 @@
                     <a class="nav-link" href="/home/dailyreport">Laporan</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="/home/administrator">Administrator</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="/setting">Setting</a>
                 </li>
                 <li class="nav-item dropdown">

@@ -4,20 +4,21 @@
 @section('container')
 {{-- Content Start --}}
 <div class="container mt-5">
-    <h4>{{ date('l, d F Y') }}</h4>
+    <h4>Laporan Harian Cabang {{ date('l, d F Y') }}</h4>
     <div class="daily-report mb-5">
         <div class="div1">
             <div class="card text-bg-dark h-100">
             <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                <h4>Total Kas & Bank</h4>
-                <h1>{{ number_format($endbalance->flatten()->sum('balance')) }}</h1>
+                <h4>Saldo Kas</h4>
+                <h1>{{ number_format($totalCash->flatten()->sum('balance')) }}</h1>
+                
             </div>
         </div>
     </div>
         <div class="div2"><div class="card text-bg-dark h-100">
             <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                <h4>Saldo Kas</h4>
-                <h1>{{ number_format($totalCash->flatten()->sum('balance')) }}</h1>
+                <h4>Total Saldo Bank</h4>
+                <h1>{{ number_format($totalBank->flatten()->sum('balance')) }}</h1>
             </div>
         </div></div>
         <div class="div3"><div class="card text-bg-dark h-100">
@@ -34,20 +35,14 @@
         </div></div>
         <div class="div5"><div class="card text-bg-dark h-100">
             <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                <h4>Total Laba</h4>
-                <h1>{{ number_format($fee) }}</h1>
+                <h4>Total Kas & Bank</h4>
+                <h1 class="text-warning display-2 fw-bold">{{ number_format($endbalance->flatten()->sum('balance')) }}</h1>
             </div>
         </div></div>
         <div class="div6"><div class="card text-bg-dark h-100">
             <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                <h4>Total Pendapatan</h4>
-                <h1>20.000.000</h1>
-            </div>
-        </div></div>
-        <div class="div7"><div class="card text-bg-dark h-100">
-            <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                <h4>Total Saldo Bank</h4>
-                <h1>{{ number_format($totalBank->flatten()->sum('balance')) }}</h1>
+                <h4>Total Laba (Profit)</h4>
+                <h1>{{ number_format($fee) }}</h1>
             </div>
         </div></div>
     </div>
@@ -57,61 +52,22 @@
     <table class="table display">
         <thead>
             <tr>
-                <th scope="col">#</th>
                 <th scope="col">Account</th>
-                <th scope="col">Status</th>
-                <th scope="col">Jumlah</th>
+                <th scope="col">Saldo</th>
             </tr>
         </thead>
         <tbody>
+            @foreach ($warehouseaccount as $wa)
+
             <tr>
-                <td scope="row">1</td>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
+                <td>{{ $wa->acc_name }}</td>
+                <td>{{ number_format($wa->balance) }}</td>
             </tr>
+
+            @endforeach
         </tbody>
     </table>
 
-    <h2 class="mt-5">Penambahan</h2>
-    <table class="table display">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Account</th>
-                <th scope="col">Status</th>
-                <th scope="col">Jumlah</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td scope="row">1</td>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-            </tr>
-        </tbody>
-    </table>
-    
-    <h2 class="mt-5">Pengeluaran</h2>
-    <table class="table display">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Account</th>
-                <th scope="col">Status</th>
-                <th scope="col">Jumlah</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td scope="row">1</td>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-            </tr>
-        </tbody>
-    </table>
 </div>
 
 

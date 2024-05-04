@@ -23,11 +23,11 @@ class AccountTraceController extends Controller
         ]);
     }
 
-    public function dailyreport()
+    public function administrator()
     {
         $accountTrace = new AccountTrace();
-        $startDate = Carbon::parse('first day of this month');
-        $endDate = Carbon::parse('last day of this month');
+        $startDate = Carbon::now()->startOfDay();
+        $endDate = Carbon::now()->endOfDay();
 
         $transactions = $accountTrace->with(['debt', 'cred'])
             ->selectRaw('debt_code, cred_code, SUM(amount) as total, warehouse_id')
@@ -41,6 +41,61 @@ class AccountTraceController extends Controller
             $debit = $transactions->where('debt_code', $value->acc_code)->sum('total');
             $credit = $transactions->where('cred_code', $value->acc_code)->sum('total');
 
+            // @ts-ignore
+            $value->balance = ($value->account->status == "D") ? ($value->st_balance + $debit - $credit) : ($value->st_balance + $credit - $debit);
+        }
+
+        $totalTransfer = [];
+        $warehouse = Warehouse::get();
+        foreach ($warehouse as $w) {
+            $totalTransfer = AccountTrace::where('warehouse_id', $w->id)->whereBetween('date_issued', [$startDate, $endDate])->where('description', 'Transfer Uang')->sum('amount');
+        $totalTarikTunai = AccountTrace::where('warehouse_id', $w->id)->whereBetween('date_issued', [$startDate, $endDate])->where('description', 'Tarik Tunai')->sum('amount');
+        $fee = AccountTrace::where('warehouse_id', $w->id)->whereBetween('date_issued', [$startDate, $endDate])->sum('fee_amount');
+        $totalCash = $chartOfAccounts->whereIn('warehouse_id', $w->id)->where('account_id', 1)->sum('balance');
+
+            $dailyreport[] = [
+                'warehouse' => $w->w_name,
+                'warehouse_id' => $w->id,
+                'totalTransfer' => $totalTransfer,
+                'totalTarikTunai' => $totalTarikTunai,
+                'fee' => $fee,
+                'endbalance' => $chartOfAccounts->whereIn('warehouse_id', $w->id)->sum('balance'),
+                'revenue' => $chartOfAccounts->whereIn('warehouse_id', $w->id)->sum('balance'),
+                'totalCash' => $totalCash,
+                'totalBank' => $chartOfAccounts->whereIn('warehouse_id', $w->id)->where('account_id', 2)->sum('balance'),
+                'warehouseaccount' => $chartOfAccounts->whereIn('account_id', ['1', '2'])->where('warehouse_id', $w->id),
+            ];
+            
+        }
+
+        return view('home.admin', [
+            'title' => 'Administrator',
+            'subtitle' => 'Administrator',
+            'warehouse' => Warehouse::get(),
+            'dailyreport' => $dailyreport,
+            'chartOfAccounts' => $chartOfAccounts->whereIn('account_id', ['1', '2']),
+        ]);
+    }
+
+    public function dailyreport()
+    {
+        $accountTrace = new AccountTrace();
+        $startDate = Carbon::now()->startOfDay();
+        $endDate = Carbon::now()->endOfDay();
+
+        $transactions = $accountTrace->with(['debt', 'cred'])
+            ->selectRaw('debt_code, cred_code, SUM(amount) as total, warehouse_id')
+            ->whereBetween('date_issued', [$startDate, $endDate])
+            ->groupBy('debt_code', 'cred_code', 'warehouse_id')
+            ->get();
+        
+        $chartOfAccounts = ChartOfAccount::with(['account', 'warehouse'])->get();
+
+        foreach ($chartOfAccounts as $value) {
+            $debit = $transactions->where('debt_code', $value->acc_code)->sum('total');
+            $credit = $transactions->where('cred_code', $value->acc_code)->sum('total');
+
+            // @ts-ignore
             $value->balance = ($value->account->status == "D") ? ($value->st_balance + $debit - $credit) : ($value->st_balance + $credit - $debit);
         }
 
@@ -58,6 +113,7 @@ class AccountTraceController extends Controller
             'revenue' => $chartOfAccounts->whereIn('warehouse_id', [Auth()->user()->warehouse_id])->groupBy('warehouse_id'),
             'totalCash' => $chartOfAccounts->whereIn('warehouse_id', [Auth()->user()->warehouse_id])->where('account_id', 1)->groupBy('warehouse_id'),
             'totalBank' => $chartOfAccounts->whereIn('warehouse_id', [Auth()->user()->warehouse_id])->where('account_id', 2)->groupBy('warehouse_id'),
+            'warehouseaccount' => $chartOfAccounts->where('warehouse_id', Auth()->user()->warehouse_id),
         ]);
     }
 

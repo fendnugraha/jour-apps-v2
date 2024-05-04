@@ -56,7 +56,7 @@
         <tr class="{{ $warna }}">
           <th scope="row">{{ $no++ }}</th>
           <td>{{ $at->date_issued }}</td>
-          <td>{{ $at->cred->acc_name }}</td>
+          <td>{{ $at->debt->acc_name . ' x ' . $at->cred->acc_name }} </td>
           <td><span class="badge bg-success">{{ $at->description }}</span></td>
           <td>{{ number_format($at->amount) }}</td>
           <td>{{ number_format($at->fee_amount) }}</td>

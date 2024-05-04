@@ -14,289 +14,285 @@ $my-quaternary-color: #5c5241;
 $my-quinary-color: #150b04;
 
 body {
-    // font-family: 'Quicksand', sans-serif;
-    // background-color: rgb(233, 233, 233);
+  // font-family: 'Quicksand', sans-serif;
+  // background-color: rgb(233, 233, 233);
 
-    #login-failed-alert {
-        top: 5vh;
-        right: 2%;
-        width: 25vw;
-        position: absolute;
-        z-index: 1000;
-    }
+  #login-failed-alert {
+    top: 5vh;
+    right: 2%;
+    width: 25vw;
+    position: absolute;
+    z-index: 1000;
+  }
 }
 
 .card {
-    border: 0;
+  border: 0;
 }
 
 .card.card-widget {
-    border-radius: 15px;
+  border-radius: 15px;
 }
 
 table,
 tr {
-    font-size: 0.75rem;
-    vertical-align: middle;
+  font-size: 0.75rem;
+  vertical-align: middle;
 }
 
 .bg-my-color {
-    background-color: $my-color;
+  background-color: $my-color;
 }
 
 .setting-icon {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 30px;
+
+  .setting-icon-action {
+    text-decoration: none;
+    background-color: $my-secondary-color;
+    height: 250px;
+    width: 250px;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
-    gap: 30px;
+    flex-direction: column;
+    border-radius: 15px;
+    color: $my-quinary-color;
+    transition: all 0.1s;
 
-    .setting-icon-action {
-        text-decoration: none;
-        background-color: $my-secondary-color;
-        height: 250px;
-        width: 250px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        border-radius: 15px;
-        color: $my-quinary-color;
-        transition: all 0.1s;
-
-        h1 {
-            font-size: 5rem;
-        }
+    h1 {
+      font-size: 5rem;
     }
+  }
 
-    .setting-icon-action:hover {
-        background-color: $my-tertiary-color;
-        box-shadow: #cecece 1px 2px 20px;
+  .setting-icon-action:hover {
+    background-color: $my-tertiary-color;
+    box-shadow: #cecece 1px 2px 20px;
 
-        h1 {
-            font-size: 5.5rem;
-        }
+    h1 {
+      font-size: 5.5rem;
     }
+  }
 }
 
 // Dashboard GRID
 .dashboard-area {
-    height: 80vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 2fr 2fr 1.5fr;
-    grid-template-areas:
-        "assets liabilities equity finance"
-        "kas kas piutang finance"
-        "kas kas hutang finance"
-        "revenue hpp profit expense";
-    gap: 15px;
+  height: 80vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 2fr 2fr 1.5fr;
+  grid-template-areas:
+    "assets liabilities equity finance"
+    "kas kas piutang finance"
+    "kas kas hutang finance"
+    "revenue hpp profit expense";
+  gap: 15px;
 
-    @mixin myprimary-color {
-        background-color: $myprimary-color;
-        color: $mywhite-color;
+  @mixin myprimary-color {
+    background-color: $myprimary-color;
+    color: $mywhite-color;
+  }
+
+  @mixin mysecondary-color {
+    background-color: $mysecondary-color;
+    color: $mywhite-color;
+  }
+
+  @mixin mydanger-color {
+    background-color: $mydanger-color;
+    color: $mywhite-color;
+  }
+
+  &-assets {
+    @include myprimary-color;
+    grid-area: assets;
+
+    span {
+      font-size: 2.1em;
+      font-weight: 700;
+    }
+  }
+  &-liabilities {
+    @include myprimary-color;
+    grid-area: liabilities;
+
+    span {
+      font-size: 2.1em;
+      font-weight: 700;
+    }
+  }
+  &-equity {
+    @include myprimary-color;
+    grid-area: equity;
+
+    span {
+      font-size: 2.1em;
+      font-weight: 700;
+    }
+  }
+  &-kas {
+    @include myprimary-color;
+    grid-area: kas;
+
+    .account-value {
+      span {
+        font-size: 3.3em;
+        color: $mywarning-color;
+      }
+    }
+    .card-cash-list {
+      overflow: auto;
+
+      .card-cash-list {
+        &-items {
+          background-color: rgb(121, 141, 255);
+          padding: 15px;
+          border-radius: 25px;
+
+          span {
+            font-size: 1em;
+          }
+        }
+      }
     }
 
-    @mixin mysecondary-color {
-        background-color: $mysecondary-color;
-        color: $mywhite-color;
+    table {
+      width: 100%;
+      font-size: 0.9em;
+      height: 100%;
+
+      tr,
+      th,
+      td {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.425);
+        padding: 10px;
+      }
     }
 
-    @mixin mydanger-color {
-        background-color: $mydanger-color;
-        color: $mywhite-color;
+    span {
+      font-size: 2em;
+      font-weight: 700;
     }
+  }
+  &-piutang {
+    @include mysecondary-color;
+    grid-area: piutang;
 
-    &-assets {
-        @include myprimary-color;
-        grid-area: assets;
+    h3 {
+      font-weight: 700;
+      color: $mywarning-color;
+    }
+  }
+  &-hutang {
+    @include mysecondary-color;
+    grid-area: hutang;
 
-        span {
-            font-size: 2.1em;
+    h3 {
+      font-weight: 700;
+      color: $mywarning-color;
+    }
+  }
+  &-revenue {
+    @include mydanger-color;
+    grid-area: revenue;
+  }
+  &-hpp {
+    @include mydanger-color;
+    grid-area: hpp;
+  }
+  &-profit {
+    @include mydanger-color;
+    grid-area: profit;
+  }
+  &-expense {
+    @include mydanger-color;
+    grid-area: expense;
+  }
+  &-finance {
+    grid-area: finance;
+    background-color: #ddd;
+
+    .card-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .card-finance-indicator {
+        background-color: white;
+        padding: 5px 15px 5px 15px;
+        border-radius: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        // height: 80px;
+
+        &-icon {
+          background-color: $myprimary-color;
+          border-radius: 50%;
+          color: wheat;
+          height: 40px;
+          width: 40px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        &-content {
+          display: flex;
+          flex-direction: column;
+          align-items: end;
+
+          span {
+            font-size: 1.4em;
             font-weight: 700;
-        }
-    }
-    &-liabilities {
-        @include myprimary-color;
-        grid-area: liabilities;
-
-        span {
-            font-size: 2.1em;
-            font-weight: 700;
-        }
-    }
-    &-equity {
-        @include myprimary-color;
-        grid-area: equity;
-
-        span {
-            font-size: 2.1em;
-            font-weight: 700;
-        }
-    }
-    &-kas {
-        @include myprimary-color;
-        grid-area: kas;
-
-        .account-value {
-            span {
-                font-size: 3.3em;
-                color: $mywarning-color;
-            }
-        }
-        .card-cash-list {
-            overflow: auto;
-
-            .card-cash-list {
-                &-items {
-                    background-color: rgb(121, 141, 255);
-                    padding: 15px;
-                    border-radius: 25px;
-
-                    span {
-                        font-size: 1em;
-                    }
-                }
-            }
+          }
         }
 
-        table {
-            width: 100%;
-            font-size: 0.9em;
-            height: 100%;
-
-            tr,
-            th,
-            td {
-                border-bottom: 1px solid rgba(255, 255, 255, 0.425);
-                padding: 10px;
-            }
+        h5 {
+          font-size: 0.65em;
         }
-
-        span {
-            font-size: 2em;
-            font-weight: 700;
-        }
+      }
     }
-    &-piutang {
-        @include mysecondary-color;
-        grid-area: piutang;
-
-        h3 {
-            font-weight: 700;
-            color: $mywarning-color;
-        }
-    }
-    &-hutang {
-        @include mysecondary-color;
-        grid-area: hutang;
-
-        h3 {
-            font-weight: 700;
-            color: $mywarning-color;
-        }
-    }
-    &-revenue {
-        @include mydanger-color;
-        grid-area: revenue;
-    }
-    &-hpp {
-        @include mydanger-color;
-        grid-area: hpp;
-    }
-    &-profit {
-        @include mydanger-color;
-        grid-area: profit;
-    }
-    &-expense {
-        @include mydanger-color;
-        grid-area: expense;
-    }
-    &-finance {
-        grid-area: finance;
-        background-color: #ddd;
-
-        .card-body {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-
-            .card-finance-indicator {
-                background-color: white;
-                padding: 5px 15px 5px 15px;
-                border-radius: 15px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                // height: 80px;
-
-                &-icon {
-                    background-color: $myprimary-color;
-                    border-radius: 50%;
-                    color: wheat;
-                    height: 40px;
-                    width: 40px;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                }
-
-                &-content {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: end;
-
-                    span {
-                        font-size: 1.4em;
-                        font-weight: 700;
-                    }
-                }
-
-                h5 {
-                    font-size: 0.65em;
-                }
-            }
-        }
-    }
+  }
 }
 
 @media (max-width: 991.98px) {
-    .dashboard-area {
-        display: flex;
-        flex-direction: column;
-    }
+  .dashboard-area {
+    display: flex;
+    flex-direction: column;
+  }
 }
 // End Dashboard GRID
 
 //Report GRID Start
 .daily-report {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    grid-column-gap: 5px;
-    grid-row-gap: 5px;
-    height: 400px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-column-gap: 5px;
+  grid-row-gap: 5px;
 }
 
 .div1 {
-    grid-area: 1 / 4 / 3 / 5;
+  grid-area: 1 / 1 / 2 / 2;
 }
 .div2 {
-    grid-area: 1 / 1 / 2 / 2;
+  grid-area: 2 / 1 / 3 / 2;
 }
 .div3 {
-    grid-area: 1 / 2 / 2 / 3;
+  grid-area: 1 / 2 / 2 / 3;
 }
 .div4 {
-    grid-area: 1 / 3 / 2 / 4;
+  grid-area: 1 / 3 / 2 / 4;
 }
 .div5 {
-    grid-area: 2 / 3 / 3 / 4;
+  grid-area: 2 / 2 / 3 / 4;
 }
 .div6 {
-    grid-area: 2 / 2 / 3 / 3;
-}
-.div7 {
-    grid-area: 2 / 1 / 3 / 2;
+  grid-area: 1 / 4 / 3 / 5;
 }
 //Report GRID End
