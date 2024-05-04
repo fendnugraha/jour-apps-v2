@@ -65,7 +65,8 @@
             <form action="{{ route('accounttrace.delete', $at->id) }}" method="post">
               @csrf
               @method('DELETE')
-              <button type="submit" onclick="return confirm('Are you sure?')" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i>
+              <button type="submit" onclick="return confirm('Are you sure?')" class="btn btn-danger btn-sm"><i
+                  class="fa-solid fa-trash"></i>
               </button>
             </form>
           </td>
@@ -104,12 +105,14 @@
             <div class="mb-2 row">
               <label for="date_issued" class="col-sm col-form-label">Tanggal</label>
               <div class="col-sm-8">
-                  <input type="datetime-local" class="form-control @error('date_issued') is-invalid @enderror" name="date_issued" id="date_issued" value="{{old('date_issued') == null ? date('Y-m-d H:i') : old('date_issued')}}">
-                  @error('date_issued')
-                  <div class="invalid-feedback">
-                      <small>{{ $message }}</small>
-                  </div>
-                  @enderror
+                <input type="datetime-local" class="form-control @error('date_issued') is-invalid @enderror"
+                  name="date_issued" id="date_issued"
+                  value="{{old('date_issued') == null ? date('Y-m-d H:i') : old('date_issued')}}">
+                @error('date_issued')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
               </div>
             </div>
             <div class="mb-2 row">
@@ -118,7 +121,7 @@
                 <select name="account" id="account" class="form-select">
                   <option value="">Pilih Akun</option>
                   @foreach ($warehouseaccount as $coa)
-                    <option value="{{ $coa->acc_code }}">{{ $coa->acc_name }}</option>
+                  <option value="{{ $coa->acc_code }}">{{ $coa->acc_name }}</option>
                   @endforeach
                 </select>
               </div>
@@ -126,32 +129,34 @@
             <div class="mb-2 row">
               <label for="amount" class="col-sm col-form-label">Jumlah</label>
               <div class="col-sm-8">
-                  <input type="number" class="form-control @error('amount') is-invalid @enderror" name="amount" id="amount" value="{{old('amount') == null ? 0 : old('amount')}}">
-                  @error('amount')
-                  <div class="invalid-feedback">
-                      <small>{{ $message }}</small>
-                  </div>
-                  @enderror
+                <input type="number" class="form-control @error('amount') is-invalid @enderror" name="amount"
+                  id="amount" value="{{old('amount') == null ? 0 : old('amount')}}">
+                @error('amount')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
               </div>
             </div>
             <div class="mb-2 row">
               <label for="fee_amount" class="col-sm col-form-label">Fee Admin</label>
               <div class="col-sm-8">
-                  <input type="number" class="form-control @error('fee_amount') is-invalid @enderror" name="fee_amount" id="fee_amount" value="{{old('fee_amount') == null ? 0 : old('fee_amount')}}">
-                  @error('fee_amount')
-                  <div class="invalid-feedback">
-                      <small>{{ $message }}</small>
-                  </div>
-                  @enderror
+                <input type="number" class="form-control @error('fee_amount') is-invalid @enderror" name="fee_amount"
+                  id="fee_amount" value="{{old('fee_amount') == null ? 0 : old('fee_amount')}}">
+                @error('fee_amount')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
               </div>
             </div>
 
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Transfer</button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Transfer</button>
           </form>
-          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -170,12 +175,14 @@
             <div class="mb-2 row">
               <label for="date_issued" class="col-sm col-form-label">Tanggal</label>
               <div class="col-sm-8">
-                  <input type="datetime-local" class="form-control @error('date_issued') is-invalid @enderror" name="date_issued" id="date_issued" value="{{old('date_issued') == null ? date('Y-m-d H:i') : old('date_issued')}}">
-                  @error('date_issued')
-                  <div class="invalid-feedback">
-                      <small>{{ $message }}</small>
-                  </div>
-                  @enderror
+                <input type="datetime-local" class="form-control @error('date_issued') is-invalid @enderror"
+                  name="date_issued" id="date_issued"
+                  value="{{old('date_issued') == null ? date('Y-m-d H:i') : old('date_issued')}}">
+                @error('date_issued')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
               </div>
             </div>
             <div class="mb-2 row">
@@ -184,7 +191,7 @@
                 <select name="account" id="account" class="form-select">
                   <option value="">Pilih Akun</option>
                   @foreach ($warehouseaccount as $coa)
-                    <option value="{{ $coa->acc_code }}">{{ $coa->acc_name }}</option>
+                  <option value="{{ $coa->acc_code }}">{{ $coa->acc_name }}</option>
                   @endforeach
                 </select>
               </div>
@@ -192,30 +199,32 @@
             <div class="mb-2 row">
               <label for="amount" class="col-sm col-form-label">Jumlah</label>
               <div class="col-sm-8">
-                  <input type="number" class="form-control @error('amount') is-invalid @enderror" name="amount" id="amount" value="{{old('amount') == null ? 0 : old('amount')}}">
-                  @error('amount')
-                  <div class="invalid-feedback">
-                      <small>{{ $message }}</small>
-                  </div>
-                  @enderror
+                <input type="number" class="form-control @error('amount') is-invalid @enderror" name="amount"
+                  id="amount" value="{{old('amount') == null ? 0 : old('amount')}}">
+                @error('amount')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
               </div>
             </div>
             <div class="mb-2 row">
               <label for="fee_amount" class="col-sm col-form-label">Fee Admin</label>
               <div class="col-sm-8">
-                  <input type="number" class="form-control @error('fee_amount') is-invalid @enderror" name="fee_amount" id="fee_amount" value="{{old('fee_amount') == null ? 0 : old('fee_amount')}}">
-                  @error('fee_amount')
-                  <div class="invalid-feedback">
-                      <small>{{ $message }}</small>
-                  </div>
-                  @enderror
+                <input type="number" class="form-control @error('fee_amount') is-invalid @enderror" name="fee_amount"
+                  id="fee_amount" value="{{old('fee_amount') == null ? 0 : old('fee_amount')}}">
+                @error('fee_amount')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
               </div>
             </div>
 
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Simpan</button>
           </form>
         </div>
       </div>
@@ -252,7 +261,8 @@
   </div>
 
   {{-- Pengeluaran --}}
-  <div class="modal fade" id="ModalPengeluaran" tabindex="-1" aria-labelledby="ModalPengeluaranLabel" aria-hidden="true">
+  <div class="modal fade" id="ModalPengeluaran" tabindex="-1" aria-labelledby="ModalPengeluaranLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -265,12 +275,14 @@
             <div class="mb-2 row">
               <label for="date_issued" class="col-sm col-form-label">Tanggal</label>
               <div class="col-sm-8">
-                  <input type="datetime-local" class="form-control @error('date_issued') is-invalid @enderror" name="date_issued" id="date_issued" value="{{old('date_issued') == null ? date('Y-m-d H:i') : old('date_issued')}}">
-                  @error('date_issued')
-                  <div class="invalid-feedback">
-                      <small>{{ $message }}</small>
-                  </div>
-                  @enderror
+                <input type="datetime-local" class="form-control @error('date_issued') is-invalid @enderror"
+                  name="date_issued" id="date_issued"
+                  value="{{old('date_issued') == null ? date('Y-m-d H:i') : old('date_issued')}}">
+                @error('date_issued')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
               </div>
             </div>
             <div class="mb-2 row">
@@ -279,7 +291,7 @@
                 <select name="cred" id="cred" class="form-select">
                   <option value="">Pilih Akun</option>
                   @foreach ($warehouseaccount as $coa)
-                    <option value="{{ $coa->acc_code }}">{{ $coa->acc_name }}</option>
+                  <option value="{{ $coa->acc_code }}">{{ $coa->acc_name }}</option>
                   @endforeach
                 </select>
               </div>
@@ -290,7 +302,7 @@
                 <select name="debt" id="debt" class="form-select">
                   <option value="">Pilih Akun</option>
                   @foreach ($hqaccount as $coa)
-                    <option value="{{ $coa->acc_code }}">{{ $coa->acc_name }}</option>
+                  <option value="{{ $coa->acc_code }}">{{ $coa->acc_name }}</option>
                   @endforeach
                 </select>
               </div>
@@ -298,19 +310,20 @@
             <div class="mb-2 row">
               <label for="amount" class="col-sm col-form-label">Jumlah</label>
               <div class="col-sm-8">
-                  <input type="number" class="form-control @error('amount') is-invalid @enderror" name="amount" id="amount" value="{{old('amount') == null ? 0 : old('amount')}}">
-                  @error('amount')
-                  <div class="invalid-feedback">
-                      <small>{{ $message }}</small>
-                  </div>
-                  @enderror
+                <input type="number" class="form-control @error('amount') is-invalid @enderror" name="amount"
+                  id="amount" value="{{old('amount') == null ? 0 : old('amount')}}">
+                @error('amount')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
               </div>
             </div>
 
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Simpan</button>
           </form>
         </div>
       </div>

@@ -8,43 +8,54 @@
     <div class="daily-report mb-5">
         <div class="div1">
             <div class="card text-bg-dark h-100">
-            <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                <h4>Saldo Kas</h4>
-                <h1>{{ number_format($totalCash->flatten()->sum('balance')) }}</h1>
-                
+                <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                    <h4>Saldo Kas</h4>
+                    <h1>{{ number_format($totalCash->flatten()->sum('balance')) }}</h1>
+
+                </div>
             </div>
         </div>
-    </div>
-        <div class="div2"><div class="card text-bg-dark h-100">
-            <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                <h4>Total Saldo Bank</h4>
-                <h1>{{ number_format($totalBank->flatten()->sum('balance')) }}</h1>
+        <div class="div2">
+            <div class="card text-bg-dark h-100">
+                <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                    <h4>Total Saldo Bank</h4>
+                    <h1>{{ number_format($totalBank->flatten()->sum('balance')) }}</h1>
+                </div>
             </div>
-        </div></div>
-        <div class="div3"><div class="card text-bg-dark h-100">
-            <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                <h4>Total Transfer</h4>
-                <h1>{{ number_format($totalTransfer) }}</h1>
+        </div>
+        <div class="div3">
+            <div class="card text-bg-dark h-100">
+                <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                    <h4>Total Transfer</h4>
+                    <h1>{{ number_format($totalTransfer) }}</h1>
+                </div>
             </div>
-        </div></div>
-        <div class="div4"><div class="card text-bg-dark h-100">
-            <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                <h4>Total Tarik Tunai</h4>
-                <h1>{{ number_format($totalTarikTunai) }}</h1>
+        </div>
+        <div class="div4">
+            <div class="card text-bg-dark h-100">
+                <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                    <h4>Total Tarik Tunai</h4>
+                    <h1>{{ number_format($totalTarikTunai) }}</h1>
+                </div>
             </div>
-        </div></div>
-        <div class="div5"><div class="card text-bg-dark h-100">
-            <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                <h4>Total Kas & Bank</h4>
-                <h1 class="text-warning display-2 fw-bold">{{ number_format($endbalance->flatten()->sum('balance')) }}</h1>
+        </div>
+        <div class="div5">
+            <div class="card text-bg-dark h-100">
+                <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                    <h4>Total Kas & Bank</h4>
+                    <h1 class="text-warning display-2 fw-bold">{{ number_format($endbalance->flatten()->sum('balance'))
+                        }}</h1>
+                </div>
             </div>
-        </div></div>
-        <div class="div6"><div class="card text-bg-dark h-100">
-            <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                <h4>Total Laba (Profit)</h4>
-                <h1>{{ number_format($fee) }}</h1>
+        </div>
+        <div class="div6">
+            <div class="card text-bg-dark h-100">
+                <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                    <h4>Total Laba (Profit)</h4>
+                    <h1>{{ number_format($fee) }}</h1>
+                </div>
             </div>
-        </div></div>
+        </div>
     </div>
 </div>
 <div class="container mt-5">

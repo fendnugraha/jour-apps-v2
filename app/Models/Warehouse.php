@@ -20,4 +20,9 @@ class Warehouse extends Model
     {
         return $this->belongsTo(ChartOfAccount::class);
     }
+
+    public function AccountTrace()
+    {
+        return $this->hasMany(AccountTrace::class);
+    }
 }

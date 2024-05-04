@@ -50,19 +50,34 @@ class WarehouseAccountController extends Controller
     {
         try {
             DB::transaction(function () use ($id) {
-        $account = WarehouseAccount::find($id);
-        $account->delete();
-
-        $ChartOfAccount = ChartOfAccount::find($account->chart_of_account_id);
-        $ChartOfAccount->update([
-            'warehouse_id' => 1,
-        ]);
-
-        });
+                // Find the WarehouseAccount by ID
+                $account = WarehouseAccount::find($id);
+        
+                // Check if the account exists before attempting to delete it
+                if ($account) {
+                    // Delete the WarehouseAccount
+                    $account->delete();
+        
+                    // Find the corresponding ChartOfAccount and update its warehouse_id
+                    $ChartOfAccount = ChartOfAccount::find($account->chart_of_account_id);
+                    if ($ChartOfAccount) {
+                        $ChartOfAccount->update([
+                            'warehouse_id' => 1,
+                        ]);
+                    } else {
+                        // Handle the case where the corresponding ChartOfAccount is not found
+                        throw new \Exception('Corresponding ChartOfAccount not found.');
+                    }
+                } else {
+                    // Handle the case where the WarehouseAccount is not found
+                    throw new \Exception('WarehouseAccount not found.');
+                }
+            });
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
+        
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Data Deleted Successfully');
     }
 }

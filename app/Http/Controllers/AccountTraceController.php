@@ -14,18 +14,21 @@ class AccountTraceController extends Controller
 {
     public function index()
     {
+        $startDate = Carbon::now()->startOfDay();
+        $endDate = Carbon::now()->endOfDay();
+
         return view('home.index', [
             'title' => 'Home',
             'subtitle' => 'Home',
             'warehouseaccount' => ChartOfAccount::whereIn('account_id', ['1', '2'])->where('warehouse_id', Auth()->user()->warehouse_id)->get(),
-            'accounttrace' => AccountTrace::with('debt', 'cred')->where('warehouse_id', Auth()->user()->warehouse_id)->get(),
+            'accounttrace' => AccountTrace::with('debt', 'cred')->whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', Auth()->user()->warehouse_id)->get(),
             'hqaccount' => ChartOfAccount::whereIn('account_id', ['1', '2'])->where('warehouse_id', 1)->get(),
         ]);
     }
 
     public function administrator()
     {
-        if(Auth()->user()->role !== "Administrator") {
+        if (Auth()->user()->role !== "Administrator") {
             return abort(403, 'Unauthorized action.');
         }
 
@@ -33,13 +36,13 @@ class AccountTraceController extends Controller
         $startDate = Carbon::now()->startOfDay();
         $endDate = Carbon::now()->endOfDay();
 
-        $transactions = $accountTrace->with(['debt', 'cred'])
-            ->selectRaw('debt_code, cred_code, SUM(amount) as total, warehouse_id')
-            ->whereBetween('date_issued', [$startDate, $endDate])
-            ->groupBy('debt_code', 'cred_code', 'warehouse_id')
+        $transactions = $accountTrace
+            ->selectRaw('debt_code, cred_code, SUM(amount) as total')
+            ->whereBetween('date_issued', [Carbon::create(0000, 1, 1, 0, 0, 0)->startOfDay(), $endDate])
+            ->groupBy('debt_code', 'cred_code')
             ->get();
-        
-        $chartOfAccounts = ChartOfAccount::with(['account', 'warehouse'])->get();
+
+        $chartOfAccounts = ChartOfAccount::with(['account'])->get();
 
         foreach ($chartOfAccounts as $value) {
             $debit = $transactions->where('debt_code', $value->acc_code)->sum('total');
@@ -50,12 +53,21 @@ class AccountTraceController extends Controller
         }
 
         $totalTransfer = [];
+        $sumtotalTransfer = 0;
+        $sumtotalTarikTunai = 0;
+        $sumfee = 0;
+        $sumtotalCash = 0;
+        $sumtotalBank = 0;
+        $sumendbalance = 0;
+
         $warehouse = Warehouse::get();
         foreach ($warehouse as $w) {
             $totalTransfer = AccountTrace::where('warehouse_id', $w->id)->whereBetween('date_issued', [$startDate, $endDate])->where('description', 'Transfer Uang')->sum('amount');
-        $totalTarikTunai = AccountTrace::where('warehouse_id', $w->id)->whereBetween('date_issued', [$startDate, $endDate])->where('description', 'Tarik Tunai')->sum('amount');
-        $fee = AccountTrace::where('warehouse_id', $w->id)->whereBetween('date_issued', [$startDate, $endDate])->sum('fee_amount');
-        $totalCash = $chartOfAccounts->whereIn('warehouse_id', $w->id)->where('account_id', 1)->sum('balance');
+            $totalTarikTunai = AccountTrace::where('warehouse_id', $w->id)->whereBetween('date_issued', [$startDate, $endDate])->where('description', 'Tarik Tunai')->sum('amount');
+            $fee = AccountTrace::where('warehouse_id', $w->id)->whereBetween('date_issued', [$startDate, $endDate])->sum('fee_amount');
+            $totalCash = $chartOfAccounts->whereIn('warehouse_id', $w->id)->where('account_id', 1)->sum('balance');
+            $totalBank = $chartOfAccounts->whereIn('warehouse_id', $w->id)->where('account_id', 2)->sum('balance');
+            $endbalance = $chartOfAccounts->whereIn('warehouse_id', $w->id)->sum('balance');
 
             $dailyreport[] = [
                 'warehouse' => $w->w_name,
@@ -63,13 +75,18 @@ class AccountTraceController extends Controller
                 'totalTransfer' => $totalTransfer,
                 'totalTarikTunai' => $totalTarikTunai,
                 'fee' => $fee,
-                'endbalance' => $chartOfAccounts->whereIn('warehouse_id', $w->id)->sum('balance'),
-                'revenue' => $chartOfAccounts->whereIn('warehouse_id', $w->id)->sum('balance'),
+                'endbalance' => $endbalance,
                 'totalCash' => $totalCash,
-                'totalBank' => $chartOfAccounts->whereIn('warehouse_id', $w->id)->where('account_id', 2)->sum('balance'),
+                'totalBank' => $totalBank,
                 'warehouseaccount' => $chartOfAccounts->whereIn('account_id', ['1', '2'])->where('warehouse_id', $w->id),
             ];
-            
+
+            $sumtotalTransfer += $totalTransfer;
+            $sumtotalTarikTunai += $totalTarikTunai;
+            $sumfee += $fee;
+            $sumtotalCash += $totalCash;
+            $sumtotalBank += $totalBank;
+            $sumendbalance += $endbalance;
         }
 
         return view('home.admin', [
@@ -78,6 +95,12 @@ class AccountTraceController extends Controller
             'warehouse' => Warehouse::get(),
             'dailyreport' => $dailyreport,
             'chartOfAccounts' => $chartOfAccounts->whereIn('account_id', ['1', '2']),
+            'sumtotalTransfer' => $sumtotalTransfer,
+            'sumtotalTarikTunai' => $sumtotalTarikTunai,
+            'sumfee' => $sumfee,
+            'sumtotalCash' => $sumtotalCash,
+            'sumtotalBank' => $sumtotalBank,
+            'sumendbalance' => $sumendbalance,
         ]);
     }
 
@@ -89,10 +112,10 @@ class AccountTraceController extends Controller
 
         $transactions = $accountTrace->with(['debt', 'cred'])
             ->selectRaw('debt_code, cred_code, SUM(amount) as total, warehouse_id')
-            ->whereBetween('date_issued', [$startDate, $endDate])
+            ->whereBetween('date_issued', [Carbon::create(0000, 1, 1, 0, 0, 0)->startOfDay(), $endDate])
             ->groupBy('debt_code', 'cred_code', 'warehouse_id')
             ->get();
-        
+
         $chartOfAccounts = ChartOfAccount::with(['account', 'warehouse'])->get();
 
         foreach ($chartOfAccounts as $value) {
@@ -114,7 +137,6 @@ class AccountTraceController extends Controller
             'totalTarikTunai' => $totalTarikTunai,
             'fee' => $fee,
             'endbalance' => $chartOfAccounts->whereIn('warehouse_id', [Auth()->user()->warehouse_id])->groupBy('warehouse_id'),
-            'revenue' => $chartOfAccounts->whereIn('warehouse_id', [Auth()->user()->warehouse_id])->groupBy('warehouse_id'),
             'totalCash' => $chartOfAccounts->whereIn('warehouse_id', [Auth()->user()->warehouse_id])->where('account_id', 1)->groupBy('warehouse_id'),
             'totalBank' => $chartOfAccounts->whereIn('warehouse_id', [Auth()->user()->warehouse_id])->where('account_id', 2)->groupBy('warehouse_id'),
             'warehouseaccount' => $chartOfAccounts->where('warehouse_id', Auth()->user()->warehouse_id),
@@ -128,7 +150,7 @@ class AccountTraceController extends Controller
             'amount' => 'required|numeric',
             'fee_amount' => 'required|numeric',
         ]);
-        
+
         $w_account = Warehouse::with('chartofaccount')->Where('id', Auth()->user()->warehouse_id)->first();
         $w_account = $w_account->chartofaccount->acc_code;
 
@@ -154,7 +176,7 @@ class AccountTraceController extends Controller
             'amount' => 'required|numeric',
             'fee_amount' => 'required|numeric',
         ]);
-        
+
         $w_account = Warehouse::with('chartofaccount')->Where('id', Auth()->user()->warehouse_id)->first();
         $w_account = $w_account->chartofaccount->acc_code;
 
@@ -180,7 +202,7 @@ class AccountTraceController extends Controller
             'cred' => 'required',
             'amount' => 'required|numeric',
         ]);
-        
+
         $w_account = Warehouse::with('chartofaccount')->Where('id', Auth()->user()->warehouse_id)->first();
         $w_account = $w_account->chartofaccount->acc_code;
 
@@ -196,7 +218,7 @@ class AccountTraceController extends Controller
         $accountTrace->warehouse_id = Auth()->user()->warehouse_id;
         $accountTrace->save();
 
-        return redirect('/home')->with('success', 'Mutasi added successfully.');
+        return redirect()->back()->with('success', 'Mutasi added successfully.');
     }
 
     public function destroy($id)
