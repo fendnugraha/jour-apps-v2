@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('amount');
             $table->integer('fee_amount');
             $table->integer('status')->default(1);
+            $table->string('trx_type', 60)->nullable();
             $table->string('rcv_pay', 30)->nullable();
             $table->integer('payment_status')->nullable();
             $table->integer('payment_nth')->nullable();

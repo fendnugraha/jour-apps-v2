@@ -47,6 +47,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@jour.com',
             'password' => bcrypt('admin123'),
+            'role' => 'Administrator',
             'warehouse_id' => 1
         ]);
 
@@ -54,6 +55,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'fend',
             'email' => 'fend@jour.com',
             'password' => bcrypt('user123'),
+            'role' => 'Administrator',
             'warehouse_id' => 1
         ]);
 

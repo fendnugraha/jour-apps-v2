@@ -39,6 +39,7 @@ Route::get('/auth/register_success', function () {
 Route::get('/home', [AccountTraceController::class, 'index'])->middleware('auth');
 Route::get('/home/dailyreport', [AccountTraceController::class, 'dailyreport'])->middleware('auth');
 Route::get('/home/administrator', [AccountTraceController::class, 'administrator'])->middleware('auth');
+Route::post('/home/generalledger', [AccountTraceController::class, 'generalLedger'])->middleware('auth');
 Route::get('/setting', function () {
     return view('home.setting', [
         'title' => 'Setting',
@@ -102,7 +103,9 @@ Route::delete('/warehouse/delete/{id}', [WarehouseAccountController::class, 'des
 
 Route::post('/addTransfer', [AccountTraceController::class, 'addTransfer'])->middleware('auth');
 Route::post('/addTarikTunai', [AccountTraceController::class, 'addTarikTunai'])->middleware('auth');
-Route::post('/mutasi', [AccountTraceController::class, 'pengeluaran'])->middleware('auth');
+Route::post('/transaksi', [AccountTraceController::class, 'transaksi'])->middleware('auth');
+Route::post('/mutasi', [AccountTraceController::class, 'mutasi'])->middleware('auth');
+Route::post('/pengeluaran', [AccountTraceController::class, 'pengeluaran'])->middleware('auth');
 Route::delete('/deleteAccountTrace/{id}', [AccountTraceController::class, 'destroy'])->name('accounttrace.delete')->middleware('auth');
 
 // End Journal Area

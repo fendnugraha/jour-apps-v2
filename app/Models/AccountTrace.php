@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -30,7 +31,7 @@ class AccountTrace extends Model
     {
         return $this->belongsTo(ChartOfAccount::class, 'cred_code', 'acc_code');
     }
-    
+
     public function invoice_journal()
     {
         $lastInvoice = DB::table('account_traces')
@@ -49,5 +50,30 @@ class AccountTrace extends Model
             $kd = "0000001";
         }
         return 'JR.BK.' . date('dmY') . '.' . Auth()->user()->id . '.' . \sprintf("%07s", $kd);
+    }
+
+    public function endBalanceBetweenDate($account_code, $start_date, $end_date)
+    {
+        $initBalance = ChartOfAccount::where('acc_code', $account_code)->first();
+        $transaction = $this->whereBetween('date_issued', [
+            Carbon::parse($start_date)->startOfDay(),
+            Carbon::parse($end_date)->endOfDay(),
+        ])
+            ->where('debt_code', $account_code)
+            ->orWhere('cred_code', $account_code)
+            ->whereBetween('date_issued', [
+                Carbon::parse($start_date)->startOfDay(),
+                Carbon::parse($end_date)->endOfDay(),
+            ])
+            ->get();
+
+        $debit = $transaction->where('debt_code', $account_code)->sum('amount');
+        $kredit = $transaction->where('cred_code', $account_code)->sum('amount');
+
+        if ($initBalance->Account->status == "D") {
+            return $initBalance->st_balance + $debit - $kredit;
+        } else {
+            return $initBalance->st_balance + $kredit - $debit;
+        }
     }
 }

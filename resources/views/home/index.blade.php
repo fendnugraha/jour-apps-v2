@@ -4,7 +4,7 @@
 @section('container')
 {{-- Content Area --}}
 
-<div class="container mt-5">
+<div class="container mt-3">
   <div class="row ">
     <div class="col-sm">
       <div class="d-grid gap-2">
@@ -20,17 +20,17 @@
         </button>
       </div>
     </div>
-    {{-- <div class="col-sm">
+    <div class="col-sm">
       <div class="d-grid gap-2">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalPemasukan">
-          Pemasukan
+          Voucher & Deposit
         </button>
       </div>
-    </div> --}}
+    </div>
     <div class="col-sm">
       <div class="d-grid gap-2">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalPengeluaran">
-          Pengeluaran
+          Mutasi Kas
         </button>
       </div>
     </div>
@@ -42,6 +42,7 @@
           <th scope="col">#</th>
           <th scope="col">Waktu</th>
           <th scope="col">Account</th>
+          <th scope="col">Keterangan</th>
           <th scope="col">Status</th>
           <th scope="col">Jumlah</th>
           <th scope="col">Fee Admin</th>
@@ -52,12 +53,13 @@
       <tbody>
         @php($no = 1)
         @foreach ($accounttrace as $at)
-        @php($warna = $at->description == 'Transfer Uang' ? 'table-danger' : 'table-success')
+        @php($warna = $at->trx_type == 'Transfer Uang' ? 'table-danger' : 'table-success')
         <tr class="{{ $warna }}">
           <th scope="row">{{ $no++ }}</th>
           <td>{{ $at->date_issued }}</td>
           <td>{{ $at->debt->acc_name . ' x ' . $at->cred->acc_name }} </td>
-          <td><span class="badge bg-success">{{ $at->description }}</span></td>
+          <td>{{ $at->description }}</td>
+          <td><span class="badge bg-success">{{ $at->trx_type }}</span></td>
           <td>{{ number_format($at->amount) }}</td>
           <td>{{ number_format($at->fee_amount) }}</td>
           <td>{{ $at->user->name }}</td>
@@ -236,26 +238,53 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="ModalPemasukanLabel">Pemasukan</h1>
+          <h1 class="modal-title fs-5" id="ModalPemasukanLabel">Voucher & Deposit</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="" method="post">
+          <form action="/transaksi" method="post">
             @csrf
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Email address</label>
-              <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+            <div class="mb-3 row">
+              <label for="date_issued" class="col-sm col-form-label">Tanggal</label>
+              <div class="col-sm-8">
+                <input type="datetime-local" class="form-control @error('date_issued') is-invalid @enderror"
+                  name="date_issued" id="date_issued"
+                  value="{{old('date_issued') == null ? date('Y-m-d H:i') : old('date_issued')}}">
+                @error('date_issued')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
+              </div>
             </div>
             <div class="mb-3">
-              <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
-              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+              <label for="trx_type" class="form-label">Produk</label>
+              <select class="form-select" name="trx_type" id="trx_type">
+                <option selected>- Pilih Produk -</option>
+                <option value="Voucher & SP">Voucher & Kartu Perdana</option>
+                <option value="Deposit">Deposit</option>
+              </select>
             </div>
-          </form>
+            <div class="mb-3">
+              <label for="description" class="form-label">Keterangan</label>
+              <input type="text" class="form-control" id="description" name="description" placeholder="Description">
+            </div>
+            <div class="row">
+              <div class="mb-3 col-sm">
+                <label for="jual" class="form-label">Harga Jual</label>
+                <input type="number" class="form-control" id="jual" name="jual" placeholder="Rp">
+              </div>
+              <div class="mb-3 col-sm">
+                <label for="modal" class="form-label">Modal</label>
+                <input type="number" class="form-control" id="modal" name="modal" placeholder="Rp">
+              </div>
+            </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <button type="submit" class="btn btn-primary">Simpan</button>
         </div>
+        </form>
       </div>
     </div>
   </div>

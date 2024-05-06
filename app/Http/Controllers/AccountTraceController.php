@@ -55,16 +55,26 @@ class AccountTraceController extends Controller
         $totalTransfer = [];
         $sumtotalTransfer = 0;
         $sumtotalTarikTunai = 0;
+        $sumtotalVcr = 0;
+        $sumtotaldeposit = 0;
         $sumfee = 0;
         $sumtotalCash = 0;
         $sumtotalBank = 0;
         $sumendbalance = 0;
 
         $warehouse = Warehouse::get();
+        $actrace = AccountTrace::whereBetween('date_issued', [$startDate, $endDate]);
         foreach ($warehouse as $w) {
-            $totalTransfer = AccountTrace::where('warehouse_id', $w->id)->whereBetween('date_issued', [$startDate, $endDate])->where('description', 'Transfer Uang')->sum('amount');
-            $totalTarikTunai = AccountTrace::where('warehouse_id', $w->id)->whereBetween('date_issued', [$startDate, $endDate])->where('description', 'Tarik Tunai')->sum('amount');
-            $fee = AccountTrace::where('warehouse_id', $w->id)->whereBetween('date_issued', [$startDate, $endDate])->sum('fee_amount');
+            $totalTransfer = $actrace->where('warehouse_id', $w->id)->where('trx_type', 'Transfer Uang')->sum('amount');
+            $totalTarikTunai = $actrace->where('warehouse_id', $w->id)->where('trx_type', 'Tarik Tunai')->sum('amount');
+            $totalVcr = $actrace->where('warehouse_id', $w->id)->where('trx_type', 'Voucher & SP')->sum('amount');
+            $totaldeposit = $actrace->where('warehouse_id', $w->id)->where('trx_type', 'Deposit')->sum('amount');
+            $fee = $actrace->where('warehouse_id', $w->id)->sum('fee_amount');
+            $w_account = $chartOfAccounts->where('warehouse_id', $w->id)->pluck('acc_code');
+
+            $penambahan = AccountTrace::with(['debt', 'cred'])->where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate])->whereIn('debt_code', $w_account)->get();
+            $pengeluaran = AccountTrace::with(['debt', 'cred'])->where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate])->whereIn('cred_code', $w_account)->get();
+
             $totalCash = $chartOfAccounts->whereIn('warehouse_id', $w->id)->where('account_id', 1)->sum('balance');
             $totalBank = $chartOfAccounts->whereIn('warehouse_id', $w->id)->where('account_id', 2)->sum('balance');
             $endbalance = $chartOfAccounts->whereIn('warehouse_id', $w->id)->sum('balance');
@@ -74,6 +84,10 @@ class AccountTraceController extends Controller
                 'warehouse_id' => $w->id,
                 'totalTransfer' => $totalTransfer,
                 'totalTarikTunai' => $totalTarikTunai,
+                'totalVcr' => $totalVcr,
+                'totaldeposit' => $totaldeposit,
+                'penambahan' => $penambahan,
+                'pengeluaran' => $pengeluaran,
                 'fee' => $fee,
                 'endbalance' => $endbalance,
                 'totalCash' => $totalCash,
@@ -83,6 +97,8 @@ class AccountTraceController extends Controller
 
             $sumtotalTransfer += $totalTransfer;
             $sumtotalTarikTunai += $totalTarikTunai;
+            $sumtotalVcr += $totalVcr;
+            $sumtotaldeposit += $totaldeposit;
             $sumfee += $fee;
             $sumtotalCash += $totalCash;
             $sumtotalBank += $totalBank;
@@ -95,8 +111,11 @@ class AccountTraceController extends Controller
             'warehouse' => Warehouse::get(),
             'dailyreport' => $dailyreport,
             'chartOfAccounts' => $chartOfAccounts->whereIn('account_id', ['1', '2']),
+            'expense' => $chartOfAccounts->whereIn('account_id', range(33, 45)),
             'sumtotalTransfer' => $sumtotalTransfer,
             'sumtotalTarikTunai' => $sumtotalTarikTunai,
+            'sumtotalVcr' => $sumtotalVcr,
+            'sumtotaldeposit' => $sumtotaldeposit,
             'sumfee' => $sumfee,
             'sumtotalCash' => $sumtotalCash,
             'sumtotalBank' => $sumtotalBank,
@@ -126,20 +145,35 @@ class AccountTraceController extends Controller
             $value->balance = ($value->account->status == "D") ? ($value->st_balance + $debit - $credit) : ($value->st_balance + $credit - $debit);
         }
 
-        $totalTransfer = AccountTrace::where('warehouse_id', Auth()->user()->warehouse_id)->whereBetween('date_issued', [$startDate, $endDate])->where('description', 'Transfer Uang')->sum('amount');
-        $totalTarikTunai = AccountTrace::where('warehouse_id', Auth()->user()->warehouse_id)->whereBetween('date_issued', [$startDate, $endDate])->where('description', 'Tarik Tunai')->sum('amount');
+        $totalTransfer = AccountTrace::where('warehouse_id', Auth()->user()->warehouse_id)->whereBetween('date_issued', [$startDate, $endDate])->where('trx_type', 'Transfer Uang')->sum('amount');
+        $totalTarikTunai = AccountTrace::where('warehouse_id', Auth()->user()->warehouse_id)->whereBetween('date_issued', [$startDate, $endDate])->where('trx_type', 'Tarik Tunai')->sum('amount');
+        $totalVcr = AccountTrace::where('warehouse_id', Auth()->user()->warehouse_id)->whereBetween('date_issued', [$startDate, $endDate])->where('trx_type', 'Voucher & SP')->sum('amount');
+        $totaldeposit = AccountTrace::where('warehouse_id', Auth()->user()->warehouse_id)->whereBetween('date_issued', [$startDate, $endDate])->where('trx_type', 'Deposit')->sum('amount');
         $fee = AccountTrace::where('warehouse_id', Auth()->user()->warehouse_id)->whereBetween('date_issued', [$startDate, $endDate])->sum('fee_amount');
+
+        $w_account = $chartOfAccounts->where('warehouse_id', Auth()->user()->warehouse_id)->pluck('acc_code');
+        // dd($w_account);
+        // $actrace = AccountTrace::with(['debt', 'cred'])->where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate]);
+        // $sql = $actrace->whereIn('cred_code', $w_account)->toSql();
+        // dd($sql);
+        $penambahan = AccountTrace::with(['debt', 'cred'])->where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate])->whereIn('debt_code', $w_account)->get();
+        $pengeluaran = AccountTrace::with(['debt', 'cred'])->where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate])->whereIn('cred_code', $w_account)->get();
 
         return view('home.dailyreport', [
             'title' => 'Daily Report',
             'subtitle' => 'Daily Report',
             'totalTransfer' => $totalTransfer,
             'totalTarikTunai' => $totalTarikTunai,
+            'totalVcr' => $totalVcr,
+            'totaldeposit' => $totaldeposit,
             'fee' => $fee,
             'endbalance' => $chartOfAccounts->whereIn('warehouse_id', [Auth()->user()->warehouse_id])->groupBy('warehouse_id'),
             'totalCash' => $chartOfAccounts->whereIn('warehouse_id', [Auth()->user()->warehouse_id])->where('account_id', 1)->groupBy('warehouse_id'),
             'totalBank' => $chartOfAccounts->whereIn('warehouse_id', [Auth()->user()->warehouse_id])->where('account_id', 2)->groupBy('warehouse_id'),
             'warehouseaccount' => $chartOfAccounts->where('warehouse_id', Auth()->user()->warehouse_id),
+            'penambahan' => $penambahan,
+            'pengeluaran' => $pengeluaran,
+            'account' => $chartOfAccounts->where('warehouse_id', Auth()->user()->warehouse_id),
         ]);
     }
 
@@ -162,6 +196,7 @@ class AccountTraceController extends Controller
         $accountTrace->amount = $request->amount;
         $accountTrace->fee_amount = $request->fee_amount;
         $accountTrace->description = "Transfer Uang";
+        $accountTrace->trx_type = "Transfer Uang";
         $accountTrace->user_id = Auth()->user()->id;
         $accountTrace->warehouse_id = Auth()->user()->warehouse_id;
         $accountTrace->save();
@@ -188,6 +223,7 @@ class AccountTraceController extends Controller
         $accountTrace->amount = $request->amount;
         $accountTrace->fee_amount = $request->fee_amount;
         $accountTrace->description = "Tarik Tunai";
+        $accountTrace->trx_type = "Tarik Tunai";
         $accountTrace->user_id = Auth()->user()->id;
         $accountTrace->warehouse_id = Auth()->user()->warehouse_id;
         $accountTrace->save();
@@ -195,7 +231,7 @@ class AccountTraceController extends Controller
         return redirect('/home')->with('success', 'Tarik Tunai added successfully.');
     }
 
-    public function pengeluaran(Request $request)
+    public function mutasi(Request $request)
     {
         $request->validate([
             'debt' => 'required',
@@ -214,11 +250,102 @@ class AccountTraceController extends Controller
         $accountTrace->amount = $request->amount;
         $accountTrace->fee_amount = 0;
         $accountTrace->description = "Mutasi Kas";
+        $accountTrace->trx_type = "Mutasi Kas";
         $accountTrace->user_id = Auth()->user()->id;
         $accountTrace->warehouse_id = Auth()->user()->warehouse_id;
         $accountTrace->save();
 
         return redirect()->back()->with('success', 'Mutasi added successfully.');
+    }
+
+    public function pengeluaran(Request $request)
+    {
+        $request->validate([
+            'debt' => 'required',
+            'cred' => 'required',
+            'description' => 'required',
+            'amount' => 'required|numeric',
+        ]);
+
+        $w_account = Warehouse::with('chartofaccount')->Where('id', Auth()->user()->warehouse_id)->first();
+        $w_account = $w_account->chartofaccount->acc_code;
+
+        $accountTrace = new AccountTrace();
+        $accountTrace->date_issued = $request->date_issued;
+        $accountTrace->invoice = $accountTrace->invoice_journal();
+        $accountTrace->debt_code = $request->debt;
+        $accountTrace->cred_code = $request->cred;
+        $accountTrace->amount = $request->amount;
+        $accountTrace->fee_amount = 0;
+        $accountTrace->description = $request->description;
+        $accountTrace->trx_type = "Pengeluaran";
+        $accountTrace->user_id = Auth()->user()->id;
+        $accountTrace->warehouse_id = Auth()->user()->warehouse_id;
+        $accountTrace->save();
+
+        return redirect()->back()->with('success', 'Pengeluaran added successfully.');
+    }
+
+    public function transaksi(Request $request)
+    {
+        $request->validate([
+            'description' => 'required',
+            'jual' => 'required|numeric',
+            'modal' => 'required|numeric',
+            'trx_type' => 'required',
+        ]);
+
+        $w_account = Warehouse::with('chartofaccount')->Where('id', Auth()->user()->warehouse_id)->first();
+        $w_account = $w_account->chartofaccount->acc_code;
+        $fee = $request->jual - $request->modal;
+
+        $accountTrace = new AccountTrace();
+        $accountTrace->date_issued = $request->date_issued;
+        $accountTrace->invoice = $accountTrace->invoice_journal();
+        $accountTrace->debt_code = $w_account;
+        $accountTrace->cred_code = "10600-001";
+        $accountTrace->amount = $request->modal;
+        $accountTrace->fee_amount = $fee;
+        $accountTrace->description = $request->description;
+        $accountTrace->trx_type = $request->trx_type;
+        $accountTrace->user_id = Auth()->user()->id;
+        $accountTrace->warehouse_id = Auth()->user()->warehouse_id;
+        $accountTrace->save();
+
+        return redirect()->back()->with('success', 'Mutasi added successfully.');
+    }
+
+    public function generalLedger(Request $request)
+    {
+        $accountTrace = new AccountTrace();
+        $startDate = Carbon::parse($request->start_date)->startOfDay();
+        $endDate = Carbon::parse($request->end_date)->endOfDay();
+        $account_trace = $accountTrace->with('debt', 'cred', 'warehouse', 'user')->where('debt_code', $request->accounts)
+            ->whereBetween('date_issued', [$startDate, $endDate])
+            ->orWhere('cred_code', $request->accounts)
+            ->WhereBetween('date_issued', [$startDate, $endDate])
+            ->orderBy('date_issued', 'asc')
+            ->get();
+
+        $debt_total = $account_trace->where('debt_code', $request->accounts)->sum('amount');
+        $cred_total = $account_trace->where('cred_code', $request->accounts)->sum('amount');
+
+        $initBalanceDate = Carbon::parse($startDate)->subDays(1)->endOfDay();
+        $initBalance = $accountTrace->endBalanceBetweenDate($request->accounts, Carbon::create(0000, 00, 00), $initBalanceDate);
+        $endBalance = $accountTrace->endBalanceBetweenDate($request->accounts, Carbon::create(0000, 00, 00), $request->end_date);
+        // dd($endBalance);
+
+        return view('home.history', [
+            'title' => 'General Ledger',
+            'active' => 'reports',
+            'account_trace' => $account_trace,
+            'account' => ChartOfAccount::with(['account'])->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('acc_code', 'asc')->get(),
+            'debt_total' => $debt_total,
+            'cred_total' => $cred_total,
+            'initBalance' => $initBalance,
+            'endBalance' => $endBalance,
+            'status' => ChartOfAccount::with(['account'])->where('acc_code', $request->accounts)->first()->account->status
+        ])->with($request->all());
     }
 
     public function destroy($id)
