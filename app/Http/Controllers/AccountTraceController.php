@@ -331,8 +331,8 @@ class AccountTraceController extends Controller
         $cred_total = $account_trace->where('cred_code', $request->accounts)->sum('amount');
 
         $initBalanceDate = Carbon::parse($startDate)->subDays(1)->endOfDay();
-        $initBalance = $accountTrace->endBalanceBetweenDate($request->accounts, Carbon::create(0000, 00, 00), $initBalanceDate);
-        $endBalance = $accountTrace->endBalanceBetweenDate($request->accounts, Carbon::create(0000, 00, 00), $request->end_date);
+        $initBalance = $accountTrace->endBalanceBetweenDate($request->accounts, '0000-00-00', $initBalanceDate);
+        $endBalance = $accountTrace->endBalanceBetweenDate($request->accounts, '0000-00-00', $endDate);
         // dd($endBalance);
 
         return view('home.history', [

@@ -55,25 +55,25 @@ class AccountTrace extends Model
     public function endBalanceBetweenDate($account_code, $start_date, $end_date)
     {
         $initBalance = ChartOfAccount::where('acc_code', $account_code)->first();
-        $transaction = $this->whereBetween('date_issued', [
-            Carbon::parse($start_date)->startOfDay(),
-            Carbon::parse($end_date)->endOfDay(),
-        ])
-            ->where('debt_code', $account_code)
-            ->orWhere('cred_code', $account_code)
+
+        $transactions = $this->where(function ($query) use ($account_code) {
+            $query
+                ->where('debt_code', $account_code)
+                ->orWhere('cred_code', $account_code);
+        })
             ->whereBetween('date_issued', [
-                Carbon::parse($start_date)->startOfDay(),
-                Carbon::parse($end_date)->endOfDay(),
+                $start_date,
+                $end_date,
             ])
             ->get();
 
-        $debit = $transaction->where('debt_code', $account_code)->sum('amount');
-        $kredit = $transaction->where('cred_code', $account_code)->sum('amount');
+        $debit = $transactions->where('debt_code', $account_code)->sum('amount');
+        $credit = $transactions->where('cred_code', $account_code)->sum('amount');
 
         if ($initBalance->Account->status == "D") {
-            return $initBalance->st_balance + $debit - $kredit;
+            return $initBalance->st_balance + $debit - $credit;
         } else {
-            return $initBalance->st_balance + $kredit - $debit;
+            return $initBalance->st_balance + $credit - $debit;
         }
     }
 }
