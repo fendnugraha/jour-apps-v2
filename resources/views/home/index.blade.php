@@ -57,8 +57,11 @@
         <tr class="{{ $warna }}">
           <th scope="row">{{ $no++ }}</th>
           <td>{{ $at->date_issued }}</td>
-          <td>{{ $at->debt->acc_name . ' x ' . $at->cred->acc_name }} </td>
-          <td>{{ $at->description }}</td>
+          <td>{{ $at->cred->acc_name }} <i class="fa-solid fa-arrow-right"></i> {{ $at->debt->acc_name }} </td>
+          <td>
+            <span class="badge bg-warning text-dark">{{ $at->invoice }}</span><br>
+            {{ $at->description }}
+          </td>
           <td><span class="badge bg-success">{{ $at->trx_type }}</span></td>
           <td>{{ number_format($at->amount) }}</td>
           <td>{{ number_format($at->fee_amount) }}</td>
@@ -235,7 +238,7 @@
 
   {{-- Pemasukan --}}
   <div class="modal fade" id="ModalPemasukan" tabindex="-1" aria-labelledby="ModalPemasukanLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="ModalPemasukanLabel">Voucher & Deposit</h1>
@@ -257,19 +260,34 @@
                 @enderror
               </div>
             </div>
-            <div class="mb-3">
-              <label for="trx_type" class="form-label">Produk</label>
-              <select class="form-select" name="trx_type" id="trx_type">
-                <option selected>- Pilih Produk -</option>
-                <option value="Voucher & SP">Voucher & Kartu Perdana</option>
-                <option value="Deposit">Deposit</option>
-              </select>
+            <div class="row">
+              <div class="mb-3 col-sm-4">
+                <label for="trx_type" class="form-label">Produk</label>
+                <select class="form-select" name="trx_type" id="trx_type">
+                  <option selected>- Pilih Type Transaksi -</option>
+                  <option value="Voucher & SP">Voucher & Kartu Perdana</option>
+                  <option value="Deposit">Deposit</option>
+                </select>
+              </div>
+              <div class="mb-3 col-sm">
+                <label for="product_id" class="form-label">Produk</label>
+                <select class="form-select" name="product_id" id="product_id">
+                  <option selected>- Pilih Produk -</option>
+                  @foreach ($product as $p)
+                  <option value="{{ $p->id }}">{{ $p->name }} - Rp. {{ number_format($p->cost) }}</option>
+                  @endforeach
+                </select>
+              </div>
             </div>
             <div class="mb-3">
               <label for="description" class="form-label">Keterangan</label>
               <input type="text" class="form-control" id="description" name="description" placeholder="Description">
             </div>
             <div class="row">
+              <div class="mb-3 col-sm-2">
+                <label for="Qty" class="form-label">Qty</label>
+                <input type="number" class="form-control" id="Qty" name="qty" placeholder="Qty" value="1">
+              </div>
               <div class="mb-3 col-sm">
                 <label for="jual" class="form-label">Harga Jual</label>
                 <input type="number" class="form-control" id="jual" name="jual" placeholder="Rp">

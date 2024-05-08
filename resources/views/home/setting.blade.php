@@ -4,9 +4,9 @@
 @section('container')
 <div class="container-fluid mt-5">
     <div class="setting-icon">
-        <a href="/setting" class="setting-icon-action">
+        {{-- <a href="/setting" class="setting-icon-action">
             <h1><i class="fa-solid fa-sliders"></i></h1> <span class="setting-icon-text">General</span>
-        </a>
+        </a> --}}
         <a href="/setting/users" class="setting-icon-action">
             <h1><i class="fa-solid fa-users"></i></h1> <span class="setting-icon-text"> Users</span>
         </a>
@@ -18,6 +18,9 @@
         </a>
         <a href="/setting/warehouses" class="setting-icon-action">
             <h1><i class="fa-solid fa-warehouse"></i></h1> <span class="setting-icon-text"> Warehouse</span>
+        </a>
+        <a href="/setting/product" class="setting-icon-action">
+            <h1><i class="fa-solid fa-box"></i></h1> <span class="setting-icon-text"> Product</span>
         </a>
         <!-- <a href="#" class="setting-icon-action">
         <h1><i class="fa-solid fa-users-line"></i></h1> <span class="setting-icon-text"> Employes</span>

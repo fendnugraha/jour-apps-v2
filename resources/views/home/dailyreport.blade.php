@@ -136,7 +136,50 @@
             </table>
         </div>
     </div>
-
+    <div class="row">
+        <div class="col-sm">
+            <h2 class="">Penjulalan Vcr & Kartu SP</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Waktu</th>
+                        <th scope="col">Invoice</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Qty</th>
+                        <th scope="col">Jual </th>
+                        <th scope="col">Modal</th>
+                        <th scope="col">Fee</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($sales as $s)
+                    @php
+                    $jual = $s->quantity * $s->price;
+                    $modal = $s->quantity * $s->cost;
+                    $fee = $jual - $modal;
+                    @endphp
+                    <tr>
+                        <td>{{ $s->created_at }}</td>
+                        <td>{{ $s->invoice }}</td>
+                        <td>{{ $s->product->name }}</td>
+                        <td>{{ $s->quantity }}</td>
+                        <td>{{ number_format($jual) }}
+                            <small class="text-muted d-block">{{ number_format($s->quantity) }} * {{
+                                number_format($s->price)
+                                }}</small>
+                        </td>
+                        <td>{{ number_format($modal) }}
+                            <small class="text-muted d-block">{{ number_format($s->quantity) }} * {{
+                                number_format($s->cost)
+                                }}</small>
+                        </td>
+                        <td>{{ number_format($fee) }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 </div>
 

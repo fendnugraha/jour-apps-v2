@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\AccountTraceController;
 use App\Http\Controllers\ChartOfAccountController;
@@ -109,3 +110,13 @@ Route::post('/pengeluaran', [AccountTraceController::class, 'pengeluaran'])->mid
 Route::delete('/deleteAccountTrace/{id}', [AccountTraceController::class, 'destroy'])->name('accounttrace.delete')->middleware('auth');
 
 // End Journal Area
+
+// Product Area
+
+Route::get('/setting/product', [ProductController::class, 'index'])->middleware('auth');
+Route::post('/product/addproduct', [ProductController::class, 'store'])->middleware('auth');
+Route::get('/product/{id}/edit', [ProductController::class, 'edit'])->middleware('auth');
+Route::put('/product/{id}/edit', [ProductController::class, 'update'])->name('product.update')->middleware('auth');
+Route::delete('/product/{id}/delete', [ProductController::class, 'destroy'])->name('product.delete')->middleware('auth');
+
+// End Product Area
