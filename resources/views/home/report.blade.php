@@ -193,9 +193,37 @@
                 </table>
             </div>
         </div>
+        <h2 class="">Penjulalan Vcr & Kartu SP</h2>
         <div class="row">
+            <div class="col-sm-5">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Qty</th>
+                            <th>Jumlah</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                        $sumtotalcost = 0;
+                        @endphp
+                        @foreach ($vcr as $v)
+                        @php
+                        $sumtotalcost += $v->total_cost;
+                        @endphp
+                        <tr>
+                            <td>{{ $v->product->name }}</td>
+                            <td>{{ $v->qty }}</td>
+                            <td>{{ number_format($v->total_cost) }}</td>
+                            <td>{{ number_format($sumtotalcost) }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
             <div class="col-sm">
-                <h2 class="">Penjulalan Vcr & Kartu SP</h2>
                 <table class="table">
                     <thead>
                         <tr>

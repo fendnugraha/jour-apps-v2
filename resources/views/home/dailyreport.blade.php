@@ -142,14 +142,42 @@
                 </table>
             </div>
         </div>
+        <h2 class="">Penjulalan Vcr & Kartu SP</h2>
         <div class="row">
-            <div class="col-sm">
-                <h2 class="">Penjulalan Vcr & Kartu SP</h2>
+            <div class="col-sm-5">
                 <table class="table">
                     <thead>
                         <tr>
+                            <th>Product</th>
+                            <th>Qty</th>
+                            <th>Jumlah</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                        $sumtotalcost = 0;
+                        @endphp
+                        @foreach ($vcr as $v)
+                        @php
+                        $sumtotalcost += $v->total_cost;
+                        @endphp
+                        <tr>
+                            <td>{{ $v->product->name }}</td>
+                            <td>{{ $v->qty }}</td>
+                            <td>{{ number_format($v->total_cost) }}</td>
+                            <td>{{ number_format($sumtotalcost) }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm">
+                <table class="table display">
+                    <thead>
+                        <tr>
                             <th scope="col">Waktu</th>
-                            <th scope="col">Invoice</th>
+                            {{-- <th scope="col">Invoice</th> --}}
                             <th scope="col">Product</th>
                             <th scope="col">Qty</th>
                             <th scope="col">Jual </th>
@@ -166,7 +194,7 @@
                         @endphp
                         <tr>
                             <td>{{ $s->created_at }}</td>
-                            <td>{{ $s->invoice }}</td>
+                            {{-- <td>{{ $s->invoice }}</td> --}}
                             <td>{{ $s->product->name }}</td>
                             <td>{{ $s->quantity }}</td>
                             <td>{{ number_format($jual) }}

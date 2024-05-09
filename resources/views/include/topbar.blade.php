@@ -17,6 +17,16 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/home/administrator">Administrator</a>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Hutang x Piutang
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/hutang">Hutang</a></li>
+                        <li><a class="dropdown-item" href="#">Piutang</a></li>
+                    </ul>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/setting">Setting</a>
                 </li>

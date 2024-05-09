@@ -22,7 +22,7 @@ class AccountTraceController extends Controller
             'title' => 'Home',
             'subtitle' => 'Home',
             'warehouseaccount' => ChartOfAccount::whereIn('account_id', ['1', '2'])->where('warehouse_id', Auth()->user()->warehouse_id)->get(),
-            'accounttrace' => AccountTrace::with('debt', 'cred')->whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', Auth()->user()->warehouse_id)->get(),
+            'accounttrace' => AccountTrace::with('debt', 'cred', 'sale')->whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', Auth()->user()->warehouse_id)->get(),
             'hqaccount' => ChartOfAccount::whereIn('account_id', ['1', '2'])->where('warehouse_id', 1)->get(),
             'product' => Product::all(),
         ]);
@@ -160,6 +160,13 @@ class AccountTraceController extends Controller
         $penambahan = AccountTrace::with(['debt', 'cred'])->where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate])->whereIn('debt_code', $w_account)->get();
         $pengeluaran = AccountTrace::with(['debt', 'cred'])->where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate])->whereIn('cred_code', $w_account)->get();
 
+        $vcr = Sale::with('product')
+            ->selectRaw('SUM(cost * quantity) as total_cost, product_id, sum(quantity) as qty')
+            ->whereBetween('date_issued', [$startDate, $endDate])
+            ->where('warehouse_id', Auth()->user()->warehouse_id)
+            ->groupBy('product_id')
+            ->get();
+
         return view('home.dailyreport', [
             'title' => 'Daily Report',
             'subtitle' => 'Daily Report',
@@ -176,6 +183,7 @@ class AccountTraceController extends Controller
             'pengeluaran' => $pengeluaran,
             'account' => $chartOfAccounts->where('warehouse_id', Auth()->user()->warehouse_id),
             'sales' => Sale::whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', Auth()->user()->warehouse_id)->get(),
+            'vcr' => $vcr
         ]);
     }
 
@@ -215,6 +223,13 @@ class AccountTraceController extends Controller
         $penambahan = AccountTrace::with(['debt', 'cred'])->where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate])->whereIn('debt_code', $w_account)->get();
         $pengeluaran = AccountTrace::with(['debt', 'cred'])->where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate])->whereIn('cred_code', $w_account)->get();
 
+        $vcr = Sale::with('product')
+            ->selectRaw('SUM(cost * quantity) as total_cost, product_id, sum(quantity) as qty')
+            ->whereBetween('date_issued', [$startDate, $endDate])
+            ->where('warehouse_id', $request->cabang)
+            ->groupBy('product_id')
+            ->get();
+
         return view('home.report', [
             'title' => 'Report Cabang',
             'subtitle' => 'Report Cabang',
@@ -231,6 +246,7 @@ class AccountTraceController extends Controller
             'pengeluaran' => $pengeluaran,
             'account' => $chartOfAccounts->where('warehouse_id', $request->cabang),
             'sales' => Sale::whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', $request->cabang)->get(),
+            'vcr' => $vcr,
             'warehouse' => Warehouse::all()
         ])->with($request->all());
     }
@@ -246,6 +262,8 @@ class AccountTraceController extends Controller
         $w_account = Warehouse::with('chartofaccount')->Where('id', Auth()->user()->warehouse_id)->first();
         $w_account = $w_account->chartofaccount->acc_code;
 
+        $description = $request->description ?? "Transfer Uang";
+
         $accountTrace = new AccountTrace();
         $accountTrace->date_issued = $request->date_issued;
         $accountTrace->invoice = $accountTrace->invoice_journal();
@@ -253,7 +271,7 @@ class AccountTraceController extends Controller
         $accountTrace->cred_code = $request->account;
         $accountTrace->amount = $request->amount;
         $accountTrace->fee_amount = $request->fee_amount;
-        $accountTrace->description = "Transfer Uang";
+        $accountTrace->description = $description;
         $accountTrace->trx_type = "Transfer Uang";
         $accountTrace->user_id = Auth()->user()->id;
         $accountTrace->warehouse_id = Auth()->user()->warehouse_id;
@@ -273,6 +291,8 @@ class AccountTraceController extends Controller
         $w_account = Warehouse::with('chartofaccount')->Where('id', Auth()->user()->warehouse_id)->first();
         $w_account = $w_account->chartofaccount->acc_code;
 
+        $description = $request->description ?? "Tarik Tunai";
+
         $accountTrace = new AccountTrace();
         $accountTrace->date_issued = $request->date_issued;
         $accountTrace->invoice = $accountTrace->invoice_journal();
@@ -280,7 +300,7 @@ class AccountTraceController extends Controller
         $accountTrace->cred_code = $w_account;
         $accountTrace->amount = $request->amount;
         $accountTrace->fee_amount = $request->fee_amount;
-        $accountTrace->description = "Tarik Tunai";
+        $accountTrace->description = $description;
         $accountTrace->trx_type = "Tarik Tunai";
         $accountTrace->user_id = Auth()->user()->id;
         $accountTrace->warehouse_id = Auth()->user()->warehouse_id;

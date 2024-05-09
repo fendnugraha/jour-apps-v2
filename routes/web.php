@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\PayableController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\AccountTraceController;
@@ -121,3 +122,20 @@ Route::put('/product/{id}/edit', [ProductController::class, 'update'])->name('pr
 Route::delete('/product/{id}/delete', [ProductController::class, 'destroy'])->name('product.delete')->middleware('auth');
 
 // End Product Area
+
+// Hutang Area
+Route::controller(PayableController::class)->group(function () {
+    Route::get('/hutang', 'index')->middleware('auth');
+    Route::get('/hutang/{id}/invoice', 'invoice')->middleware('auth');
+    Route::get('/hutang/add', 'create')->middleware('auth');
+    Route::post('/hutang/add', 'store')->middleware('auth');
+    Route::get('/hutang/{id}/detail', 'detail')->middleware('auth');
+    Route::get('/hutang/{id}/edit', 'edit')->middleware('auth');
+    Route::put('/hutang/{id}/edit', 'update')->name('hutang.update')->middleware('auth');
+    Route::delete('/hutang/{id}/delete', 'destroy')->name('hutang.delete')->middleware('auth');
+
+    Route::post('hutang/payment', 'payment')->middleware('auth');
+});
+
+// End Hutang Area
+// ========================================================================================================

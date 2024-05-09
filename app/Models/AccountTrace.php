@@ -11,6 +11,11 @@ class AccountTrace extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
+    protected $casts = [
+        'amount' => 'float', // Adjust this based on your actual data type
+    ];
 
     public function user()
     {
@@ -30,6 +35,21 @@ class AccountTrace extends Model
     public function cred()
     {
         return $this->belongsTo(ChartOfAccount::class, 'cred_code', 'acc_code');
+    }
+
+    public function receivable()
+    {
+        return $this->hasMany(Receivable::class, 'invoice', 'invoice');
+    }
+
+    public function payable()
+    {
+        return $this->hasMany(Payable::class, 'invoice', 'invoice');
+    }
+
+    public function sale()
+    {
+        return $this->belongsTo(Sale::class, 'invoice', 'invoice');
     }
 
     public function invoice_journal()

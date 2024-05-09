@@ -25,4 +25,9 @@ class Sale extends Model
     {
         return $this->belongsTo(Warehouse::class);
     }
+
+    public function AccountTrace()
+    {
+        return $this->belongsTo(AccountTrace::class, 'invoice', 'invoice');
+    }
 }

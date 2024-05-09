@@ -21,10 +21,20 @@
       </div>
     </div>
     <div class="col-sm">
-      <div class="d-grid gap-2">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalPemasukan">
+      <div class="dropdown">
+        <div class="d-grid gap-2">
+          <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Voucher & Deposit
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#ModalvcrSP">Voucher &
+                Kartu SP</a></li>
+            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#ModalDeposit">Deposit</a></li>
+          </ul>
+        </div>
+        {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalvcrSP">
           Voucher & Deposit
-        </button>
+        </button> --}}
       </div>
     </div>
     <div class="col-sm">
@@ -60,7 +70,11 @@
           <td>{{ $at->cred->acc_name }} <i class="fa-solid fa-arrow-right"></i> {{ $at->debt->acc_name }} </td>
           <td>
             <span class="badge bg-warning text-dark">{{ $at->invoice }}</span><br>
-            {{ $at->description }}
+
+            {{ $at->description }} @if($at->sale){{ $at->sale->product->name . ' - ' . $at->sale->qty. ' Pcs Harga Modal
+            Rp.'
+            .
+            number_format($at->sale->cost) }}@endif
           </td>
           <td><span class="badge bg-success">{{ $at->trx_type }}</span></td>
           <td>{{ number_format($at->amount) }}</td>
@@ -156,6 +170,20 @@
               </div>
             </div>
 
+            <div class="mb-2 row">
+              <label for="description" class="col-sm col-form-label">Deskripsi</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control @error('description') is-invalid @enderror" name="description"
+                  id="description" value="{{old('description') == null ? '' : old('description')}}"
+                  placeholder="Keterangan">
+                @error('description')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
+              </div>
+            </div>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -225,7 +253,19 @@
                 @enderror
               </div>
             </div>
-
+            <div class="mb-2 row">
+              <label for="description" class="col-sm col-form-label">Deskripsi</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control @error('description') is-invalid @enderror" name="description"
+                  id="description" value="{{old('description') == null ? '' : old('description')}}"
+                  placeholder="Keterangan">
+                @error('description')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
+              </div>
+            </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -236,12 +276,12 @@
     </div>
   </div>
 
-  {{-- Pemasukan --}}
-  <div class="modal fade" id="ModalPemasukan" tabindex="-1" aria-labelledby="ModalPemasukanLabel" aria-hidden="true">
+  {{-- Voucher --}}
+  <div class="modal fade" id="ModalvcrSP" tabindex="-1" aria-labelledby="ModalvcrSPLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="ModalPemasukanLabel">Voucher & Deposit</h1>
+          <h1 class="modal-title fs-5" id="ModalvcrSPLabel">Penjualan Voucher & Kartu Perdana</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -261,14 +301,15 @@
               </div>
             </div>
             <div class="row">
-              <div class="mb-3 col-sm-4">
+              {{-- <div class="mb-3 col-sm-4">
                 <label for="trx_type" class="form-label">Produk</label>
                 <select class="form-select" name="trx_type" id="trx_type">
                   <option selected>- Pilih Type Transaksi -</option>
                   <option value="Voucher & SP">Voucher & Kartu Perdana</option>
                   <option value="Deposit">Deposit</option>
                 </select>
-              </div>
+              </div> --}}
+              <input type="text" name="trx_type" id="trx_type" value="Voucher & SP" hidden>
               <div class="mb-3 col-sm">
                 <label for="product_id" class="form-label">Produk</label>
                 <select class="form-select" name="product_id" id="product_id">
@@ -288,6 +329,79 @@
                 <label for="Qty" class="form-label">Qty</label>
                 <input type="number" class="form-control" id="Qty" name="qty" placeholder="Qty" value="1">
               </div>
+              <div class="mb-3 col-sm">
+                <label for="jual" class="form-label">Harga Jual</label>
+                <input type="number" class="form-control" id="jual" name="jual" placeholder="Rp">
+              </div>
+              <div class="mb-3 col-sm">
+                <label for="modal" class="form-label">Modal</label>
+                <input type="number" class="form-control" id="modal" name="modal" placeholder="Rp">
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  {{-- Deposit --}}
+  <div class="modal fade" id="ModalDeposit" tabindex="-1" aria-labelledby="ModalDepositLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="ModalDepositLabel">Transaksi Deposit</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/transaksi" method="post">
+            @csrf
+            <div class="mb-3 row">
+              <label for="date_issued" class="col-sm col-form-label">Tanggal</label>
+              <div class="col-sm-8">
+                <input type="datetime-local" class="form-control @error('date_issued') is-invalid @enderror"
+                  name="date_issued" id="date_issued"
+                  value="{{old('date_issued') == null ? date('Y-m-d H:i') : old('date_issued')}}">
+                @error('date_issued')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
+              </div>
+            </div>
+            <div class="row">
+              {{-- <div class="mb-3 col-sm-4">
+                <label for="trx_type" class="form-label">Produk</label>
+                <select class="form-select" name="trx_type" id="trx_type">
+                  <option selected>- Pilih Type Transaksi -</option>
+                  <option value="Voucher & SP">Voucher & Kartu Perdana</option>
+                  <option value="Deposit">Deposit</option>
+                </select>
+              </div> --}}
+              <input type="text" name="trx_type" id="trx_type" value="Deposit" hidden>
+              {{-- <div class="mb-3 col-sm">
+                <label for="product_id" class="form-label">Produk</label>
+                <select class="form-select" name="product_id" id="product_id">
+                  <option selected>- Pilih Produk -</option>
+                  @foreach ($product as $p)
+                  <option value="{{ $p->id }}">{{ $p->name }} - Rp. {{ number_format($p->cost) }}</option>
+                  @endforeach
+                </select>
+              </div> --}}
+            </div>
+            <div class="mb-3">
+              <label for="description" class="form-label">Keterangan</label>
+              <input type="text" class="form-control" id="description" name="description" placeholder="Description">
+            </div>
+            <div class="row">
+              {{-- <div class="mb-3 col-sm-2">
+                <label for="Qty" class="form-label">Qty</label> --}}
+                <input type="number" class="form-control" id="Qty" name="qty" placeholder="Qty" value="1" hidden>
+                {{--
+              </div> --}}
               <div class="mb-3 col-sm">
                 <label for="jual" class="form-label">Harga Jual</label>
                 <input type="number" class="form-control" id="jual" name="jual" placeholder="Rp">
