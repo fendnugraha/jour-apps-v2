@@ -20,6 +20,13 @@
         </button>
       </div>
     </div>
+    <div class="col-sm">
+      <div class="d-grid gap-2">
+        <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#ModalReportCabang">
+          Report Cabang
+        </button>
+      </div>
+    </div>
   </div>
 
   <div class="daily-report my-3">
@@ -347,6 +354,61 @@
             </div>
           </div>
 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="ModalReportCabang" tabindex="-1" aria-labelledby="ModalReportCabangLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="ModalReportCabangLabel">Report Cabang</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/home/reportcabang" method="post">
+          @csrf
+          <div class="mb-2 row">
+            <label for="date_issued" class="col-sm col-form-label">Cabang</label>
+            <div class="col-sm-8">
+              <select name="cabang" id="cabang" class="form-select">
+                @foreach ($warehouse as $wh)
+                <option value="{{ $wh->id }}">{{ $wh->w_name }}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="mb-2 row">
+            <label for="start_date" class="col-sm col-form-label">Dari</label>
+            <div class="col-sm-8">
+              <input type="date" class="form-control @error('start_date') is-invalid @enderror" name="start_date"
+                id="start_date" value="{{old('start_date') == null ? date('Y-m-d') : old('start_date')}}">
+              @error('start_date')
+              <div class="invalid-feedback">
+                <small>{{ $message }}</small>
+              </div>
+              @enderror
+            </div>
+          </div>
+          <div class="mb-2 row">
+            <label for="end_date" class="col-sm col-form-label">Sampai</label>
+            <div class="col-sm-8">
+              <input type="date" class="form-control @error('end_date') is-invalid @enderror" name="end_date"
+                id="end_date" value="{{old('end_date') == null ? date('Y-m-d') : old('end_date')}}">
+              @error('end_date')
+              <div class="invalid-feedback">
+                <small>{{ $message }}</small>
+              </div>
+              @enderror
+            </div>
+          </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

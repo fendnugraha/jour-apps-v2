@@ -179,6 +179,62 @@ class AccountTraceController extends Controller
         ]);
     }
 
+    public function reportCabang(Request $request)
+    {
+        $accountTrace = new AccountTrace();
+        $startDate = Carbon::parse($request->start_date)->startOfDay();
+        $endDate = Carbon::parse($request->end_date)->endOfDay();
+
+        $transactions = $accountTrace->with(['debt', 'cred'])
+            ->selectRaw('debt_code, cred_code, SUM(amount) as total, warehouse_id')
+            ->whereBetween('date_issued', [Carbon::create(0000, 1, 1, 0, 0, 0)->startOfDay(), $endDate])
+            ->groupBy('debt_code', 'cred_code', 'warehouse_id')
+            ->get();
+
+        $chartOfAccounts = ChartOfAccount::with(['account', 'warehouse'])->get();
+
+        foreach ($chartOfAccounts as $value) {
+            $debit = $transactions->where('debt_code', $value->acc_code)->sum('total');
+            $credit = $transactions->where('cred_code', $value->acc_code)->sum('total');
+
+            // @ts-ignore
+            $value->balance = ($value->account->status == "D") ? ($value->st_balance + $debit - $credit) : ($value->st_balance + $credit - $debit);
+        }
+
+        $totalTransfer = AccountTrace::where('warehouse_id', $request->cabang)->whereBetween('date_issued', [$startDate, $endDate])->where('trx_type', 'Transfer Uang')->sum('amount');
+        $totalTarikTunai = AccountTrace::where('warehouse_id', $request->cabang)->whereBetween('date_issued', [$startDate, $endDate])->where('trx_type', 'Tarik Tunai')->sum('amount');
+        $totalVcr = AccountTrace::where('warehouse_id', $request->cabang)->whereBetween('date_issued', [$startDate, $endDate])->where('trx_type', 'Voucher & SP')->sum('amount');
+        $totaldeposit = AccountTrace::where('warehouse_id', $request->cabang)->whereBetween('date_issued', [$startDate, $endDate])->where('trx_type', 'Deposit')->sum('amount');
+        $fee = AccountTrace::where('warehouse_id', $request->cabang)->whereBetween('date_issued', [$startDate, $endDate])->sum('fee_amount');
+
+        $w_account = $chartOfAccounts->where('warehouse_id', $request->cabang)->pluck('acc_code');
+        // dd($w_account);
+        // $actrace = AccountTrace::with(['debt', 'cred'])->where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate]);
+        // $sql = $actrace->whereIn('cred_code', $w_account)->toSql();
+        // dd($sql);
+        $penambahan = AccountTrace::with(['debt', 'cred'])->where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate])->whereIn('debt_code', $w_account)->get();
+        $pengeluaran = AccountTrace::with(['debt', 'cred'])->where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate])->whereIn('cred_code', $w_account)->get();
+
+        return view('home.report', [
+            'title' => 'Report Cabang',
+            'subtitle' => 'Report Cabang',
+            'totalTransfer' => $totalTransfer,
+            'totalTarikTunai' => $totalTarikTunai,
+            'totalVcr' => $totalVcr,
+            'totaldeposit' => $totaldeposit,
+            'fee' => $fee,
+            'endbalance' => $chartOfAccounts->whereIn('warehouse_id', [$request->cabang])->groupBy('warehouse_id'),
+            'totalCash' => $chartOfAccounts->whereIn('warehouse_id', [$request->cabang])->where('account_id', 1)->groupBy('warehouse_id'),
+            'totalBank' => $chartOfAccounts->whereIn('warehouse_id', [$request->cabang])->where('account_id', 2)->groupBy('warehouse_id'),
+            'warehouseaccount' => $chartOfAccounts->where('warehouse_id', $request->cabang),
+            'penambahan' => $penambahan,
+            'pengeluaran' => $pengeluaran,
+            'account' => $chartOfAccounts->where('warehouse_id', $request->cabang),
+            'sales' => Sale::whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', $request->cabang)->get(),
+            'warehouse' => Warehouse::all()
+        ])->with($request->all());
+    }
+
     public function addTransfer(Request $request)
     {
         $request->validate([

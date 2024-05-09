@@ -41,6 +41,7 @@ Route::get('/home', [AccountTraceController::class, 'index'])->middleware('auth'
 Route::get('/home/dailyreport', [AccountTraceController::class, 'dailyreport'])->middleware('auth');
 Route::get('/home/administrator', [AccountTraceController::class, 'administrator'])->middleware('auth');
 Route::post('/home/generalledger', [AccountTraceController::class, 'generalLedger'])->middleware('auth');
+Route::post('/home/reportcabang', [AccountTraceController::class, 'reportcabang'])->middleware('auth');
 Route::get('/setting', function () {
     return view('home.setting', [
         'title' => 'Setting',
