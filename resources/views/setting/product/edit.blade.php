@@ -4,7 +4,7 @@
 @section('container')
 {{-- Content Area --}}
 
-<div class="container mt-3">
+<div class="container" style="margin-top: 70px">
     <h4>Edit Product</h4>
     <div class="row">
         <div class="col-8">

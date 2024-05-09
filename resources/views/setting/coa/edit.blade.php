@@ -2,7 +2,7 @@
 
 @include('include.topbar')
 @section('container')
-<div class="container mt-3">
+<div class="container" style="margin-top: 70px">
     <!-- Content  -->
     <div class="card">
         <div class="card-body">
@@ -12,7 +12,8 @@
                 <div class="mb-2 row">
                     <label for="acc_name" class="col-sm col-form-label">Nama Akun</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control @error('acc_name') is-invalid @enderror" name="acc_name" id="acc_name" value="{{old('acc_name') ?? $coa->acc_name}}">
+                        <input type="text" class="form-control @error('acc_name') is-invalid @enderror" name="acc_name"
+                            id="acc_name" value="{{old('acc_name') ?? $coa->acc_name}}">
                         @error('acc_name')
                         <div class="invalid-feedback">
                             <small>{{ $message }}</small>
@@ -23,7 +24,8 @@
                 <div class="mb-2 row">
                     <label for="st_balance" class="col-sm col-form-label">Saldo Awal</label>
                     <div class="col-sm-8">
-                        <input type="number" class="form-control @error('st_balance') is-invalid @enderror" name="st_balance" id="st_balance" value="{{old('st_balance') ?? $coa->st_balance}}">
+                        <input type="number" class="form-control @error('st_balance') is-invalid @enderror"
+                            name="st_balance" id="st_balance" value="{{old('st_balance') ?? $coa->st_balance}}">
                         @error('st_balance')
                         <div class="invalid-feedback">
                             <small>{{ $message }}</small>

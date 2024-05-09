@@ -3,7 +3,7 @@
 @include('include.topbar')
 @section('container')
 
-<div class="container mt-3">
+<div class="container" style="margin-top: 70px">
     <!-- Content  -->
     <div class="row">
         <div class="col-8">
@@ -16,7 +16,9 @@
                         <div class="mb-2 row">
                             <label for="email" class="col-sm col-form-label">Email Address</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control @error('email') is-invalid @enderror" name="email" id="email" value="{{old('email') == null ? $user->email : old('email')}}">
+                                <input type="text" class="form-control @error('email') is-invalid @enderror"
+                                    name="email" id="email"
+                                    value="{{old('email') == null ? $user->email : old('email')}}">
                                 @error('email')
                                 <div class="invalid-feedback">
                                     <small>{{ $message }}</small>
@@ -27,7 +29,8 @@
                         <div class="mb-2 row">
                             <label for="name" class="col-sm col-form-label">Full Name</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" value="{{ old('name') == null ? $user->name : old('name') }}">
+                                <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
+                                    id="name" value="{{ old('name') == null ? $user->name : old('name') }}">
                                 @error('name')
                                 <div class="invalid-feedback">
                                     <small>{{ $message }}</small>
@@ -38,9 +41,11 @@
                         <div class="mb-2 row">
                             <label for="warehouse" class="col-sm col-form-label">Warehouse (Gudang)</label>
                             <div class="col-sm-8">
-                                <select name="warehouse" class="form-control" id="warehouse" @error('warehouse') is-invalid @enderror>
+                                <select name="warehouse" class="form-control" id="warehouse" @error('warehouse')
+                                    is-invalid @enderror>
                                     @foreach ($warehouses as $wh)
-                                    <option value="{{ $wh->id }}" {{ $user->warehouse_id == $wh->id ? 'selected' : '' }}>{{ $wh->w_name }}</option>
+                                    <option value="{{ $wh->id }}" {{ $user->warehouse_id == $wh->id ? 'selected' : ''
+                                        }}>{{ $wh->w_name }}</option>
                                     @endforeach
                                 </select>
                                 @error('warehouse')
@@ -51,10 +56,11 @@
                             </div>
                         </div>
                         <div class="mb-2 row">
-                            <label for="role" class="col-sm col-form-label">Role</label> 
+                            <label for="role" class="col-sm col-form-label">Role</label>
                             <div class="col-sm-8">
                                 <select name="role" class="form-control" id="role">
-                                    <option value="Administrator" {{ $user->role == 'Administrator' ? 'selected' : '' }}>Administrator</option>
+                                    <option value="Administrator" {{ $user->role == 'Administrator' ? 'selected' : ''
+                                        }}>Administrator</option>
                                     <option value="Kasir" {{ $user->role == 'Kasir' ? 'selected' : '' }}>Kasir</option>
                                     <option value="Staff" {{ $user->role == 'Staff' ? 'selected' : '' }}>Staff</option>
                                 </select>

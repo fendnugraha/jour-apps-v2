@@ -3,7 +3,7 @@
 @include('include.topbar')
 @section('container')
 
-<div class="container mt-3">
+<div class="container" style="margin-top: 70px">
     <a href="/setting/warehouses" class="btn btn-primary mb-3"><i class="fa-solid fa-arrow-left"></i> Go back</a>
     <div class="row">
         <div class="col-md-6">

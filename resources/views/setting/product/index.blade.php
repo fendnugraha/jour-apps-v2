@@ -4,7 +4,7 @@
 @section('container')
 {{-- Content Area --}}
 
-<div class="container mt-3">
+<div class="container" style="margin-top: 70px">
     <a href="/setting" class="btn btn-primary mb-3"><i class="fa-solid fa-arrow-left"></i> Go back</a>
     <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addProduct">
         <i class="fa-solid fa-plus"></i> Add new product

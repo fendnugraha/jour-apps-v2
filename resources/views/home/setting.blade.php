@@ -2,7 +2,7 @@
 
 @include('include.topbar')
 @section('container')
-<div class="container-fluid mt-5">
+<div class="container-fluid" style="margin-top: 70px">
     <div class="setting-icon">
         {{-- <a href="/setting" class="setting-icon-action">
             <h1><i class="fa-solid fa-sliders"></i></h1> <span class="setting-icon-text">General</span>

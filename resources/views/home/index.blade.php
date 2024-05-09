@@ -4,7 +4,7 @@
 @section('container')
 {{-- Content Area --}}
 
-<div class="container mt-3">
+<div class="container" style="margin-top: 70px">
   <div class="row ">
     <div class="col-sm">
       <div class="d-grid gap-2">

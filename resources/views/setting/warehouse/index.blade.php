@@ -2,7 +2,7 @@
 
 @include('include.topbar')
 @section('container')
-<div class="container mt-3">
+<div class="container" style="margin-top: 70px">
     <!-- Content  -->
     <a href="/setting" class="btn btn-primary mb-3"><i class="fa-solid fa-arrow-left"></i> Go back</a>
     <!-- Button trigger modal -->
@@ -41,7 +41,8 @@
                     <form action="{{ route('warehouse.delete', $w->id) }}" method="POST" class="d-inline">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" onclick="return confirm('Are you sure?')" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i>
+                        <button type="submit" onclick="return confirm('Are you sure?')" class="btn btn-danger btn-sm"><i
+                                class="fa-solid fa-trash"></i>
                         </button>
                     </form>
                 </td>
@@ -62,7 +63,8 @@
                         @csrf
                         <div class="mb-3">
                             <label for="w_code" class="form-label">Warehouse code</label>
-                            <input type="text" class="form-control {{ $errors->has('w_code') ? 'is-invalid' : '' }}" id="w_code" name="w_code" value="{{ old('w_code') }}">
+                            <input type="text" class="form-control {{ $errors->has('w_code') ? 'is-invalid' : '' }}"
+                                id="w_code" name="w_code" value="{{ old('w_code') }}">
                             @error('w_code')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -71,7 +73,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="w_name" class="form-label">Warehouse name</label>
-                            <input type="text" class="form-control {{ $errors->has('w_name') ? 'is-invalid' : '' }}" id="w_name" name="w_name" value="{{ old('w_name') }}">
+                            <input type="text" class="form-control {{ $errors->has('w_name') ? 'is-invalid' : '' }}"
+                                id="w_name" name="w_name" value="{{ old('w_name') }}">
                             @error('w_name')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -80,16 +83,20 @@
                         </div>
                         <div class="mb-3">
                             <label for="account" class="form-label">Cash Account</label>
-                            <select name="account" id="account" class="form-select {{ $errors->has('account') ? 'is-invalid' : '' }}">
+                            <select name="account" id="account"
+                                class="form-select {{ $errors->has('account') ? 'is-invalid' : '' }}">
                                 <option value="">Pilih Akun</option>
                                 @foreach ($account as $ac)
-                                <option value="{{ $ac->id }}" {{ old('account') == $ac->id ? 'selected' : '' }}>{{ $ac->acc_name }} - {{ $ac->acc_code }}</option>
+                                <option value="{{ $ac->id }}" {{ old('account')==$ac->id ? 'selected' : '' }}>{{
+                                    $ac->acc_name }} - {{ $ac->acc_code }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="mb-3">
                             <label for="address" class="form-label">address</label>
-                            <textarea name="address" id="address" cols="30" rows="5" class="form-control {{ $errors->has('address') ? 'is-invalid' : '' }}" value="{{ old('address') }}">{{ old('address') }}</textarea>
+                            <textarea name="address" id="address" cols="30" rows="5"
+                                class="form-control {{ $errors->has('address') ? 'is-invalid' : '' }}"
+                                value="{{ old('address') }}">{{ old('address') }}</textarea>
                             @error('address')
                             <div class="invalid-feedback">
                                 {{ $message }}

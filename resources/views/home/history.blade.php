@@ -3,7 +3,7 @@
 @include('include.topbar')
 @section('container')
 {{-- Content Area --}}
-<div class="container mt-3">
+<div class="container" style="margin-top: 70px">
     <div class="row g-1">
         <div class="col">
             <div class="card card-widget text-bg-dark">
