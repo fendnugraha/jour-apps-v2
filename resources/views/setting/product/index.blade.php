@@ -27,6 +27,9 @@
                         <td>{{ $p->name }}</td>
                         <td>{{ number_format($p->cost) }}</td>
                         <td>
+                            <a href="/product/{{ $p->id }}/edit" class="btn btn-warning btn-sm">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
                             <form action="{{ route('product.delete', $p->id) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')

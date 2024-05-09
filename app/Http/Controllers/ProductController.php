@@ -16,10 +16,13 @@ class ProductController extends Controller
         ]);
     }
 
-    public function edit()
+    public function edit($id)
     {
+        $product = Product::find($id);
+
         return view('setting.product/edit', [
             'title' => 'Edit Product',
+            'product' => $product
         ]);
     }
 
@@ -44,7 +47,17 @@ class ProductController extends Controller
 
     public function update(Request $request, $id)
     {
-        return redirect('/setting/product');
+        $request->validate([
+            'name' => 'required',
+            'cost' => 'required|numeric',
+        ]);
+
+        $product = Product::find($id);
+        $product->name = $request->name;
+        $product->cost = $request->cost;
+        $product->save();
+
+        return redirect('/setting/product')->with('success', 'Product Updated');
     }
 
     public function destroy($id)
