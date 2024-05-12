@@ -292,6 +292,7 @@ class AccountTraceController extends Controller
         $w_account = $w_account->chartofaccount->acc_code;
 
         $description = $request->description ?? "Tarik Tunai";
+        $status = $request->status == 1 ? 1 : 2;
 
         $accountTrace = new AccountTrace();
         $accountTrace->date_issued = $request->date_issued;
@@ -300,6 +301,7 @@ class AccountTraceController extends Controller
         $accountTrace->cred_code = $w_account;
         $accountTrace->amount = $request->amount;
         $accountTrace->fee_amount = $request->fee_amount;
+        $accountTrace->status = $status;
         $accountTrace->description = $description;
         $accountTrace->trx_type = "Tarik Tunai";
         $accountTrace->user_id = Auth()->user()->id;
@@ -480,11 +482,16 @@ class AccountTraceController extends Controller
             'amount' => 'required|numeric',
             'fee_amount' => 'required|numeric',
         ]);
+
+        $status = $request->status == 1 ? 1 : 2;
+
         $accountTrace = AccountTrace::find($id);
         $accountTrace->debt_code = $request->debt_code;
         $accountTrace->cred_code = $request->cred_code;
         $accountTrace->amount = $request->amount;
         $accountTrace->fee_amount = $request->fee_amount;
+        $accountTrace->status = $status;
+        $accountTrace->description = $request->description;
         $accountTrace->save();
         return redirect('/home')->with('success', 'Data Updated Successfully');
     }

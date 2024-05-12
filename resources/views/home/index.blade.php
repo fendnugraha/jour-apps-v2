@@ -65,7 +65,7 @@
         @php($warna = $at->trx_type == 'Transfer Uang' ? 'table-danger' : 'table-success')
         @php($hidden = $at->trx_type == 'Voucher & SP' ? 'hidden' : '')
         @php($status = $at->status == 1 ? '<span class="badge bg-success">Sudah diambil</span>' : '<span
-          class="badge bg-warning">Belum diambil </span>')
+          class="badge bg-warning text-dark">Belum diambil </span>')
         <tr class="{{ $warna }}">
           <th scope="row">{{ $no++ }}</th>
           <td>{{ $at->date_issued }}</td>
@@ -188,6 +188,7 @@
               </div>
             </div>
 
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -269,6 +270,12 @@
                 </div>
                 @enderror
               </div>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="1" id="flexCheckChecked" name="status" checked>
+              <label class="form-check-label" for="flexCheckChecked">
+                Sudah diambil
+              </label>
             </div>
         </div>
         <div class="modal-footer">

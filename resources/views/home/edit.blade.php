@@ -76,6 +76,25 @@
                 @enderror
             </div>
         </div>
+        <div class="mb-3 row">
+            <label for="description" class="col-sm col-form-label">Description</label>
+            <div class="col-sm-8">
+                <textarea name="description" id="description" cols="30" rows="3"
+                    class="form-control @error('description') is-invalid @enderror">{{ $accountTrace->description }}</textarea>
+                @error('description')
+                <div class="invalid-feedback">
+                    <small>{{ $message }}</small>
+                </div>
+                @enderror
+            </div>
+        </div>
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" value="1" id="flexCheckChecked" name="status" {{
+                $accountTrace->status == 1 ? 'checked' : '' }}>
+            <label class="form-check-label" for="flexCheckChecked">
+                Sudah diambil
+            </label>
+        </div>
 
         <button type="submit" class="btn btn-success">Update</button>
         <a href="/home" class="btn btn-danger">Cancel</a>
