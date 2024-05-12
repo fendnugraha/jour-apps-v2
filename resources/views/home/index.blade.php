@@ -53,7 +53,6 @@
           <th scope="col">Waktu</th>
           <th scope="col">Account</th>
           <th scope="col">Keterangan</th>
-          <th scope="col">Status</th>
           <th scope="col">Jumlah</th>
           <th scope="col">Fee Admin</th>
           <th scope="col">User</th>
@@ -64,23 +63,28 @@
         @php($no = 1)
         @foreach ($accounttrace as $at)
         @php($warna = $at->trx_type == 'Transfer Uang' ? 'table-danger' : 'table-success')
+        @php($hidden = $at->trx_type == 'Voucher & SP' ? 'hidden' : '')
+        @php($status = $at->status == 1 ? '<span class="badge bg-success">Sudah diambil</span>' : '<span
+          class="badge bg-warning">Belum diambil </span>')
         <tr class="{{ $warna }}">
           <th scope="row">{{ $no++ }}</th>
           <td>{{ $at->date_issued }}</td>
           <td>{{ $at->cred->acc_name }} <i class="fa-solid fa-arrow-right"></i> {{ $at->debt->acc_name }} </td>
           <td>
-            <span class="badge bg-warning text-dark">{{ $at->invoice }}</span><br>
+            {!! $status !!} <span class="badge bg-success">{{ $at->trx_type }}</span><br>
 
-            {{ $at->description }} @if($at->sale){{ $at->sale->product->name . ' - ' . $at->sale->qty. ' Pcs Harga Modal
+            {{ $at->description }} @if($at->sale){{ $at->sale->product->name . ' - ' . $at->sale->quantity. ' Pcs Harga
+            Modal
             Rp.'
             .
             number_format($at->sale->cost) }}@endif
           </td>
-          <td><span class="badge bg-success">{{ $at->trx_type }}</span></td>
           <td>{{ number_format($at->amount) }}</td>
           <td>{{ number_format($at->fee_amount) }}</td>
           <td>{{ $at->user->name }}</td>
           <td>
+            <a href="/home/{{ $at->id }}/edit" class="btn btn-warning btn-sm" {{$hidden}}>
+              <i class="fa-solid fa-pen-to-square"></i></a>
             <form action="{{ route('accounttrace.delete', $at->id) }}" method="post">
               @csrf
               @method('DELETE')

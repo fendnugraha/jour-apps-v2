@@ -392,7 +392,7 @@ class AccountTraceController extends Controller
             $accountTrace = new AccountTrace();
             $accountTrace->date_issued = $request->date_issued;
             $accountTrace->invoice = $invoice->invoice;
-            $accountTrace->debt_code = $w_account;
+            $accountTrace->debt_code = "10600-001";
             $accountTrace->cred_code = "10600-001";
             $accountTrace->amount = $modal;
             $accountTrace->fee_amount = $fee;
@@ -457,6 +457,36 @@ class AccountTraceController extends Controller
             'endBalance' => $endBalance,
             'status' => ChartOfAccount::with(['account'])->where('acc_code', $request->accounts)->first()->account->status
         ])->with($request->all());
+    }
+
+    public function edit($id)
+    {
+        $accountTrace = AccountTrace::find($id);
+
+        return view('home.edit', [
+            'title' => 'Edit Transaction',
+            'active' => 'reports',
+            'account' => ChartOfAccount::with(['account'])->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('acc_code', 'asc')->get(),
+            'accountTrace' => $accountTrace,
+            'warehouse_cash' => $accountTrace->warehouse->chartofaccount->acc_code,
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'debt_code' => 'required',
+            'cred_code' => 'required',
+            'amount' => 'required|numeric',
+            'fee_amount' => 'required|numeric',
+        ]);
+        $accountTrace = AccountTrace::find($id);
+        $accountTrace->debt_code = $request->debt_code;
+        $accountTrace->cred_code = $request->cred_code;
+        $accountTrace->amount = $request->amount;
+        $accountTrace->fee_amount = $request->fee_amount;
+        $accountTrace->save();
+        return redirect('/home')->with('success', 'Data Updated Successfully');
     }
 
     public function destroy($id)

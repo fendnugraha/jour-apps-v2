@@ -31,7 +31,7 @@
 
   <div class="daily-report my-3">
     <div class="div1">
-      <div class="card text-bg-light h-100">
+      <div class="card text-bg-dark h-100">
         <div class="card-body d-flex justify-content-center align-items-center flex-column">
           <h4>Saldo Kas</h4>
           <h1>{{ number_format($sumtotalCash) }}</h1>
@@ -40,7 +40,7 @@
       </div>
     </div>
     <div class="div2">
-      <div class="card text-bg-light h-100">
+      <div class="card text-bg-dark h-100">
         <div class="card-body d-flex justify-content-center align-items-center flex-column">
           <h4>Total Saldo Bank</h4>
           <h1>{{ number_format($sumtotalBank) }}</h1>
@@ -48,7 +48,7 @@
       </div>
     </div>
     <div class="div3">
-      <div class="card text-bg-light h-100">
+      <div class="card text-bg-dark h-100">
         <div class="card-body d-flex justify-content-center align-items-center flex-column">
           <h4>Total Transfer</h4>
           <h1>{{ number_format($sumtotalTransfer) }}</h1>
@@ -56,7 +56,7 @@
       </div>
     </div>
     <div class="div4">
-      <div class="card text-bg-light h-100">
+      <div class="card text-bg-dark h-100">
         <div class="card-body d-flex justify-content-center align-items-center flex-column">
           <h4>Total Tarik Tunai</h4>
           <h1>{{ number_format($sumtotalTarikTunai) }}</h1>
@@ -64,7 +64,7 @@
       </div>
     </div>
     <div class="div5">
-      <div class="card text-bg-light h-100">
+      <div class="card text-bg-dark h-100">
         <div class="card-body d-flex justify-content-center align-items-center flex-column">
           <h4>Total Kas & Bank</h4>
           <h1 class="text-warning fw-bold display-2">{{ number_format($sumendbalance) }}</h1>
@@ -72,7 +72,7 @@
       </div>
     </div>
     <div class="div6">
-      <div class="card text-bg-light h-100">
+      <div class="card text-bg-dark h-100">
         <div class="card-body d-flex justify-content-center align-items-center flex-column">
           <h4>Voucher & Kartu SP</h4>
           <h1>{{ number_format($sumtotalVcr) }}</h1>
@@ -80,7 +80,7 @@
       </div>
     </div>
     <div class="div7">
-      <div class="card text-bg-light h-100">
+      <div class="card text-bg-dark h-100">
         <div class="card-body d-flex justify-content-center align-items-center flex-column">
           <h4>Deposit, Pulsa, Dll</h4>
           <h1>{{ number_format($sumtotaldeposit) }}</h1>
@@ -88,7 +88,7 @@
       </div>
     </div>
     <div class="div8">
-      <div class="card text-bg-light h-100">
+      <div class="card text-bg-dark h-100">
         <div class="card-body d-flex justify-content-center align-items-center flex-column">
           <h4>Total Laba (Profit)</h4>
           <h1>{{ number_format($sumfee) }}</h1>
@@ -97,118 +97,7 @@
     </div>
   </div>
 
-  @foreach ($dailyreport as $w)
-  <h2>{{ $w['warehouse'] }}</h2>
-  <div class="daily-report my-3">
-    <div class="div1">
-      <div class="card text-bg-dark h-100">
-        <div class="card-body d-flex justify-content-center align-items-center flex-column">
-          <h4>Saldo Kas</h4>
-          <h1>{{ number_format($w['totalCash']) }}</h1>
 
-        </div>
-      </div>
-    </div>
-    <div class="div2">
-      <div class="card text-bg-dark h-100">
-        <div class="card-body d-flex justify-content-center align-items-center flex-column">
-          <h4>Total Saldo Bank</h4>
-          <h1>{{ number_format($w['totalBank']) }}</h1>
-        </div>
-      </div>
-    </div>
-    <div class="div3">
-      <div class="card text-bg-dark h-100">
-        <div class="card-body d-flex justify-content-center align-items-center flex-column">
-          <h4>Total Transfer</h4>
-          <h1>{{ number_format($w['totalTransfer']) }}</h1>
-        </div>
-      </div>
-    </div>
-    <div class="div4">
-      <div class="card text-bg-dark h-100">
-        <div class="card-body d-flex justify-content-center align-items-center flex-column">
-          <h4>Total Tarik Tunai</h4>
-          <h1>{{ number_format($w['totalTarikTunai']) }}</h1>
-        </div>
-      </div>
-    </div>
-    <div class="div5">
-      <div class="card text-bg-dark h-100">
-        <div class="card-body d-flex justify-content-center align-items-center flex-column">
-          <h4>Total Kas & Bank</h4>
-          <h1 class="text-warning fw-bold display-2">{{ number_format($w['endbalance']) }}</h1>
-        </div>
-      </div>
-    </div>
-    <div class="div6">
-      <div class="card text-bg-dark h-100">
-        <div class="card-body d-flex justify-content-center align-items-center flex-column">
-          <h4>Voucher & Kartu SP</h4>
-          <h1>{{ number_format($w['totalVcr']) }}</h1>
-        </div>
-      </div>
-    </div>
-    <div class="div7">
-      <div class="card text-bg-dark h-100">
-        <div class="card-body d-flex justify-content-center align-items-center flex-column">
-          <h4>Deposit, Pulsa, Dll</h4>
-          <h1>{{ number_format($w['totaldeposit']) }}</h1>
-        </div>
-      </div>
-    </div>
-    <div class="div8">
-      <div class="card text-bg-dark h-100">
-        <div class="card-body d-flex justify-content-center align-items-center flex-column">
-          <h4>Total Laba (Profit)</h4>
-          <h1>{{ number_format($w['fee']) }}</h1>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-sm">
-      <h5>Saldo Kas & Bank</h5>
-      <table class="table">
-        @foreach ($w['warehouseaccount'] as $wa)
-        <tr>
-          <th>{{ $wa->acc_name }}</th>
-          <td>{{ number_format(intval($wa->balance)) }}</td>
-        </tr>
-        @endforeach
-      </table>
-    </div>
-    <div class="col-sm">
-      <h2 class="">Mutasi Kas</h2>
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Account</th>
-            <th scope="col">Masuk</th>
-            <th scope="col">Keluar</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach ($w['penambahan'] as $wa)
-          <tr>
-            <td>{{ $wa->debt->acc_name }}</td>
-            <td>{{ number_format($wa->amount) }}</td>
-            <td></td>
-          </tr>
-          @endforeach
-          @foreach ($w['pengeluaran'] as $wa)
-          <tr>
-            <td>{{ $wa->cred->acc_name }}</td>
-            <td></td>
-            <td>{{ number_format($wa->amount) }}</td>
-          </tr>
-          @endforeach
-        </tbody>
-      </table>
-    </div>
-  </div>
-  @endforeach
 </div>
 
 

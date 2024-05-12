@@ -11,6 +11,15 @@
     </button>
     <div class="row">
         <div class="col-sm-8">
+            @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
             <table class="table display-no-order">
                 <thead>
                     <tr>
@@ -59,11 +68,13 @@
                         @csrf
                         <div class="mb-3">
                             <label for="name" class="form-label">Nama Product</label>
-                            <input type="text" name="name" class="form-control" id="name">
+                            <input type="text" name="name" class="form-control" id="name" required
+                                value="{{ old('name') }}">
                         </div>
                         <div class="mb-3">
                             <label for="cost" class="form-label">Modal</label>
-                            <input type="number" name="cost" class="form-control" id="cost">
+                            <input type="number" name="cost" class="form-control" id="cost" value="{{ old('cost') }}"
+                                required>
                         </div>
                 </div>
                 <div class="modal-footer">
