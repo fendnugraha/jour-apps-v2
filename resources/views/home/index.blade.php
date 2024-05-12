@@ -63,7 +63,8 @@
         @php($no = 1)
         @foreach ($accounttrace as $at)
         @php($warna = $at->trx_type == 'Transfer Uang' ? 'table-danger' : 'table-success')
-        @php($hidden = $at->trx_type == 'Voucher & SP' ? 'hidden' : ($at->trx_type == 'Deposit' ? 'hidden' : ''))
+        @php($hidden = $at->trx_type == 'Voucher & SP' ? 'hidden' : ($at->trx_type == 'Deposit' ? 'hidden' :
+        ($at->trx_type == 'Mutasi Kas' ? 'hidden' : '')))
         @php($status = $at->status == 1 ? '<span class="badge bg-success">Success</span>' : '<span
           class="badge bg-warning text-dark">Belum diambil </span>')
         @php(
