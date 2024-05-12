@@ -81,18 +81,15 @@
         <div class="col-sm-4">
             <h2 class="">Saldo Kas & Bank</h2>
             <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Account</th>
-                        <th scope="col">Saldo</th>
-                    </tr>
-                </thead>
                 <tbody>
                     @foreach ($warehouseaccount as $wa)
 
                     <tr>
-                        <td>{{ $wa->acc_name }}</td>
-                        <td>{{ number_format($wa->balance) }}</td>
+                        <th colspan="2" class="bg-warning">{{ $wa->acc_name }}</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="text-end fw-bold" style="font-size: 1.2rem">{{ number_format($wa->balance) }}</td>
                     </tr>
 
                     @endforeach
