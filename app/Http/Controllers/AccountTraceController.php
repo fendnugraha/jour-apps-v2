@@ -183,7 +183,8 @@ class AccountTraceController extends Controller
             'pengeluaran' => $pengeluaran,
             'account' => $chartOfAccounts->where('warehouse_id', Auth()->user()->warehouse_id),
             'sales' => Sale::whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', Auth()->user()->warehouse_id)->get(),
-            'vcr' => $vcr
+            'vcr' => $vcr,
+            'warehouses' => Warehouse::get(),
         ]);
     }
 
@@ -248,6 +249,47 @@ class AccountTraceController extends Controller
             'sales' => Sale::whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', $request->cabang)->get(),
             'vcr' => $vcr,
             'warehouse' => Warehouse::all()
+        ])->with($request->all());
+    }
+
+    public function customReport(Request $request)
+    {
+        $accountTrace = new AccountTrace();
+        $startDate = Carbon::parse($request->start_date)->startOfDay();
+        $endDate = Carbon::parse($request->end_date)->endOfDay();
+
+        // $transactions = $accountTrace->with(['debt', 'cred'])
+        //     ->selectRaw('debt_code, cred_code, SUM(amount) as total, warehouse_id')
+        //     ->whereBetween('date_issued', [Carbon::create(0000, 1, 1, 0, 0, 0)->startOfDay(), $endDate])
+        //     ->groupBy('debt_code', 'cred_code', 'warehouse_id')
+        //     ->get();
+
+        // $chartOfAccounts = ChartOfAccount::with(['account', 'warehouse'])->get();
+
+        // foreach ($chartOfAccounts as $value) {
+        //     $debit = $transactions->where('debt_code', $value->acc_code)->sum('total');
+        //     $credit = $transactions->where('cred_code', $value->acc_code)->sum('total');
+
+        //     // @ts-ignore
+        //     $value->balance = ($value->account->status == "D") ? ($value->st_balance + $debit - $credit) : ($value->st_balance + $credit - $debit);
+        // }
+
+        $totalTransaksi = $request->warehouse == null ? $accountTrace->whereBetween('date_issued', [$startDate, $endDate])->get() : $accountTrace->whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', $request->warehouse)->get();
+
+        $totalTransfer = $totalTransaksi->where('trx_type', 'Transfer Uang');
+        $totalTarikTunai = $totalTransaksi->where('trx_type', 'Tarik Tunai');
+        $totalVcr = $totalTransaksi->where('trx_type', 'Voucher & SP');
+        $totaldeposit = $totalTransaksi->where('trx_type', 'Deposit');
+
+        return view('home.customreport', [
+            'title' => 'Custom Report',
+            'subtitle' => 'Custom Report',
+            'totalTransfer' => $totalTransfer,
+            'totalTarikTunai' => $totalTarikTunai,
+            'totalVcr' => $totalVcr,
+            'totaldeposit' => $totaldeposit,
+            'warehouse_name' => $request->warehouse == null ? "Semua Cabang" : Warehouse::find($request->warehouse)->w_name,
+            'warehouses' => Warehouse::all(),
         ])->with($request->all());
     }
 

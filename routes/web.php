@@ -48,6 +48,7 @@ Route::get('/setting', function () {
         'title' => 'Setting',
     ]);
 })->middleware('auth');
+Route::post('/report/customreport', [AccountTraceController::class, 'customReport'])->middleware('auth');
 
 
 // End Home Area
