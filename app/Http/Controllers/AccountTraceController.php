@@ -277,7 +277,7 @@ class AccountTraceController extends Controller
         $accountTrace->warehouse_id = Auth()->user()->warehouse_id;
         $accountTrace->save();
 
-        return redirect('/home')->with('success', 'Transfer added successfully.');
+        return redirect('/home')->with('success', 'Transfer added successfully.')->with($request->account);
     }
 
     public function addTarikTunai(Request $request)

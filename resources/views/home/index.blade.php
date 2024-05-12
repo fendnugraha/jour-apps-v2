@@ -51,7 +51,7 @@
         <tr>
           <th scope="col">#</th>
           <th scope="col">Waktu</th>
-          <th scope="col">Account</th>
+          {{-- <th scope="col">Account</th> --}}
           <th scope="col">Keterangan</th>
           <th scope="col">Jumlah</th>
           <th scope="col">Fee Admin</th>
@@ -71,32 +71,37 @@
         (($at->trx_type == 'Tarik Tunai') ? 'badge bg-danger' :
         (($at->trx_type == 'Voucher & SP') ? 'badge bg-primary' :
         (($at->trx_type == 'Deposit') ? 'badge bg-warning text-dark' : 'badge bg-secondary'))))
-        <th scope="row">{{ $no++ }}</th>
-        <td>{{ $at->date_issued }}</td>
-        <td>{{ $at->cred->acc_name }} <i class="fa-solid fa-arrow-right"></i> {{ $at->debt->acc_name }} </td>
-        <td>
-          {!! $status !!} <span class="badge {{$badge}}">{{ $at->trx_type }}</span><br>
+        <tr class="{{ $warna }}">
+          <th scope="row">{{ $no++ }}</th>
+          <td>{{ $at->date_issued }}</td>
+          {{-- <td>{{ $at->cred->acc_name }} <i class="fa-solid fa-arrow-right"></i> {{ $at->debt->acc_name }} </td>
+          --}}
+          <td>
+            {!! $status !!} <span class="badge {{$badge}}">{{ $at->trx_type }}</span><br>
 
-          {{ $at->description }} @if($at->sale){{ $at->sale->product->name . ' - ' . $at->sale->quantity. ' Pcs Harga
-          Modal
-          Rp.'
-          .
-          number_format($at->sale->cost) }}@endif
-        </td>
-        <td>{{ number_format($at->amount) }}</td>
-        <td>{{ number_format($at->fee_amount) }}</td>
-        <td>{{ $at->user->name }}</td>
-        <td>
-          <a href="/home/{{ $at->id }}/edit" class="btn btn-warning btn-sm" {{$hidden}}>
-            <i class="fa-solid fa-pen-to-square"></i></a>
-          <form action="{{ route('accounttrace.delete', $at->id) }}" method="post">
-            @csrf
-            @method('DELETE')
-            <button type="submit" onclick="return confirm('Are you sure?')" class="btn btn-danger btn-sm"><i
-                class="fa-solid fa-trash"></i>
-            </button>
-          </form>
-        </td>
+            {{ $at->description }} @if($at->sale){{ $at->sale->product->name . ' - ' . $at->sale->quantity. ' Pcs Harga
+            Modal
+            Rp.'
+            .
+            number_format($at->sale->cost) }}@endif
+            <br>
+            <span class="text-muted">{{ $at->cred->acc_name }} <i class="fa-solid fa-arrow-right"></i> {{
+              $at->debt->acc_name }}</span>
+          </td>
+          <td>{{ number_format($at->amount) }}</td>
+          <td>{{ number_format($at->fee_amount) }}</td>
+          <td>{{ $at->user->name }}</td>
+          <td class="text-center">
+            <a href="/home/{{ $at->id }}/edit" class="btn btn-warning btn-sm" {{$hidden}}>
+              <i class="fa-solid fa-pen-to-square"></i></a>
+            <form action="{{ route('accounttrace.delete', $at->id) }}" method="post" class="d-inline">
+              @csrf
+              @method('DELETE')
+              <button type="submit" onclick="return confirm('Are you sure?')" class="btn btn-danger btn-sm"><i
+                  class="fa-solid fa-trash"></i>
+              </button>
+            </form>
+          </td>
         </tr>
         @endforeach
       </tbody>
@@ -148,7 +153,9 @@
                 <select name="account" id="account" class="form-select">
                   <option value="">Pilih Akun</option>
                   @foreach ($warehouseaccount as $coa)
-                  <option value="{{ $coa->acc_code }}">{{ $coa->acc_name }}</option>
+                  <option value="{{ $coa->acc_code }}" @if (old('account')==$coa->acc_code) selected
+
+                    @endif>{{ $coa->acc_name }}</option>
                   @endforeach
                 </select>
               </div>
@@ -330,7 +337,7 @@
                 <select class="form-select" name="product_id" id="product_id">
                   <option selected>- Pilih Produk -</option>
                   @foreach ($product as $p)
-                  <option value="{{ $p->id }}">{{ $p->name }} - Rp. {{ number_format($p->cost) }}</option>
+                  <option value="{{ $p->id }}">{{ $p->name }} (Rp. {{ number_format($p->cost) }})</option>
                   @endforeach
                 </select>
               </div>
