@@ -74,21 +74,21 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-sm">
-            <div class="card text-bg-dark rounded-3">
-                <div class="card-body">
+        <div class="div9">
+            <div class="card text-bg-dark h-100 rounded-3">
+                <div class="card-body d-flex justify-content-center align-items-center flex-column">
                     <h5>Total Pengeluaran (Biaya)</h5>
                     <h1>{{ number_format(-$cost->flatten()->sum('fee_amount')) }}</h1>
+
                 </div>
             </div>
         </div>
-        <div class="col-sm">
-            <div class="card text-bg-dark rounded-3">
-                <div class="card-body">
+        <div class="div10">
+            <div class="card text-bg-dark h-100 rounded-3">
+                <div class="card-body d-flex justify-content-center align-items-center flex-column">
                     <h5>Total Laba (Profit)</h5>
                     <h1>{{ number_format($fee+$cost->flatten()->sum('fee_amount')) }}</h1>
+
                 </div>
             </div>
         </div>

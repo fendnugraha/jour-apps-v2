@@ -212,7 +212,7 @@ tr {
 .daily-report {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(6, 1fr);
+  grid-template-rows: repeat(8, 1fr);
   grid-column-gap: 10px;
   grid-row-gap: 10px;
 }
@@ -247,4 +247,12 @@ tr {
 
 .div8 {
   grid-area: 5/4/7/5;
+}
+
+.div9 {
+  grid-area: 7/1/9/3;
+}
+
+.div10 {
+  grid-area: 7/3/9/5;
 }/*# sourceMappingURL=mycss.css.map */
