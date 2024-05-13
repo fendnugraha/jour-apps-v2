@@ -220,7 +220,7 @@
         <h2 class="">Penjulalan Vcr & Kartu SP</h2>
         <div class="row">
             <div class="col-sm-5">
-                <table class="table">
+                <table class="table display">
                     <thead>
                         <tr>
                             <th>Product</th>
@@ -248,7 +248,7 @@
                 </table>
             </div>
             <div class="col-sm">
-                <table class="table">
+                <table class="table display">
                     <thead>
                         <tr>
                             <th scope="col">Waktu</th>
