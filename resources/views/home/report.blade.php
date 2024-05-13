@@ -50,6 +50,7 @@
                     <div class="mb-2 row">
                         <div class="col-sm-8">
                             <button type="submit" class="btn btn-primary">Submit</button>
+                            <a href="/home/administrator" class="btn btn-secondary">Cancel</a>
                         </div>
                     </div>
                 </form>

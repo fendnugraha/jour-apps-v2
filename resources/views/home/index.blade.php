@@ -38,15 +38,26 @@
       </div>
     </div>
     <div class="col-sm">
-      <div class="d-grid gap-2">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalPengeluaran">
-          Mutasi Kas
-        </button>
+      <div class="dropdown">
+        <div class="d-grid gap-2">
+          <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Kas Keluar
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#ModalMutasiKas">Mutasi Kas /
+                Bank</a></li>
+            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#ModalPengeluaran">Biaya /
+                Pengeluaran</a></li>
+          </ul>
+        </div>
+        {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalvcrSP">
+          Voucher & Deposit
+        </button> --}}
       </div>
     </div>
   </div>
   <div class="container mt-5">
-    <table class="table display">
+    <table class="table display-no-order">
       <thead>
         <tr>
           <th scope="col">#</th>
@@ -64,7 +75,7 @@
         @foreach ($accounttrace as $at)
         @php($warna = $at->trx_type == 'Transfer Uang' ? 'table-danger' : 'table-success')
         @php($hidden = $at->trx_type == 'Voucher & SP' ? 'hidden' : ($at->trx_type == 'Deposit' ? 'hidden' :
-        ($at->trx_type == 'Mutasi Kas' ? 'hidden' : '')))
+        ($at->trx_type == 'Mutasi Kas' ? 'hidden' : ($at->trx_type == 'Pengeluaran' ? 'hidden' : '' ))))
         @php($status = $at->status == 1 ? '<span class="badge bg-success">Success</span>' : '<span
           class="badge bg-warning text-dark">Belum diambil </span>')
         @php(
@@ -80,11 +91,13 @@
           <td>
             {!! $status !!} <span class="badge {{$badge}}">{{ $at->trx_type }}</span><br>
 
-            {{ $at->description }} @if($at->sale){{ $at->sale->product->name . ' - ' . $at->sale->quantity. ' Pcs Harga
+            {{ $at->description }}
+            @if($at->sale){{ $at->sale->product->name . ' - ' . $at->sale->quantity. ' Pcs Harga
             Modal
             Rp.'
             .
-            number_format($at->sale->cost) }}@endif
+            number_format($at->sale->cost) }}
+            @endif
             <br>
             <span class="text-muted">{{ $at->cred->acc_name }} <i class="fa-solid fa-arrow-right"></i> {{
               $at->debt->acc_name }}</span>
@@ -444,13 +457,12 @@
     </div>
   </div>
 
-  {{-- Pengeluaran --}}
-  <div class="modal fade" id="ModalPengeluaran" tabindex="-1" aria-labelledby="ModalPengeluaranLabel"
-    aria-hidden="true">
+  {{-- Mutasi Kas --}}
+  <div class="modal fade" id="ModalMutasiKas" tabindex="-1" aria-labelledby="ModalMutasiKasLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="ModalPengeluaranLabel">Pengeluaran</h1>
+          <h1 class="modal-title fs-5" id="ModalMutasiKasLabel">Mutasi Kas / Bank ke Rekening Pusat</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -473,9 +485,10 @@
               <label for="cred" class="col-sm col-form-label">Dari</label>
               <div class="col-sm-8">
                 <select name="cred" id="cred" class="form-select">
-                  <option value="">Pilih Akun</option>
+                  <option value="">Pilih Sumber Dana</option>
                   @foreach ($warehouseaccount as $coa)
-                  <option value="{{ $coa->acc_code }}">{{ $coa->acc_name }}</option>
+                  <option value="{{ $coa->acc_code }}" {{old('cred')==$coa->acc_code ? 'selected' : ''}}>{{
+                    $coa->acc_name }}</option>
                   @endforeach
                 </select>
               </div>
@@ -484,9 +497,10 @@
               <label for="debt" class="col-sm col-form-label">Ke</label>
               <div class="col-sm-8">
                 <select name="debt" id="debt" class="form-select">
-                  <option value="">Pilih Akun</option>
+                  <option value="">Pilih Tujuan Mutasi</option>
                   @foreach ($hqaccount as $coa)
-                  <option value="{{ $coa->acc_code }}">{{ $coa->acc_name }}</option>
+                  <option value="{{ $coa->acc_code }}" {{old('debt')==$coa->acc_code ? 'selected' : ''}}>{{
+                    $coa->acc_name }}</option>
                   @endforeach
                 </select>
               </div>
@@ -497,6 +511,80 @@
                 <input type="number" class="form-control @error('amount') is-invalid @enderror" name="amount"
                   id="amount" value="{{old('amount') == null ? 0 : old('amount')}}">
                 @error('amount')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
+              </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Simpan</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  {{-- Pengeluaran --}}
+  <div class="modal fade" id="ModalPengeluaran" tabindex="-1" aria-labelledby="ModalPengeluaranLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="ModalPengeluaranLabel">Biaya / Pengeluaran</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/pengeluaran" method="post">
+            @csrf
+            <div class="mb-2 row">
+              <label for="date_issued" class="col-sm col-form-label">Tanggal</label>
+              <div class="col-sm-8">
+                <input type="datetime-local" class="form-control @error('date_issued') is-invalid @enderror"
+                  name="date_issued" id="date_issued"
+                  value="{{old('date_issued') == null ? date('Y-m-d H:i') : old('date_issued')}}">
+                @error('date_issued')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
+              </div>
+            </div>
+            <div class="mb-2 row">
+              <label for="debt" class="col-sm col-form-label">Ke</label>
+              <div class="col-sm-8">
+                <select name="debt" id="debt" class="form-select">
+                  <option value="">Pilih Biaya</option>
+                  @foreach ($expense as $coa)
+                  <option value="{{ $coa->acc_code }}" {{old('debt')==$coa->acc_code ? 'selected' : ''}}>{{
+                    $coa->acc_name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div class="mb-2 row">
+              <label for="amount" class="col-sm col-form-label">Jumlah</label>
+              <div class="col-sm-8">
+                <input type="number" class="form-control @error('amount') is-invalid @enderror" name="amount"
+                  id="amount" value="{{old('amount') == null ? 0 : old('amount')}}">
+                @error('amount')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
+              </div>
+            </div>
+            <div class="mb-2 row">
+              <label for="description" class="col-sm col-form-label">Deskripsi</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control @error('description') is-invalid @enderror" name="description"
+                  id="description" value="{{old('description') == null ? '' : old('description')}}"
+                  placeholder="Keterangan">
+                @error('description')
                 <div class="invalid-feedback">
                   <small>{{ $message }}</small>
                 </div>

@@ -69,8 +69,26 @@
         <div class="div8">
             <div class="card text-bg-dark h-100 rounded-3">
                 <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                    <h5>Total Laba (Profit)</h5>
+                    <h5>Total Fee (Admin)</h5>
                     <h1>{{ number_format($fee) }}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-sm">
+            <div class="card text-bg-dark rounded-3">
+                <div class="card-body">
+                    <h5>Total Pengeluaran (Biaya)</h5>
+                    <h1>{{ number_format(-$cost->flatten()->sum('fee_amount')) }}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="card text-bg-dark rounded-3">
+                <div class="card-body">
+                    <h5>Total Laba (Profit)</h5>
+                    <h1>{{ number_format($fee+$cost->flatten()->sum('fee_amount')) }}</h1>
                 </div>
             </div>
         </div>
@@ -116,7 +134,7 @@
                     </div>
                 </div>
             </div>
-            <table class="table">
+            <table class="table display">
                 <thead>
                     <tr>
                         <th scope="col">Account</th>
@@ -127,7 +145,9 @@
                 <tbody>
                     @foreach ($penambahan as $wa)
                     <tr>
-                        <td>{{ $wa->cred->acc_name }} <i class="fa-solid fa-arrow-right"></i> {{ $wa->debt->acc_name
+                        <td>
+                            <small class="text-muted">{{ $wa->date_issued }}</small><br>
+                            {{ $wa->cred->acc_name }} <i class="fa-solid fa-arrow-right"></i> {{ $wa->debt->acc_name
                             }}
                         </td>
                         <td>{{ number_format($wa->amount) }}</td>
@@ -136,7 +156,10 @@
                     @endforeach
                     @foreach ($pengeluaran as $wa)
                     <tr>
-                        <td>{{ $wa->cred->acc_name }} <i class="fa-solid fa-arrow-right"></i> {{ $wa->debt->acc_name
+
+                        <td>
+                            <small class="text-muted">{{ $wa->date_issued }}</small><br>
+                            {{ $wa->cred->acc_name }} <i class="fa-solid fa-arrow-right"></i> {{ $wa->debt->acc_name
                             }}
                         </td>
                         <td></td>
@@ -146,11 +169,12 @@
                 </tbody>
             </table>
         </div>
+
     </div>
-    <h2 class="">Penjulalan Vcr & Kartu SP</h2>
+    <h2 class="my-3">Penjulalan Vcr & Kartu SP</h2>
     <div class="row">
         <div class="col-sm-5">
-            <table class="table">
+            <table class="table display">
                 <thead>
                     <tr>
                         <th>Product</th>
@@ -181,8 +205,6 @@
             <table class="table display">
                 <thead>
                     <tr>
-                        <th scope="col">Waktu</th>
-                        {{-- <th scope="col">Invoice</th> --}}
                         <th scope="col">Product</th>
                         <th scope="col">Qty</th>
                         <th scope="col">Jual </th>
@@ -198,9 +220,10 @@
                     $fee = $jual - $modal;
                     @endphp
                     <tr>
-                        <td>{{ $s->created_at }}</td>
-                        {{-- <td>{{ $s->invoice }}</td> --}}
-                        <td>{{ $s->product->name }}</td>
+                        <td>
+                            <small class="text-muted">{{ $s->created_at }}</small><br>
+                            {{ $s->product->name }}
+                        </td>
                         <td>{{ $s->quantity }}</td>
                         <td>{{ number_format($jual) }}
                             <small class="text-muted d-block">{{ number_format($s->quantity) }} * {{
@@ -213,6 +236,29 @@
                                 }}</small>
                         </td>
                         <td>{{ number_format($fee) }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row my-3">
+        <div class="col-sm-5">
+            <h2 class="">Pengeluaran (Biaya)</h2>
+            <table class="table display">
+                <thead>
+                    <tr>
+                        <th>Keterangan</th>
+                        <th scope="col">Biaya</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($cost as $c)
+                    <tr>
+                        <td><small class="text-muted">{{ $c->date_issued }}</small><br>
+                            Note: {{ $c->description }}</td>
+                        <td class="text-end">{{ number_format(-$c->fee_amount) }}</td>
                     </tr>
                     @endforeach
                 </tbody>
