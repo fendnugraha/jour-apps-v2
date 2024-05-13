@@ -122,8 +122,24 @@
             <div class="div8">
                 <div class="card text-bg-dark h-100 rounded-3">
                     <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                        <h5>Total Laba (Profit)</h5>
+                        <h5>Total Fee (Admin)</h5>
                         <h1>{{ number_format($fee) }}</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="div9">
+                <div class="card text-bg-dark h-100 rounded-3">
+                    <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                        <h5>Total Pengeluaran (Biaya)</h5>
+                        <h1>{{ number_format(-$cost->flatten()->sum('fee_amount')) }}</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="div10">
+                <div class="card text-bg-dark h-100 rounded-3">
+                    <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                        <h5>Total Laba (Profit)</h5>
+                        <h1>{{ number_format($fee+$cost->flatten()->sum('fee_amount')) }}</h1>
                     </div>
                 </div>
             </div>
@@ -145,7 +161,7 @@
 
                         <tr>
                             <td>{{ $wa->acc_name }}</td>
-                            <td>{{ number_format($wa->balance) }}</td>
+                            <td class="text-end">{{ number_format($wa->balance) }}</td>
                         </tr>
 
                         @endforeach
@@ -163,7 +179,7 @@
                             History Mutasi Saldo</button>
                     </div>
                 </div>
-                <table class="table">
+                <table class="table display">
                     <thead>
                         <tr>
                             <th scope="col">Account</th>
@@ -174,7 +190,9 @@
                     <tbody>
                         @foreach ($penambahan as $wa)
                         <tr>
-                            <td>{{ $wa->cred->acc_name }} <i class="fa-solid fa-arrow-right"></i> {{ $wa->debt->acc_name
+                            <td>
+                                <small class="text-muted">{{ $wa->date_issued }}</small><br>
+                                {{ $wa->cred->acc_name }} <i class="fa-solid fa-arrow-right"></i> {{ $wa->debt->acc_name
                                 }}
                             </td>
                             <td>{{ number_format($wa->amount) }}</td>
@@ -183,7 +201,9 @@
                         @endforeach
                         @foreach ($pengeluaran as $wa)
                         <tr>
-                            <td>{{ $wa->cred->acc_name }} <i class="fa-solid fa-arrow-right"></i> {{ $wa->debt->acc_name
+                            <td>
+                                <small class="text-muted">{{ $wa->date_issued }}</small><br>
+                                {{ $wa->cred->acc_name }} <i class="fa-solid fa-arrow-right"></i> {{ $wa->debt->acc_name
                                 }}
                             </td>
                             <td></td>
@@ -266,7 +286,28 @@
                 </table>
             </div>
         </div>
-
+        <div class="row my-3">
+            <div class="col-sm-5">
+                <h2 class="">Pengeluaran (Biaya)</h2>
+                <table class="table display">
+                    <thead>
+                        <tr>
+                            <th>Keterangan</th>
+                            <th scope="col">Biaya</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($cost as $c)
+                        <tr>
+                            <td><small class="text-muted">{{ $c->date_issued }}</small><br>
+                                Note: {{ $c->description }}</td>
+                            <td class="text-end">{{ number_format(-$c->fee_amount) }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </section>
 

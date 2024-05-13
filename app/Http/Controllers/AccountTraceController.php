@@ -172,11 +172,14 @@ class AccountTraceController extends Controller
             $value->balance = ($value->account->status == "D") ? ($value->st_balance + $debit - $credit) : ($value->st_balance + $credit - $debit);
         }
 
-        $totalTransfer = AccountTrace::where('warehouse_id', $request->cabang)->whereBetween('date_issued', [$startDate, $endDate])->where('trx_type', 'Transfer Uang')->sum('amount');
-        $totalTarikTunai = AccountTrace::where('warehouse_id', $request->cabang)->whereBetween('date_issued', [$startDate, $endDate])->where('trx_type', 'Tarik Tunai')->sum('amount');
-        $totalVcr = AccountTrace::where('warehouse_id', $request->cabang)->whereBetween('date_issued', [$startDate, $endDate])->where('trx_type', 'Voucher & SP')->sum('amount');
-        $totaldeposit = AccountTrace::where('warehouse_id', $request->cabang)->whereBetween('date_issued', [$startDate, $endDate])->where('trx_type', 'Deposit')->sum('amount');
-        $fee = AccountTrace::where('warehouse_id', $request->cabang)->whereBetween('date_issued', [$startDate, $endDate])->sum('fee_amount');
+        $trx = AccountTrace::where('warehouse_id', $request->cabang)->whereBetween('date_issued', [$startDate, $endDate])->get();
+
+        $totalTransfer = $trx->where('trx_type', 'Transfer Uang')->sum('amount');
+        $totalTarikTunai = $trx->where('trx_type', 'Tarik Tunai')->sum('amount');
+        $totalVcr = $trx->where('trx_type', 'Voucher & SP')->sum('amount');
+        $totaldeposit = $trx->where('trx_type', 'Deposit')->sum('amount');
+        $fee = $trx->where('fee_amount', '>', 0)->sum('fee_amount');
+        $cost = $trx->where('fee_amount', '<', 0);
 
         $w_account = $chartOfAccounts->where('warehouse_id', $request->cabang)->pluck('acc_code');
         // dd($w_account);
@@ -201,6 +204,7 @@ class AccountTraceController extends Controller
             'totalVcr' => $totalVcr,
             'totaldeposit' => $totaldeposit,
             'fee' => $fee,
+            'cost' => $cost,
             'endbalance' => $chartOfAccounts->whereIn('warehouse_id', [$request->cabang])->groupBy('warehouse_id'),
             'totalCash' => $chartOfAccounts->whereIn('warehouse_id', [$request->cabang])->where('account_id', 1)->groupBy('warehouse_id'),
             'totalBank' => $chartOfAccounts->whereIn('warehouse_id', [$request->cabang])->where('account_id', 2)->groupBy('warehouse_id'),
@@ -242,6 +246,14 @@ class AccountTraceController extends Controller
         $totalTarikTunai = $totalTransaksi->where('trx_type', 'Tarik Tunai');
         $totalVcr = $totalTransaksi->where('trx_type', 'Voucher & SP');
         $totaldeposit = $totalTransaksi->where('trx_type', 'Deposit');
+        $totalBiaya = $totalTransaksi->where('trx_type', 'Pengeluaran');
+        $totalLaba = $totalTransaksi->sum('fee_amount');
+
+        $revenue = $accountTrace->whereBetween('date_issued', [$startDate, $endDate])
+            ->selectRaw('SUM(amount) as total, warehouse_id, SUM(fee_amount) as sumfee')
+            ->groupBy('warehouse_id')
+            ->get();
+        // dd($revenue);
 
         return view('home.customreport', [
             'title' => 'Custom Report',
@@ -250,8 +262,11 @@ class AccountTraceController extends Controller
             'totalTarikTunai' => $totalTarikTunai,
             'totalVcr' => $totalVcr,
             'totaldeposit' => $totaldeposit,
+            'totalLaba' => $totalLaba,
             'warehouse_name' => $request->warehouse == null ? "Semua Cabang" : Warehouse::find($request->warehouse)->w_name,
             'warehouses' => Warehouse::all(),
+            'totalBiaya' => $totalBiaya,
+            'revenue' => $revenue
         ])->with($request->all());
     }
 

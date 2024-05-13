@@ -103,19 +103,106 @@
                     <td>{{ number_format($totaldeposit->sum('fee_amount')) }}</td>
                 </tr>
             </tbody>
+            <tr>
+                <th>Total</th>
+                <th>{{ number_format($totalTransfer->count() + $totalTarikTunai->count() + $totalVcr->count() +
+                    $totaldeposit->count()) }}</th>
+                <th>{{ number_format($totalTransfer->sum('amount') + $totalTarikTunai->sum('amount') +
+                    $totalVcr->sum('amount') + $totaldeposit->sum('amount')) }}</th>
+                <th class="text-end text-success">{{ number_format($totalTransfer->sum('fee_amount') +
+                    $totalTarikTunai->sum('fee_amount') +
+                    $totalVcr->sum('fee_amount') + $totaldeposit->sum('fee_amount')) }}</th>
+            </tr>
+            <tr>
+                <th colspan="4" class="bg-danger text-light">Pengeluaran (Biaya)</th>
+            </tr>
+            @foreach ($totalBiaya as $c)
+            <tr>
+                <td colspan="3">{{ $c->description }}</td>
+                <td class="text-end text-danger">{{ number_format($c->fee_amount) }}</td>
+            </tr>
+            @endforeach
+            <tr>
+                <th colspan="3">Total Pengeluaran</th>
+                <th class="text-end text-danger">{{ number_format($totalBiaya->sum('fee_amount')) }}</th>
+            </tr>
+            </tbody>
             <tfoot>
-                <tr>
-                    <th>Total</th>
-                    <th>{{ number_format($totalTransfer->count() + $totalTarikTunai->count() + $totalVcr->count() +
-                        $totaldeposit->count()) }}</th>
-                    <th>{{ number_format($totalTransfer->sum('amount') + $totalTarikTunai->sum('amount') +
-                        $totalVcr->sum('amount') + $totaldeposit->sum('amount')) }}</th>
-                    <th>{{ number_format($totalTransfer->sum('fee_amount') + $totalTarikTunai->sum('fee_amount') +
-                        $totalVcr->sum('fee_amount') + $totaldeposit->sum('fee_amount')) }}</th>
+                <tr class="bg-success text-light">
+                    <th colspan="3" class="bg-success text-light">Laba Bersih (Net Profit)</th>
+                    <th class="text-end bg-success text-light">{{ number_format($totalLaba) }}</th>
                 </tr>
             </tfoot>
+        </table>
     </div>
 
+    <h2>Ringkasan Transaksi</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Cabang</th>
+                <th>Transfer</th>
+                <th>Tarik Tunai</th>
+                <th>Voucher & SP</th>
+                <th>Deposit (Pulsa dll)</th>
+                <th>Pengeluaran (Biaya)</th>
+                <th>Laba Bersih</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php
+            $rvTransfer = 0;
+            $rvTarikTunai = 0;
+            $rvVcr = 0;
+            $rvdeposit = 0;
+            $rvLaba = 0;
+            $rvBiaya = 0;
+            $rvLaba = 0;
+            @endphp
+            @foreach ($revenue as $w)
+            @php
+            $rvTransfer += $w->where('trx_type', 'Transfer Uang')->where('warehouse_id',
+            $w->warehouse_id)->sum('amount');
+            $rvTarikTunai += $w->where('trx_type', 'Tarik Tunai')->where('warehouse_id',
+            $w->warehouse_id)->sum('amount');
+            $rvVcr += $w->where('trx_type', 'Voucher & SP')->where('warehouse_id',
+            $w->warehouse_id)->sum('amount');
+            $rvdeposit += $w->where('trx_type', 'Deposit')->where('warehouse_id',
+            $w->warehouse_id)->sum('amount');
+            $rvLaba += $w->sumfee;
+            $rvBiaya += $w->where('trx_type', 'Pengeluaran')->where('warehouse_id',
+            $w->warehouse_id)->sum('fee_amount');
+            @endphp
+            <tr>
+                <td>{{ $w->warehouse->w_name }}</td>
+                <td>{{ number_format($w->where('trx_type', 'Transfer Uang')->where('warehouse_id',
+                    $w->warehouse_id)->sum('amount')) }}</td>
+                <td>{{ number_format($w->where('trx_type', 'Tarik Tunai')->where('warehouse_id',
+                    $w->warehouse_id)->sum('amount')) }}</td>
+                <td>{{ number_format($w->where('trx_type', 'Voucher & SP')->where('warehouse_id',
+                    $w->warehouse_id)->sum('amount')) }}</td>
+                <td>{{ number_format($w->where('trx_type', 'Deposit')->where('warehouse_id',
+                    $w->warehouse_id)->sum('amount')) }}</td>
+                <td class="text-danger">{{ number_format(-$w->where('trx_type', 'Pengeluaran')->where('warehouse_id',
+                    $w->warehouse_id)->sum('fee_amount')) }}
+                </td>
+                <td class="text-success fw-bold">{{ number_format($w->sumfee) }}</td>
+            </tr>
+
+            @endforeach
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Total</th>
+                <th>{{ number_format($rvTransfer) }}</th>
+                <th>{{ number_format($rvTarikTunai) }}</th>
+                <th>{{ number_format($rvVcr) }}</th>
+                <th>{{ number_format($rvdeposit) }}</th>
+                <th>{{ number_format(-$rvBiaya) }}</th>
+                <th>{{ number_format($revenue->sum('sumfee')) }}</th>
+            </tr>
+        </tfoot>
+    </table>
 
 
     {{-- End Content --}}
