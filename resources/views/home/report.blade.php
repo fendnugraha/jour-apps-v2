@@ -10,6 +10,8 @@
             <div class="col-sm-8">
                 <form action="/home/reportcabang" method="post">
                     @csrf
+                    @can('admin')
+
                     <div class="mb-2 row">
                         <label for="date_issued" class="col-sm col-form-label">Cabang</label>
                         <div class="col-sm-8">
@@ -21,6 +23,7 @@
                             </select>
                         </div>
                     </div>
+                    @endcan
                     <div class="mb-2 row">
                         <label for="start_date" class="col-sm col-form-label">Dari</label>
                         <div class="col-sm-8">
@@ -50,7 +53,7 @@
                     <div class="mb-2 row">
                         <div class="col-sm-8">
                             <button type="submit" class="btn btn-primary">Submit</button>
-                            <a href="/home/administrator" class="btn btn-secondary">Cancel</a>
+                            <a href="/home" class="btn btn-secondary">Cancel</a>
                         </div>
                     </div>
                 </form>

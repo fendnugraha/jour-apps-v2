@@ -156,6 +156,8 @@ class AccountTraceController extends Controller
         $startDate = Carbon::parse($request->start_date)->startOfDay();
         $endDate = Carbon::parse($request->end_date)->endOfDay();
 
+        $cabang = $request->cabang !== null ? $request->cabang : Auth()->user()->warehouse_id;
+
         $transactions = $accountTrace->with(['debt', 'cred'])
             ->selectRaw('debt_code, cred_code, SUM(amount) as total, warehouse_id')
             ->whereBetween('date_issued', [Carbon::create(0000, 1, 1, 0, 0, 0)->startOfDay(), $endDate])
@@ -172,7 +174,7 @@ class AccountTraceController extends Controller
             $value->balance = ($value->account->status == "D") ? ($value->st_balance + $debit - $credit) : ($value->st_balance + $credit - $debit);
         }
 
-        $trx = AccountTrace::where('warehouse_id', $request->cabang)->whereBetween('date_issued', [$startDate, $endDate])->get();
+        $trx = AccountTrace::where('warehouse_id', $cabang)->whereBetween('date_issued', [$startDate, $endDate])->get();
 
         $totalTransfer = $trx->where('trx_type', 'Transfer Uang')->sum('amount');
         $totalTarikTunai = $trx->where('trx_type', 'Tarik Tunai')->sum('amount');
@@ -181,7 +183,7 @@ class AccountTraceController extends Controller
         $fee = $trx->where('fee_amount', '>', 0)->sum('fee_amount');
         $cost = $trx->where('fee_amount', '<', 0);
 
-        $w_account = $chartOfAccounts->where('warehouse_id', $request->cabang)->pluck('acc_code');
+        $w_account = $chartOfAccounts->where('warehouse_id', $cabang)->pluck('acc_code');
         // dd($w_account);
         // $actrace = AccountTrace::with(['debt', 'cred'])->where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate]);
         // $sql = $actrace->whereIn('cred_code', $w_account)->toSql();
@@ -192,7 +194,7 @@ class AccountTraceController extends Controller
         $vcr = Sale::with('product')
             ->selectRaw('SUM(cost * quantity) as total_cost, product_id, sum(quantity) as qty')
             ->whereBetween('date_issued', [$startDate, $endDate])
-            ->where('warehouse_id', $request->cabang)
+            ->where('warehouse_id', $cabang)
             ->groupBy('product_id')
             ->get();
 
@@ -205,15 +207,16 @@ class AccountTraceController extends Controller
             'totaldeposit' => $totaldeposit,
             'fee' => $fee,
             'cost' => $cost,
-            'endbalance' => $chartOfAccounts->whereIn('warehouse_id', [$request->cabang])->groupBy('warehouse_id'),
-            'totalCash' => $chartOfAccounts->whereIn('warehouse_id', [$request->cabang])->where('account_id', 1)->groupBy('warehouse_id'),
-            'totalBank' => $chartOfAccounts->whereIn('warehouse_id', [$request->cabang])->where('account_id', 2)->groupBy('warehouse_id'),
-            'warehouseaccount' => $chartOfAccounts->where('warehouse_id', $request->cabang),
+            'endbalance' => $chartOfAccounts->whereIn('warehouse_id', [$cabang])->groupBy('warehouse_id'),
+            'totalCash' => $chartOfAccounts->whereIn('warehouse_id', [$cabang])->where('account_id', 1)->groupBy('warehouse_id'),
+            'totalBank' => $chartOfAccounts->whereIn('warehouse_id', [$cabang])->where('account_id', 2)->groupBy('warehouse_id'),
+            'warehouseaccount' => $chartOfAccounts->where('warehouse_id', $cabang),
             'penambahan' => $penambahan,
             'pengeluaran' => $pengeluaran,
-            'account' => $chartOfAccounts->where('warehouse_id', $request->cabang),
-            'sales' => Sale::whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', $request->cabang)->get(),
+            'account' => $chartOfAccounts->where('warehouse_id', $cabang),
+            'sales' => Sale::whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', $cabang)->get(),
             'vcr' => $vcr,
+            'cabang' => $cabang,
             'warehouse' => Warehouse::all()
         ])->with($request->all());
     }
