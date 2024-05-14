@@ -9,6 +9,7 @@ use App\Models\AccountTrace;
 use Illuminate\Http\Request;
 use App\Models\ChartOfAccount;
 use App\Models\Sale;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AccountTraceController extends Controller
@@ -22,7 +23,7 @@ class AccountTraceController extends Controller
             'title' => 'Home',
             'subtitle' => 'Home',
             'warehouseaccount' => ChartOfAccount::whereIn('account_id', ['1', '2'])->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('account_id', 'desc')->get(),
-            'accounttrace' => AccountTrace::with('debt', 'cred', 'sale')->whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('id', 'desc')->get(),
+            'accounttrace' => AccountTrace::with('debt', 'cred', 'sale', 'user')->whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('id', 'desc')->get(),
             'hqaccount' => ChartOfAccount::whereIn('account_id', ['1', '2'])->where('warehouse_id', 1)->get(),
             'product' => Product::orderBy('sold', 'desc')->orderBy('name', 'asc')->get(),
             'expense' => ChartOfAccount::whereIn('account_id', range(33, 45))->get(),
@@ -41,6 +42,7 @@ class AccountTraceController extends Controller
         $endDate = Carbon::now()->endOfDay();
 
         $transactions = $accountTrace
+            ->with('warehouse')
             ->selectRaw('debt_code, cred_code, SUM(amount) as total')
             ->whereBetween('date_issued', [Carbon::create(0000, 1, 1, 0, 0, 0)->startOfDay(), $endDate])
             ->groupBy('debt_code', 'cred_code')
@@ -97,7 +99,7 @@ class AccountTraceController extends Controller
             ->groupBy('debt_code', 'cred_code', 'warehouse_id')
             ->get();
 
-        $chartOfAccounts = ChartOfAccount::with(['account', 'warehouse'])->get();
+        $chartOfAccounts = ChartOfAccount::with(['account', 'warehouse'])->orderBy('acc_code', 'asc')->get();
 
         foreach ($chartOfAccounts as $value) {
             $debit = $transactions->where('debt_code', $value->acc_code)->sum('total');
@@ -129,6 +131,8 @@ class AccountTraceController extends Controller
             ->groupBy('product_id')
             ->get();
 
+        $account = Auth()->user()->role == 'Administrator' ? $chartOfAccounts : $chartOfAccounts->where('warehouse_id', Auth()->user()->warehouse_id);
+
         return view('home.dailyreport', [
             'title' => 'Daily Report',
             'subtitle' => 'Daily Report',
@@ -143,7 +147,7 @@ class AccountTraceController extends Controller
             'warehouseaccount' => $chartOfAccounts->where('warehouse_id', Auth()->user()->warehouse_id),
             'penambahan' => $penambahan,
             'pengeluaran' => $pengeluaran,
-            'account' => $chartOfAccounts->where('warehouse_id', Auth()->user()->warehouse_id),
+            'account' => $account,
             'sales' => Sale::whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', Auth()->user()->warehouse_id)->get(),
             'vcr' => $vcr,
             'warehouses' => Warehouse::get(),
@@ -215,7 +219,7 @@ class AccountTraceController extends Controller
             'penambahan' => $penambahan,
             'pengeluaran' => $pengeluaran,
             'account' => $chartOfAccounts->where('warehouse_id', $cabang),
-            'sales' => Sale::whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', $cabang)->get(),
+            'sales' => Sale::with('product')->whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', $cabang)->get(),
             'vcr' => $vcr,
             'cabang' => $cabang,
             'warehouse' => Warehouse::all()
@@ -462,6 +466,7 @@ class AccountTraceController extends Controller
         ]);
 
         $accountTrace = new AccountTrace();
+        $chartOfAccounts = ChartOfAccount::with(['account', 'warehouse'])->orderBy('acc_code', 'asc')->get();
         $startDate = Carbon::parse($request->start_date)->startOfDay();
         $endDate = Carbon::parse($request->end_date)->endOfDay();
         $account_trace = $accountTrace->with('debt', 'cred', 'warehouse', 'user')->where('debt_code', $request->accounts)
@@ -479,16 +484,18 @@ class AccountTraceController extends Controller
         $endBalance = $accountTrace->endBalanceBetweenDate($request->accounts, '0000-00-00', $endDate);
         // dd($endBalance);
 
+        $account = Auth()->user()->role == 'Administrator' ? $chartOfAccounts : $chartOfAccounts->where('warehouse_id', Auth()->user()->warehouse_id);
+
         return view('home.history', [
             'title' => 'General Ledger',
             'active' => 'reports',
             'account_trace' => $account_trace,
-            'account' => ChartOfAccount::with(['account'])->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('acc_code', 'asc')->get(),
+            'account' => $account,
             'debt_total' => $debt_total,
             'cred_total' => $cred_total,
             'initBalance' => $initBalance,
             'endBalance' => $endBalance,
-            'status' => ChartOfAccount::with(['account'])->where('acc_code', $request->accounts)->first()->account->status
+            'status' => $chartOfAccounts->where('acc_code', $request->accounts)->first()->account->status
         ])->with($request->all());
     }
 

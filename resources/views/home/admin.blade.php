@@ -4,114 +4,113 @@
 @section('container')
 {{-- Content Area --}}
 
-<div class="container" style="margin-top: 70px">
-  <div class="row ">
-    <div class="col-sm">
-      <div class="d-grid gap-2">
-        <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#ModalPemasukan">
-          Mutasi Kas
-        </button>
-      </div>
+<div class="row ">
+  <div class="col-sm">
+    <div class="d-grid gap-2">
+      <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#ModalPemasukan">
+        Mutasi Kas
+      </button>
     </div>
-    <div class="col-sm">
-      <div class="d-grid gap-2">
-        <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#ModalPengeluaran">
-          Pengeluaran
-        </button>
-      </div>
+  </div>
+  <div class="col-sm">
+    <div class="d-grid gap-2">
+      <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#ModalPengeluaran">
+        Pengeluaran
+      </button>
     </div>
-    <div class="col-sm">
-      <div class="d-grid gap-2">
-        <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#ModalReportCabang">
-          Report Cabang
-        </button>
+  </div>
+  <div class="col-sm">
+    <div class="d-grid gap-2">
+      <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#ModalReportCabang">
+        Report Cabang
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="daily-report my-3">
+  <div class="div1">
+    <div class="card text-bg-dark h-100">
+      <div class="card-body d-flex justify-content-center align-items-center flex-column">
+        <h4>Saldo Kas</h4>
+        <h1>{{ number_format($sumtotalCash) }}</h1>
+
       </div>
     </div>
   </div>
-
-  <div class="daily-report my-3">
-    <div class="div1">
-      <div class="card text-bg-dark h-100">
-        <div class="card-body d-flex justify-content-center align-items-center flex-column">
-          <h4>Saldo Kas</h4>
-          <h1>{{ number_format($sumtotalCash) }}</h1>
-
-        </div>
-      </div>
-    </div>
-    <div class="div2">
-      <div class="card text-bg-dark h-100">
-        <div class="card-body d-flex justify-content-center align-items-center flex-column">
-          <h4>Total Saldo Bank</h4>
-          <h1>{{ number_format($sumtotalBank) }}</h1>
-        </div>
-      </div>
-    </div>
-    <div class="div3">
-      <div class="card text-bg-dark h-100">
-        <div class="card-body d-flex justify-content-center align-items-center flex-column">
-          <h4>Total Transfer</h4>
-          <h1>{{ number_format($sumtotalTransfer) }}</h1>
-        </div>
-      </div>
-    </div>
-    <div class="div4">
-      <div class="card text-bg-dark h-100">
-        <div class="card-body d-flex justify-content-center align-items-center flex-column">
-          <h4>Total Tarik Tunai</h4>
-          <h1>{{ number_format($sumtotalTarikTunai) }}</h1>
-        </div>
-      </div>
-    </div>
-    <div class="div5">
-      <div class="card text-bg-dark h-100">
-        <div class="card-body d-flex justify-content-center align-items-center flex-column">
-          <h4>Total Kas & Bank</h4>
-          <h1 class="text-warning fw-bold display-2">{{ number_format($sumendbalance) }}</h1>
-        </div>
-      </div>
-    </div>
-    <div class="div6">
-      <div class="card text-bg-dark h-100">
-        <div class="card-body d-flex justify-content-center align-items-center flex-column">
-          <h4>Voucher & Kartu SP</h4>
-          <h1>{{ number_format($sumtotalVcr) }}</h1>
-        </div>
-      </div>
-    </div>
-    <div class="div7">
-      <div class="card text-bg-dark h-100">
-        <div class="card-body d-flex justify-content-center align-items-center flex-column">
-          <h4>Deposit, Pulsa, Dll</h4>
-          <h1>{{ number_format($sumtotaldeposit) }}</h1>
-        </div>
-      </div>
-    </div>
-    <div class="div8">
-      <div class="card text-bg-dark h-100">
-        <div class="card-body d-flex justify-content-center align-items-center flex-column">
-          <h4>Total Fee (Admin)</h4>
-          <h1>{{ number_format($sumfee) }}</h1>
-        </div>
-      </div>
-    </div>
-    <div class="div9">
-      <div class="card text-bg-dark h-100">
-        <div class="card-body d-flex justify-content-center align-items-center flex-column">
-          <h5>Total Pengeluaran (Biaya)</h5>
-          <h1>{{ number_format(-$sumcost) }}</h1>
-        </div>
-      </div>
-    </div>
-    <div class="div10">
-      <div class="card text-bg-dark h-100">
-        <div class="card-body d-flex justify-content-center align-items-center flex-column">
-          <h5>Total Laba (Profit)</h5>
-          <h1>{{ number_format($sumfee+$sumcost) }}</h1>
-        </div>
+  <div class="div2">
+    <div class="card text-bg-dark h-100">
+      <div class="card-body d-flex justify-content-center align-items-center flex-column">
+        <h4>Total Saldo Bank</h4>
+        <h1>{{ number_format($sumtotalBank) }}</h1>
       </div>
     </div>
   </div>
+  <div class="div3">
+    <div class="card text-bg-dark h-100">
+      <div class="card-body d-flex justify-content-center align-items-center flex-column">
+        <h4>Total Transfer</h4>
+        <h1>{{ number_format($sumtotalTransfer) }}</h1>
+      </div>
+    </div>
+  </div>
+  <div class="div4">
+    <div class="card text-bg-dark h-100">
+      <div class="card-body d-flex justify-content-center align-items-center flex-column">
+        <h4>Total Tarik Tunai</h4>
+        <h1>{{ number_format($sumtotalTarikTunai) }}</h1>
+      </div>
+    </div>
+  </div>
+  <div class="div5">
+    <div class="card text-bg-dark h-100">
+      <div class="card-body d-flex justify-content-center align-items-center flex-column">
+        <h4>Total Kas & Bank</h4>
+        <h1 class="text-warning fw-bold display-2">{{ number_format($sumendbalance) }}</h1>
+      </div>
+    </div>
+  </div>
+  <div class="div6">
+    <div class="card text-bg-dark h-100">
+      <div class="card-body d-flex justify-content-center align-items-center flex-column">
+        <h4>Voucher & Kartu SP</h4>
+        <h1>{{ number_format($sumtotalVcr) }}</h1>
+      </div>
+    </div>
+  </div>
+  <div class="div7">
+    <div class="card text-bg-dark h-100">
+      <div class="card-body d-flex justify-content-center align-items-center flex-column">
+        <h4>Deposit, Pulsa, Dll</h4>
+        <h1>{{ number_format($sumtotaldeposit) }}</h1>
+      </div>
+    </div>
+  </div>
+  <div class="div8">
+    <div class="card text-bg-dark h-100">
+      <div class="card-body d-flex justify-content-center align-items-center flex-column">
+        <h4>Total Fee (Admin)</h4>
+        <h1>{{ number_format($sumfee) }}</h1>
+      </div>
+    </div>
+  </div>
+  <div class="div9">
+    <div class="card text-bg-dark h-100">
+      <div class="card-body d-flex justify-content-center align-items-center flex-column">
+        <h5>Total Pengeluaran (Biaya)</h5>
+        <h1>{{ number_format(-$sumcost) }}</h1>
+      </div>
+    </div>
+  </div>
+  <div class="div10">
+    <div class="card text-bg-dark h-100">
+      <div class="card-body d-flex justify-content-center align-items-center flex-column">
+        <h5>Total Laba (Profit)</h5>
+        <h1>{{ number_format($sumfee+$sumcost) }}</h1>
+      </div>
+    </div>
+  </div>
+</div>
 
 </div>
 
@@ -324,6 +323,5 @@
       </div>
     </div>
   </div>
-</div>
-{{-- End Content Area --}}
-@endSection
+  {{-- End Content Area --}}
+  @endSection
