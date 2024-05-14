@@ -56,7 +56,7 @@
       </div>
     </div>
   </div>
-  <div class="container mt-5">
+  <div class="container mt-3">
     <table class="table display-no-order">
       <thead>
         <tr>
@@ -111,7 +111,9 @@
             <form action="{{ route('accounttrace.delete', $at->id) }}" method="post" class="d-inline">
               @csrf
               @method('DELETE')
-              <button type="submit" onclick="return confirm('Are you sure?')" class="btn btn-danger btn-sm"><i
+              <button type="submit"
+                onclick="this.disabled=true;this.value='Sending, please wait...';this.form.submit();"
+                onclick="return confirm('Are you sure?')" class="btn btn-danger btn-sm"><i
                   class="fa-solid fa-trash"></i>
               </button>
             </form>
@@ -217,7 +219,8 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Transfer</button>
+          <button type="submit" onclick="this.disabled=true;this.value='Sending, please wait...';this.form.submit();"
+            class="btn btn-primary">Transfer</button>
           </form>
         </div>
       </div>
@@ -305,7 +308,8 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Simpan</button>
+          <button type="submit" onclick="this.disabled=true;this.value='Sending, please wait...';this.form.submit();"
+            class="btn btn-primary">Simpan</button>
           </form>
         </div>
       </div>
@@ -377,7 +381,8 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Simpan</button>
+          <button type="submit" onclick="this.disabled=true;this.value='Sending, please wait...';this.form.submit();"
+            class="btn btn-primary">Simpan</button>
         </div>
         </form>
       </div>
@@ -450,7 +455,8 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Simpan</button>
+          <button type="submit" onclick="this.disabled=true;this.value='Sending, please wait...';this.form.submit();"
+            class="btn btn-primary">Simpan</button>
         </div>
         </form>
       </div>
@@ -521,7 +527,8 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Simpan</button>
+          <button type="submit" onclick="this.disabled=true;this.value='Sending, please wait...';this.form.submit();"
+            class="btn btn-primary">Simpan</button>
           </form>
         </div>
       </div>
@@ -595,7 +602,8 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Simpan</button>
+          <button type="submit" onclick="this.disabled=true;this.value='Sending, please wait...';this.form.submit();"
+            class="btn btn-primary">Simpan</button>
           </form>
         </div>
       </div>

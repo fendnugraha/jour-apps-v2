@@ -5,6 +5,7 @@
 {{-- Content Area --}}
 
 <div class="container" style="margin-top: 70px">
+    @include('include.setting')
     <a href="/setting" class="btn btn-primary mb-3"><i class="fa-solid fa-arrow-left"></i> Go back</a>
     <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addProduct">
         <i class="fa-solid fa-plus"></i> Add new product
@@ -25,7 +26,8 @@
                     <tr>
                         <th>#ID</th>
                         <th>Product name</th>
-                        <th>Harga Modal</th>
+                        <th>Modal</th>
+                        <th>Terjual</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -35,6 +37,7 @@
                         <td>{{ $p->id }}</td>
                         <td>{{ $p->name }}</td>
                         <td>{{ number_format($p->cost) }}</td>
+                        <td>{{ number_format($p->sold) }}</td>
                         <td>
                             <a href="/product/{{ $p->id }}/edit" class="btn btn-warning btn-sm">
                                 <i class="fa-solid fa-pen-to-square"></i>
@@ -79,7 +82,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="submit"
+                        onclick="this.disabled=true;this.value='Sending, please wait...';this.form.submit();"
+                        class="btn btn-primary">Simpan</button>
                 </div>
                 </form>
             </div>

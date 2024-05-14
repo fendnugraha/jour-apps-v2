@@ -3,6 +3,7 @@
 @include('include.topbar')
 @section('container')
 <div class="container" style="margin-top: 70px">
+
     <div class="row">
         <div class="col-sm">
             <h2>User Profile</h2>

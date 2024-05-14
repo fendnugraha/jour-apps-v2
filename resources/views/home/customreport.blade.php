@@ -118,13 +118,13 @@
             </tr>
             @foreach ($totalBiaya as $c)
             <tr>
-                <td colspan="3">{{ $c->description }}</td>
-                <td class="text-end text-danger">{{ number_format($c->fee_amount) }}</td>
+                <td colspan="3">{{ ucwords($c->description) }}</td>
+                <td class="text-end text-danger">{{ number_format(-$c->fee_amount) }}</td>
             </tr>
             @endforeach
             <tr>
-                <th colspan="3">Total Pengeluaran</th>
-                <th class="text-end text-danger">{{ number_format($totalBiaya->sum('fee_amount')) }}</th>
+                <th colspan="3" class="text-danger">Total Pengeluaran</th>
+                <th class="text-end text-danger">{{ number_format(-$totalBiaya->sum('fee_amount')) }}</th>
             </tr>
             </tbody>
             <tfoot>

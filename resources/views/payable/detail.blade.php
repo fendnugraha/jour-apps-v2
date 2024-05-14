@@ -172,9 +172,9 @@
                     <td>{{ number_format($r->bill_amount) == 0 ? '' : number_format($r->bill_amount) }}</td>
                     <td>{{ number_format($r->payment_amount) == 0 ? '' : number_format($r->payment_amount) }}</td>
                     <td>
-                        <a href="/hutang/{{ $r->id }}/invoice" class="btn btn-primary">
+                        {{-- <a href="/hutang/{{ $r->id }}/invoice" class="btn btn-primary">
                             <i class="fa-solid fa-eye"></i>
-                        </a>
+                        </a> --}}
                         <form action="/hutang/{{ $r->id }}/delete" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')

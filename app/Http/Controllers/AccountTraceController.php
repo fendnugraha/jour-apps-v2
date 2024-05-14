@@ -21,10 +21,10 @@ class AccountTraceController extends Controller
         return view('home.index', [
             'title' => 'Home',
             'subtitle' => 'Home',
-            'warehouseaccount' => ChartOfAccount::whereIn('account_id', ['1', '2'])->where('warehouse_id', Auth()->user()->warehouse_id)->get(),
+            'warehouseaccount' => ChartOfAccount::whereIn('account_id', ['1', '2'])->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('account_id', 'desc')->get(),
             'accounttrace' => AccountTrace::with('debt', 'cred', 'sale')->whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('id', 'desc')->get(),
             'hqaccount' => ChartOfAccount::whereIn('account_id', ['1', '2'])->where('warehouse_id', 1)->get(),
-            'product' => Product::all(),
+            'product' => Product::orderBy('sold', 'desc')->get(),
             'expense' => ChartOfAccount::whereIn('account_id', range(33, 45))->get(),
 
         ]);
@@ -56,12 +56,13 @@ class AccountTraceController extends Controller
             $value->balance = ($value->account->status == "D") ? ($value->st_balance + $debit - $credit) : ($value->st_balance + $credit - $debit);
         }
 
-        $sumtotalTransfer = $accountTrace->where('trx_type', 'Transfer Uang')->sum('amount');
-        $sumtotalTarikTunai = $accountTrace->where('trx_type', 'Tarik Tunai')->sum('amount');
-        $sumtotalVcr = $accountTrace->where('trx_type', 'Voucher & SP')->sum('amount');
-        $sumtotaldeposit = $accountTrace->where('trx_type', 'Deposit')->sum('amount');
-        $sumfee = $accountTrace->where('fee_amount', '>', 0)->sum('fee_amount');
-        $sumcost = $accountTrace->where('fee_amount', '<', 0)->sum('fee_amount');
+        $sumthismonth = $accountTrace->whereBetween('date_issued', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()])->get();
+        $sumtotalTransfer = $sumthismonth->where('trx_type', 'Transfer Uang')->sum('amount');
+        $sumtotalTarikTunai = $sumthismonth->where('trx_type', 'Tarik Tunai')->sum('amount');
+        $sumtotalVcr = $sumthismonth->where('trx_type', 'Voucher & SP')->sum('amount');
+        $sumtotaldeposit = $sumthismonth->where('trx_type', 'Deposit')->sum('amount');
+        $sumfee = $sumthismonth->where('fee_amount', '>', 0)->sum('fee_amount');
+        $sumcost = $sumthismonth->where('fee_amount', '<', 0)->sum('fee_amount');
         $sumtotalCash = $chartOfAccounts->whereIn('account_id', ['1'])->sum('balance');
         $sumtotalBank = $chartOfAccounts->whereIn('account_id', ['2'])->sum('balance');
 
@@ -437,6 +438,11 @@ class AccountTraceController extends Controller
                 $sale->warehouse_id = Auth()->user()->warehouse_id;
                 $sale->user_id = Auth()->user()->id;
                 $sale->save();
+            }
+
+            if ($request->trx_type == "Voucher & SP") {
+                $sold = Product::find($request->product_id)->sold + $request->qty;
+                Product::find($request->product_id)->update(['sold' => $sold]);
             }
 
 

@@ -4,6 +4,7 @@
 @section('container')
 <!-- Content  -->
 <div class="container" style="margin-top: 70px">
+    @include('include.setting')
     <a href="/setting" class="btn btn-primary mb-3"><i class="fa-solid fa-arrow-left"></i> Go back</a>
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addUser">
