@@ -24,7 +24,7 @@ class AccountTraceController extends Controller
             'warehouseaccount' => ChartOfAccount::whereIn('account_id', ['1', '2'])->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('account_id', 'desc')->get(),
             'accounttrace' => AccountTrace::with('debt', 'cred', 'sale')->whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('id', 'desc')->get(),
             'hqaccount' => ChartOfAccount::whereIn('account_id', ['1', '2'])->where('warehouse_id', 1)->get(),
-            'product' => Product::orderBy('sold', 'desc')->get(),
+            'product' => Product::orderBy('sold', 'desc')->orderBy('name', 'asc')->get(),
             'expense' => ChartOfAccount::whereIn('account_id', range(33, 45))->get(),
 
         ]);
