@@ -284,12 +284,18 @@
                     @csrf
                     <div class="form-group mb-3">
                         <label for="accounts">Akun</label>
-                        <select name="accounts" id="accounts" class="form-select">
+                        <select name="accounts" id="accounts"
+                            class="form-select @error('accounts') is-invalid @enderror">
                             <option value="">Pilih Akun</option>
                             @foreach ($account as $ac)
                             <option value="{{ $ac->acc_code }}">{{ $ac->acc_name }} - {{ $ac->acc_code }}</option>
                             @endforeach
                         </select>
+                        @error('accounts')
+                        <div class="invalid-feedback">
+                            <small>{{ $message }}</small>
+                        </div>
+                        @enderror
                     </div>
                     <div class="form-group mb-3">
                         <label for="start_date">Dari</label>

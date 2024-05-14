@@ -457,6 +457,10 @@ class AccountTraceController extends Controller
 
     public function generalLedger(Request $request)
     {
+        $request->validate([
+            'accounts' => 'required',
+        ]);
+
         $accountTrace = new AccountTrace();
         $startDate = Carbon::parse($request->start_date)->startOfDay();
         $endDate = Carbon::parse($request->end_date)->endOfDay();
