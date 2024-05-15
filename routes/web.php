@@ -110,6 +110,7 @@ Route::post('/addTarikTunai', [AccountTraceController::class, 'addTarikTunai'])-
 Route::post('/transaksi', [AccountTraceController::class, 'transaksi'])->middleware('auth');
 Route::post('/mutasi', [AccountTraceController::class, 'mutasi'])->middleware('auth');
 Route::post('/pengeluaran', [AccountTraceController::class, 'pengeluaran'])->middleware('auth');
+Route::post('/adminbank', [AccountTraceController::class, 'adminbank'])->middleware('auth');
 Route::get('/home/{id}/edit', [AccountTraceController::class, 'edit'])->middleware('auth');
 Route::put('/home/{id}/edit', [AccountTraceController::class, 'update'])->name('accounttrace.update')->middleware('auth');
 Route::delete('/deleteAccountTrace/{id}', [AccountTraceController::class, 'destroy'])->name('accounttrace.delete')->middleware('auth');

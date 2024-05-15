@@ -392,6 +392,34 @@ class AccountTraceController extends Controller
         return redirect()->back()->with('success', 'Pengeluaran added successfully.');
     }
 
+    public function adminbank(Request $request)
+    {
+        $request->validate([
+            'cred' => 'required',
+            'amount' => 'required|numeric',
+        ]);
+
+        $w_account = Warehouse::with('chartofaccount')->Where('id', Auth()->user()->warehouse_id)->first();
+        $w_account = $w_account->chartofaccount->acc_code;
+
+        $description = $request->description ?? "Biaya Admin Bank";
+
+        $accountTrace = new AccountTrace();
+        $accountTrace->date_issued = $request->date_issued;
+        $accountTrace->invoice = $accountTrace->invoice_journal();
+        $accountTrace->debt_code = $w_account;
+        $accountTrace->cred_code = $request->cred;
+        $accountTrace->amount = $request->amount;
+        $accountTrace->fee_amount = -$request->amount;
+        $accountTrace->description = $description;
+        $accountTrace->trx_type = "Pengeluaran";
+        $accountTrace->user_id = Auth()->user()->id;
+        $accountTrace->warehouse_id = Auth()->user()->warehouse_id;
+        $accountTrace->save();
+
+        return redirect()->back()->with('success', 'Biaya admin bank added successfully.');
+    }
+
     public function transaksi(Request $request)
     {
         $request->validate([

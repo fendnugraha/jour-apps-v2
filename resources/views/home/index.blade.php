@@ -46,9 +46,16 @@
           </button>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#ModalMutasiKas">Mutasi Kas /
-                Bank</a></li>
+                Bank</a>
+            </li>
             <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#ModalPengeluaran">Biaya /
-                Pengeluaran</a></li>
+                Pengeluaran Operasional</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#ModalBiayaAdminBank">
+                Biaya Admin Bank
+              </a>
+            </li>
           </ul>
         </div>
         {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalvcrSP">
@@ -114,9 +121,7 @@
             <form action="{{ route('accounttrace.delete', $at->id) }}" method="post" class="d-inline">
               @csrf
               @method('DELETE')
-              <button type="submit"
-                onclick="this.disabled=true;this.value='Sending, please wait...';this.form.submit();"
-                onclick="return confirm('Are you sure?')" class="btn btn-danger btn-sm"><i
+              <button type="submit" onclick="return confirm('Are you sure?')" class="btn btn-danger btn-sm"><i
                   class="fa-solid fa-trash"></i>
               </button>
             </form>
@@ -612,6 +617,81 @@
       </div>
     </div>
   </div>
+</div>
+
+{{-- Admin Bnk --}}
+<div class="modal fade" id="ModalBiayaAdminBank" tabindex="-1" aria-labelledby="ModalBiayaAdminBankLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="ModalBiayaAdminBankLabel">Biaya admin bank</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/adminbank" method="post">
+          @csrf
+          <div class="mb-2 row">
+            <label for="date_issued" class="col-sm col-form-label">Tanggal</label>
+            <div class="col-sm-8">
+              <input type="datetime-local" class="form-control @error('date_issued') is-invalid @enderror"
+                name="date_issued" id="date_issued"
+                value="{{old('date_issued') == null ? date('Y-m-d H:i') : old('date_issued')}}">
+              @error('date_issued')
+              <div class="invalid-feedback">
+                <small>{{ $message }}</small>
+              </div>
+              @enderror
+            </div>
+          </div>
+          <div class="mb-2 row">
+            <label for="cred" class="col-sm col-form-label">Rekening Bank</label>
+            <div class="col-sm-8">
+              <select name="cred" id="cred" class="form-select @error('cred') is-invalid @enderror">
+                <option value="">Pilih Bank</option>
+                @foreach ($warehouseaccount as $coa)
+                <option value="{{ $coa->acc_code }}" {{old('cred')==$coa->acc_code ? 'selected' : ''}}>{{
+                  $coa->acc_name }}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="mb-2 row">
+            <label for="amount" class="col-sm col-form-label">Jumlah</label>
+            <div class="col-sm-8">
+              <input type="number" class="form-control @error('amount') is-invalid @enderror" name="amount" id="amount"
+                value="{{old('amount')}}">
+              @error('amount')
+              <div class="invalid-feedback">
+                <small>{{ $message }}</small>
+              </div>
+              @enderror
+            </div>
+          </div>
+          <div class="mb-2 row">
+            <label for="description" class="col-sm col-form-label">Deskripsi</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control @error('description') is-invalid @enderror" name="description"
+                id="description" value="{{old('description') == null ? '' : old('description')}}"
+                placeholder="Keterangan">
+              @error('description')
+              <div class="invalid-feedback">
+                <small>{{ $message }}</small>
+              </div>
+              @enderror
+            </div>
+          </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" onclick="this.disabled=true;this.value='Sending, please wait...';this.form.submit();"
+          class="btn btn-primary">Simpan</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 </div>
 {{-- End Modal Area --}}
 
