@@ -4,7 +4,8 @@
 @section('container')
 {{-- Content Start --}}
 
-<div class="container" style="margin-top: 70px">
+<div class="container mt-3">
+
     <!-- Content  -->
     <div class="row mb-3 g-1">
         <div class="col-lg">

@@ -26,10 +26,8 @@
 
 <body>
 
-    <div class="container mt-3">
-        @yield('container')
+    @yield('container')
 
-    </div>
     <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 5">
         @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">

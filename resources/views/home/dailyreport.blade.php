@@ -3,94 +3,96 @@
 @include('include.topbar')
 @section('container')
 {{-- Content Start --}}
-<h5>Laporan Harian Cabang {{ date('l, d F Y') }}</h5>
-<div class="daily-report my-3">
-    <div class="div1">
-        <div class="card text-bg-dark h-100 rounded-3">
-            <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                <h5>Saldo Kas</h5>
-                <h1>{{ number_format($totalCash->flatten()->sum('balance')) }}</h1>
+<div class="container mt-3">
 
-            </div>
-        </div>
-    </div>
-    <div class="div2">
-        <div class="card text-bg-dark h-100 rounded-3">
-            <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                <h5>Total Saldo Bank</h5>
-                <h1>{{ number_format($totalBank->flatten()->sum('balance')) }}</h1>
-            </div>
-        </div>
-    </div>
-    <div class="div3">
-        <div class="card text-bg-dark h-100 rounded-3">
-            <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                <h5>Total Transfer</h5>
-                <h1>{{ number_format($totalTransfer) }}</h1>
-            </div>
-        </div>
-    </div>
-    <div class="div4">
-        <div class="card text-bg-dark h-100 rounded-3">
-            <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                <h5>Total Tarik Tunai</h5>
-                <h1>{{ number_format($totalTarikTunai) }}</h1>
-            </div>
-        </div>
-    </div>
-    <div class="div5">
-        <div class="card text-bg-dark h-100 rounded-3">
-            <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                <h5>Total Kas & Bank</h5>
-                <h1 class="text-warning display-2 fw-bold">{{
-                    number_format($endbalance->flatten()->sum('balance'))
-                    }}</h1>
-            </div>
-        </div>
-    </div>
-    <div class="div6">
-        <div class="card text-bg-dark h-100 rounded-3">
-            <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                <h5>Voucher & Kartu SP</h5>
-                <h1>{{ number_format($totalVcr) }}</h1>
-            </div>
-        </div>
-    </div>
-    <div class="div7">
-        <div class="card text-bg-dark h-100 rounded-3">
-            <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                <h5>Deposit, Pulsa, Dll</h5>
-                <h1>{{ number_format($totaldeposit) }}</h1>
-            </div>
-        </div>
-    </div>
-    <div class="div8">
-        <div class="card text-bg-dark h-100 rounded-3">
-            <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                <h5>Total Fee (Admin)</h5>
-                <h1>{{ number_format($fee) }}</h1>
-            </div>
-        </div>
-    </div>
-    <div class="div9">
-        <div class="card text-bg-dark h-100 rounded-3">
-            <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                <h5>Total Pengeluaran (Biaya)</h5>
-                <h1>{{ number_format(-$cost->flatten()->sum('fee_amount')) }}</h1>
+    <h5>Laporan Harian Cabang {{ date('l, d F Y') }}</h5>
+    <div class="daily-report my-3">
+        <div class="div1">
+            <div class="card text-bg-dark h-100 rounded-3">
+                <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                    <h5>Saldo Kas</h5>
+                    <h1>{{ number_format($totalCash->flatten()->sum('balance')) }}</h1>
 
+                </div>
             </div>
         </div>
-    </div>
-    <div class="div10">
-        <div class="card text-bg-dark h-100 rounded-3">
-            <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                <h5>Total Laba (Profit)</h5>
-                <h1>{{ number_format($fee+$cost->flatten()->sum('fee_amount')) }}</h1>
+        <div class="div2">
+            <div class="card text-bg-dark h-100 rounded-3">
+                <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                    <h5>Total Saldo Bank</h5>
+                    <h1>{{ number_format($totalBank->flatten()->sum('balance')) }}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="div3">
+            <div class="card text-bg-dark h-100 rounded-3">
+                <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                    <h5>Total Transfer</h5>
+                    <h1>{{ number_format($totalTransfer) }}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="div4">
+            <div class="card text-bg-dark h-100 rounded-3">
+                <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                    <h5>Total Tarik Tunai</h5>
+                    <h1>{{ number_format($totalTarikTunai) }}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="div5">
+            <div class="card text-bg-dark h-100 rounded-3">
+                <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                    <h5>Total Kas & Bank</h5>
+                    <h1 class="text-warning display-2 fw-bold">{{
+                        number_format($endbalance->flatten()->sum('balance'))
+                        }}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="div6">
+            <div class="card text-bg-dark h-100 rounded-3">
+                <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                    <h5>Voucher & Kartu SP</h5>
+                    <h1>{{ number_format($totalVcr) }}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="div7">
+            <div class="card text-bg-dark h-100 rounded-3">
+                <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                    <h5>Deposit, Pulsa, Dll</h5>
+                    <h1>{{ number_format($totaldeposit) }}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="div8">
+            <div class="card text-bg-dark h-100 rounded-3">
+                <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                    <h5>Total Fee (Admin)</h5>
+                    <h1>{{ number_format($fee) }}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="div9">
+            <div class="card text-bg-dark h-100 rounded-3">
+                <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                    <h5>Total Pengeluaran (Biaya)</h5>
+                    <h1>{{ number_format(-$cost->flatten()->sum('fee_amount')) }}</h1>
 
+                </div>
+            </div>
+        </div>
+        <div class="div10">
+            <div class="card text-bg-dark h-100 rounded-3">
+                <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                    <h5>Total Laba (Profit)</h5>
+                    <h1>{{ number_format($fee+$cost->flatten()->sum('fee_amount')) }}</h1>
+
+                </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 <div class="container">
     <div class="row">
