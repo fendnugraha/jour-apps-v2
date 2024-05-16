@@ -109,8 +109,8 @@ class AccountTraceController extends Controller
             $value->balance = ($value->account->status == "D") ? ($value->st_balance + $debit - $credit) : ($value->st_balance + $credit - $debit);
         }
         $trx = AccountTrace::where('warehouse_id', Auth()->user()->warehouse_id)->whereBetween('date_issued', [$startDate, $endDate])->get();
-        $totalTransfer = $trx->where('trx_type', 'Transfer Uang')->sum('amount');
-        $totalTarikTunai = $trx->where('trx_type', 'Tarik Tunai')->sum('amount');
+        $totalTransfer = $trx->where('trx_type', 'Transfer Uang');
+        $totalTarikTunai = $trx->where('trx_type', 'Tarik Tunai');
         $totalVcr = $trx->where('trx_type', 'Voucher & SP')->sum('amount');
         $totaldeposit = $trx->where('trx_type', 'Deposit')->sum('amount');
         $fee = $trx->where('fee_amount', '>', 0)->sum('fee_amount');

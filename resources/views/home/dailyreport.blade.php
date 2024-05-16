@@ -28,7 +28,8 @@
             <div class="card text-bg-dark h-100 rounded-3">
                 <div class="card-body d-flex justify-content-center align-items-center flex-column">
                     <h5>Total Transfer</h5>
-                    <h1>{{ number_format($totalTransfer) }}</h1>
+                    <small>{{ number_format($totalTransfer->count()) }} Trx</small>
+                    <h1>{{ number_format($totalTransfer->sum('amount')) }}</h1>
                 </div>
             </div>
         </div>
@@ -36,7 +37,8 @@
             <div class="card text-bg-dark h-100 rounded-3">
                 <div class="card-body d-flex justify-content-center align-items-center flex-column">
                     <h5>Total Tarik Tunai</h5>
-                    <h1>{{ number_format($totalTarikTunai) }}</h1>
+                    <small>{{ number_format($totalTarikTunai->count()) }} Trx</small>
+                    <h1>{{ number_format($totalTarikTunai->sum('amount')) }}</h1>
                 </div>
             </div>
         </div>
