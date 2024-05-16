@@ -59,14 +59,14 @@ class AccountTraceController extends Controller
         }
 
         $sumthismonth = $accountTrace->whereBetween('date_issued', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()])->get();
-        $sumtotalTransfer = $sumthismonth->where('trx_type', 'Transfer Uang')->sum('amount');
+        $sumtotalTransfer = $sumthismonth->where('trx_type', 'Transfer Uang');
         $sumtotalTarikTunai = $sumthismonth->where('trx_type', 'Tarik Tunai')->sum('amount');
         $sumtotalVcr = $sumthismonth->where('trx_type', 'Voucher & SP')->sum('amount');
         $sumtotaldeposit = $sumthismonth->where('trx_type', 'Deposit')->sum('amount');
         $sumfee = $sumthismonth->where('fee_amount', '>', 0)->sum('fee_amount');
         $sumcost = $sumthismonth->where('fee_amount', '<', 0)->sum('fee_amount');
-        $sumtotalCash = $chartOfAccounts->whereIn('account_id', ['1'])->sum('balance');
-        $sumtotalBank = $chartOfAccounts->whereIn('account_id', ['2'])->sum('balance');
+        $sumtotalCash = $chartOfAccounts->whereIn('account_id', ['1']);
+        $sumtotalBank = $chartOfAccounts->whereIn('account_id', ['2']);
 
 
         return view('home.admin', [
@@ -83,7 +83,7 @@ class AccountTraceController extends Controller
             'sumcost' => $sumcost,
             'sumtotalCash' => $sumtotalCash,
             'sumtotalBank' => $sumtotalBank,
-            'sumendbalance' => $sumtotalCash + $sumtotalBank,
+            'sumendbalance' => $sumtotalCash->sum('balance') + $sumtotalBank->sum('balance'),
         ]);
     }
 
@@ -363,6 +363,21 @@ class AccountTraceController extends Controller
         $accountTrace->save();
 
         return redirect()->back()->with('success', 'Mutasi added successfully.');
+    }
+
+    public function transfersaldo($id)
+    {
+        $warehouse = Warehouse::find($id);
+
+        return view('home.mutasi', [
+            'title' => 'Transfer Saldo',
+            'active' => 'reports',
+            'subtitle' => 'Transfer Saldo',
+            'warehouse' => $warehouse,
+            'warehouse_name' => $warehouse->w_name,
+            'hqaccount' => ChartOfAccount::whereIn('account_id', ['1', '2'])->where('warehouse_id', 1)->get(),
+            'warehouseaccount' => ChartOfAccount::whereIn('account_id', ['1', '2'])->where('warehouse_id', $id)->get(),
+        ]);
     }
 
     public function pengeluaran(Request $request)

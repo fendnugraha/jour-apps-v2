@@ -619,7 +619,7 @@
   </div>
 </div>
 
-{{-- Admin Bnk --}}
+{{-- Admin Bank --}}
 <div class="modal fade" id="ModalBiayaAdminBank" tabindex="-1" aria-labelledby="ModalBiayaAdminBankLabel"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">

@@ -33,7 +33,7 @@
       <div class="card text-bg-dark h-100">
         <div class="card-body d-flex justify-content-center align-items-center flex-column">
           <h4>Saldo Kas</h4>
-          <h1>{{ number_format($sumtotalCash) }}</h1>
+          <h1>{{ number_format($sumtotalCash->sum('balance')) }}</h1>
 
         </div>
       </div>
@@ -42,7 +42,7 @@
       <div class="card text-bg-dark h-100">
         <div class="card-body d-flex justify-content-center align-items-center flex-column">
           <h4>Total Saldo Bank</h4>
-          <h1>{{ number_format($sumtotalBank) }}</h1>
+          <h1>{{ number_format($sumtotalBank->sum('balance')) }}</h1>
         </div>
       </div>
     </div>
@@ -50,7 +50,7 @@
       <div class="card text-bg-dark h-100">
         <div class="card-body d-flex justify-content-center align-items-center flex-column">
           <h4>Total Transfer</h4>
-          <h1>{{ number_format($sumtotalTransfer) }}</h1>
+          <h1>{{ number_format($sumtotalTransfer->sum('amount')) }}</h1>
         </div>
       </div>
     </div>
@@ -111,6 +111,36 @@
       </div>
     </div>
   </div>
+
+  <table class="table display">
+    <thead>
+      <tr>
+        <th>Nama Konter</th>
+        <th>Total Uang Cash</th>
+        <th>Total Saldo Bank</th>
+        <th>Jumlah</th>
+        <th class="text-center">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach ($warehouse as $w)
+      @php
+      $cash = $sumtotalCash->where('warehouse_id', $w->id)->sum('balance');
+      $bank = $sumtotalBank->where('warehouse_id', $w->id)->sum('balance');
+      @endphp
+      <tr>
+        <td>{{ $w->w_name }}</td>
+        <td>{{ number_format($cash) }}</td>
+        <td>{{ number_format($bank) }}</td>
+        <th>{{ number_format($bank+$cash) }}</th>
+        <td class="text-center">
+          <a href="/home/{{ $w->id }}/transfer" class="btn btn-dark btn-sm">Mutasi Saldo <i
+              class="fa-solid fa-circle-arrow-right"></i></a>
+        </td>
+      </tr>
+      @endforeach
+    </tbody>
+  </table>
 
 </div>
 
