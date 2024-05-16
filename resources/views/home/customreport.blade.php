@@ -116,7 +116,10 @@
             </tr>
             @foreach ($totalBiaya as $c)
             <tr>
-                <td colspan="3">{{ ucwords($c->description) }}</td>
+                <td colspan="3">
+                    {{ $c->date_issued }}<br>
+                    {{ ucwords($c->description) }}
+                </td>
                 <td class="text-end text-danger">{{ number_format(-$c->fee_amount) }}</td>
             </tr>
             @endforeach
