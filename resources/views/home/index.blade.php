@@ -6,7 +6,7 @@
 
 <div class="container mt-3">
 
-  <div class="row ">
+  <div class="row gap-2">
     <div class="col-sm">
       <div class="d-grid gap-2">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalTransfer">

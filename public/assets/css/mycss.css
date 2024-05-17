@@ -203,12 +203,6 @@ tr {
   font-size: 0.65em;
 }
 
-@media (max-width: 991.98px) {
-  .dashboard-area {
-    display: flex;
-    flex-direction: column;
-  }
-}
 .daily-report {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -255,4 +249,15 @@ tr {
 
 .div10 {
   grid-area: 7/3/9/5;
+}
+
+@media (max-width: 575.98px) {
+  .dashboard-area {
+    display: flex;
+    flex-direction: column;
+  }
+  .daily-report {
+    display: flex;
+    flex-direction: column;
+  }
 }/*# sourceMappingURL=mycss.css.map */

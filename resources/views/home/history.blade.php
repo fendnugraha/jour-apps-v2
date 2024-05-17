@@ -6,7 +6,7 @@
 <div class="container mt-3">
 
     <div class="row g-1">
-        <div class="col">
+        <div class="col-sm">
             <div class="card card-widget text-bg-dark">
                 <div class="card-body">
                     <h5>Saldo awal</h5>
@@ -14,7 +14,7 @@
                 </div>
             </div>
         </div>
-        <div class="col">
+        <div class="col-sm">
             <div class="card card-widget text-bg-dark">
                 <div class="card-body p-3">
                     <h5>Debet</h5>
@@ -22,7 +22,7 @@
                 </div>
             </div>
         </div>
-        <div class="col">
+        <div class="col-sm">
             <div class="card card-widget text-bg-dark">
                 <div class="card-body p-3">
                     <h5>Kredit</h5>
@@ -30,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <div class="col">
+        <div class="col-sm">
             <div class="card card-widget text-bg-dark">
                 <div class="card-body p-3">
                     <h5>Saldo akhir</h5>
@@ -56,14 +56,14 @@
                     </select>
                 </div>
             </div>
-            <div class="col">
+            <div class="col-sm">
                 <div class="form-group">
                     <label for="start_date">Dari</label>
                     <input type="date" name="start_date" id="start_date" class="form-control"
                         value="{{ date('Y-m-d') == null ? date('Y-m-d') : $start_date }}">
                 </div>
             </div>
-            <div class="col">
+            <div class="col-sm">
                 <div class="form-group">
                     <label for="end_date">Sampai</label>
                     <input type="date" name="end_date" id="end_date" class="form-control"

@@ -260,12 +260,6 @@ tr {
   }
 }
 
-@media (max-width: 991.98px) {
-  .dashboard-area {
-    display: flex;
-    flex-direction: column;
-  }
-}
 // End Dashboard GRID
 
 //Report GRID Start
@@ -308,3 +302,15 @@ tr {
   grid-area: 7 / 3 / 9 / 5;
 }
 //Report GRID End
+
+@media (max-width: 575.98px) {
+  .dashboard-area {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .daily-report {
+    display: flex;
+    flex-direction: column;
+  }
+}
