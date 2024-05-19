@@ -263,6 +263,7 @@ class AccountTraceController extends Controller
         $revenue = $accountTrace->whereBetween('date_issued', [$startDate, $endDate])
             ->selectRaw('SUM(amount) as total, warehouse_id, SUM(fee_amount) as sumfee')
             ->groupBy('warehouse_id')
+            ->orderBy('sumfee', 'desc')
             ->get();
         // dd($revenue);
 
@@ -447,6 +448,9 @@ class AccountTraceController extends Controller
             'trx_type' => 'required',
         ]);
 
+        if ($request->trx_type == "Voucher & SP" && $request->product_id == null) {
+            return redirect()->back()->with('error', 'Please select product.');
+        }
         // $modal = $request->modal * $request->qty;
         $jual = $request->jual * $request->qty;
         $cost = Product::find($request->product_id)->cost ?? $request->modal;
@@ -459,9 +463,6 @@ class AccountTraceController extends Controller
         $invoice = new AccountTrace();
         $invoice->invoice = $invoice->invoice_journal();
 
-        if ($request->trx_type == "Voucher & SP" && $request->product_id == null) {
-            return redirect()->back()->with('error', 'Please select product.');
-        }
 
         try {
             DB::beginTransaction();

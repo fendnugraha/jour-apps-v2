@@ -443,7 +443,7 @@
               <div class="mb-3 col-sm">
                 <label for="product_id" class="form-label">Produk</label>
                 <select class="form-select" name="product_id" id="product_id">
-                  <option selected>- Pilih Produk -</option>
+                  <option>- Pilih Produk -</option>
                   @foreach ($product as $p)
                   <option value="{{ $p->id }}">{{ $p->name }} (Rp. {{ number_format($p->cost) }})</option>
                   @endforeach
