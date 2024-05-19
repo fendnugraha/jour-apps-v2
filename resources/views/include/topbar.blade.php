@@ -24,7 +24,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="/hutang">Hutang</a></li>
-                        <li><a class="dropdown-item" href="#">Piutang</a></li>
+                        <li><a class="dropdown-item" href="/piutang">Piutang</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">

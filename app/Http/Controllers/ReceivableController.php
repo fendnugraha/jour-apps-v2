@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\ReceivablesExport;
 use Carbon\Carbon;
 use App\Models\Contact;
 use App\Models\Receivable;
 use App\Models\AccountTrace;
 use Illuminate\Http\Request;
 use App\Models\ChartOfAccount;
+use App\Exports\ReceivableExport;
+
 use Illuminate\Routing\Controller;
 
-use Maatwebsite\Excel\Facades\Excel;
-
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReceivableController extends Controller
 {
@@ -28,7 +28,7 @@ class ReceivableController extends Controller
 
         // dd($bill_total);
 
-        return view('journal.receivable.index', [
+        return view('receivable.index', [
             'title' => 'Receivable',
             'bill_total' => $bill_total,
         ]);
@@ -36,7 +36,7 @@ class ReceivableController extends Controller
 
     public function invoice()
     {
-        return view('journal.receivable.invoice', [
+        return view('receivable.invoice', [
             'title' => 'Receivable Invoice',
             'contacts' => Contact::orderBy('name')->get(),
         ]);
@@ -47,7 +47,7 @@ class ReceivableController extends Controller
         $coa = ChartOfAccount::where('account_id', 4)->orderBy('acc_code', 'asc')->get();
         $rscFund = ChartOfAccount::whereIn('account_id', [1, 2, 6])->orderBy('acc_code', 'asc')->get();
 
-        return view('journal.receivable.addReceivable', [
+        return view('receivable.addReceivable', [
             'title' => 'Add Receivable',
             'contacts' => Contact::orderBy('name')->get(),
             'rcv' => $coa,
@@ -59,7 +59,7 @@ class ReceivableController extends Controller
     {
         $coa = ChartOfAccount::where('account_id', 4)->get();
 
-        return view('journal.receivable.addReceivableDeposit', [
+        return view('receivable.addReceivableDeposit', [
             'title' => 'Add Receivable Deposit',
             'contacts' => Contact::orderBy('name')->get(),
             'rcv' => $coa,
@@ -70,7 +70,7 @@ class ReceivableController extends Controller
     {
         $coa = ChartOfAccount::where('account_id', 4)->get();
 
-        return view('journal.receivable.addReceivableSales', [
+        return view('receivable.addReceivableSales', [
             'title' => 'Add Receivable Sales',
             'contacts' => Contact::orderBy('name')->get(),
             'rcv' => $coa,
@@ -184,7 +184,9 @@ class ReceivableController extends Controller
                     'debt_code' => $request->debt_code,
                     'cred_code' => $request->cred_code,
                     'amount' => $request->amount,
+                    'fee_amount' => 0,
                     'status' => 1,
+                    'trx_type' => 'Receivable',
                     'rcv_pay' => 'Receivable',
                     'payment_status' => 0,
                     'payment_nth' => 0,
@@ -193,8 +195,10 @@ class ReceivableController extends Controller
                 ]);
             });
 
+            DB::commit();
             return redirect('/piutang')->with('success', 'Receivable added successfully');
         } catch (\Exception $e) {
+            DB::rollBack();
             return redirect('/piutang')->with('error', 'Receivable added failed');
         }
     }
@@ -226,7 +230,7 @@ class ReceivableController extends Controller
             return redirect()->back()->with('error', 'Receivable not found');
         }
 
-        return view('journal.receivable.detail', [
+        return view('receivable.detail', [
             'title' => 'Receivable Detail',
             'rcv' => $rcv,
             'rcvs' => $rcvs,
@@ -291,7 +295,9 @@ class ReceivableController extends Controller
                     'debt_code' => $request->debt_code,
                     'cred_code' => $dtRcv->account_code,
                     'amount' => $request->amount,
+                    'fee_amount' => 0,
                     'status' => 1,
+                    'trx_type' => 'Receivable',
                     'rcv_pay' => 'Receivable',
                     'payment_status' => $payment_status,
                     'payment_nth' => $payment_nth,
@@ -300,8 +306,10 @@ class ReceivableController extends Controller
                 ]);
             });
 
+            DB::commit();
             return redirect('/piutang/' . $dtRcv->contact_id . '/detail')->with('success', 'Receivable added successfully');
         } catch (\Exception $e) {
+            DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -320,7 +328,7 @@ class ReceivableController extends Controller
 
         $rscFund = ChartOfAccount::whereIn('account_id', [1, 2, 6, 19, 26])->get();
 
-        return view('journal.receivable.update', [
+        return view('receivable.update', [
             'title' => 'Edit Receivable',
             'rcv' => $rcv,
             'rscFund' => $rscFund,
@@ -418,8 +426,8 @@ class ReceivableController extends Controller
         }
     }
 
-    // public function export()
-    // {
-    //     return Excel::download(new ReceivablesExport, 'Receivables ' . Carbon::now() . '.xlsx');
-    // }
+    public function export()
+    {
+        return Excel::download(new ReceivableExport, 'Receivables ' . Carbon::now() . '.xlsx');
+    }
 }

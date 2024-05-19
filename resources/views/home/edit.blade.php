@@ -97,7 +97,14 @@
         </div>
 
         <button type="submit" class="btn btn-success">Update</button>
-        <a href="/home" class="btn btn-danger">Cancel</a>
+        <a href="/home" class="btn btn-secondary">Cancel</a>
+    </form>
+    <form action="{{ route('accounttrace.delete', $accountTrace->id) }}" method="post" class="d-inline">
+        @csrf
+        @method('DELETE')
+        <button type="submit" onclick="return confirm('Are you sure?')" class="btn btn-danger"><i
+                class="fa-solid fa-trash"></i> Hapus
+        </button>
     </form>
 </div>
 

@@ -74,7 +74,7 @@
                         </div>
                         <div class="d-flex mt-3 justify-content-start gap-2 align-items-center">
                             <button type="submit" class="btn btn-primary">Save</button>
-                            <a href="/home/administrator" class="btn btn-danger">Cancel</a>
+                            <a href="/home/administrator" class="btn btn-danger">Kembali</a>
                         </div>
                     </form>
                 </div>

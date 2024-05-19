@@ -12,9 +12,9 @@
         <a href="/setting/users" class="setting-icon-action">
             <h1><i class="fa-solid fa-users"></i></h1> <span class="setting-icon-text"> Users</span>
         </a>
-        {{-- <a href="/setting/contacts" class="setting-icon-action">
+        <a href="/setting/contacts" class="setting-icon-action">
             <h1><i class="fa-solid fa-address-book"></i></h1> <span class="setting-icon-text"> Contacts</span>
-        </a> --}}
+        </a>
         <a href="/setting/accounts" class="setting-icon-action">
             <h1><i class="fa-solid fa-book-open-reader"></i></h1> <span class="setting-icon-text"> Accounts</span>
         </a>

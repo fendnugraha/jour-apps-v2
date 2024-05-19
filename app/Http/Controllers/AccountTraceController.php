@@ -19,14 +19,17 @@ class AccountTraceController extends Controller
         $startDate = Carbon::now()->startOfDay();
         $endDate = Carbon::now()->endOfDay();
 
+        $chartOfAccounts = new ChartOfAccount();
+
         return view('home.index', [
             'title' => 'Home',
             'subtitle' => 'Home',
-            'warehouseaccount' => ChartOfAccount::whereIn('account_id', ['1', '2'])->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('account_id', 'desc')->get(),
+            'warehouseaccount' => $chartOfAccounts->whereIn('account_id', ['1', '2'])->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('account_id', 'desc')->get(),
             'accounttrace' => AccountTrace::with('debt', 'cred', 'sale', 'user')->whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('id', 'desc')->get(),
-            'hqaccount' => ChartOfAccount::whereIn('account_id', ['1', '2'])->where('warehouse_id', 1)->get(),
+            'hqaccount' => $chartOfAccounts->whereIn('account_id', ['1', '2'])->where('warehouse_id', 1)->get(),
             'product' => Product::orderBy('sold', 'desc')->orderBy('name', 'asc')->get(),
-            'expense' => ChartOfAccount::whereIn('account_id', range(33, 45))->get(),
+            'expense' => $chartOfAccounts->whereIn('account_id', range(33, 45))->get(),
+            'belumdiambil' => AccountTrace::with('debt', 'cred', 'sale', 'user')->where('status', 2)->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('id', 'desc')->get(),
 
         ]);
     }
@@ -440,12 +443,14 @@ class AccountTraceController extends Controller
         $request->validate([
             'qty' => 'required|numeric',
             'jual' => 'required|numeric',
-            'modal' => 'required|numeric',
+            // 'modal' => 'required|numeric',
             'trx_type' => 'required',
         ]);
 
-        $modal = $request->modal * $request->qty;
+        // $modal = $request->modal * $request->qty;
         $jual = $request->jual * $request->qty;
+        $cost = Product::find($request->product_id)->cost;
+        $modal = $cost * $request->qty;
 
         $description = $request->description ?? "Transaksi";
         $w_account = Warehouse::with('chartofaccount')->Where('id', Auth()->user()->warehouse_id)->first();
@@ -481,7 +486,7 @@ class AccountTraceController extends Controller
                 $sale->product_id = $request->product_id;
                 $sale->quantity = $request->qty;
                 $sale->price = $request->jual;
-                $sale->cost = $request->modal;
+                $sale->cost = $cost;
                 $sale->warehouse_id = Auth()->user()->warehouse_id;
                 $sale->user_id = Auth()->user()->id;
                 $sale->save();

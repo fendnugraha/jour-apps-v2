@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\AccountTraceController;
 use App\Http\Controllers\ChartOfAccountController;
+use App\Http\Controllers\ReceivableController;
 use App\Http\Controllers\WarehouseAccountController;
 
 /*
@@ -143,4 +144,28 @@ Route::controller(PayableController::class)->group(function () {
 });
 
 // End Hutang Area
+// ========================================================================================================
+
+// Piutang Area
+Route::controller(ReceivableController::class)->group(function () {
+    Route::get('/piutang', 'index')->middleware('auth');
+    Route::get('/piutang/{id}/invoice', 'invoice')->middleware('auth');
+    Route::get('/piutang/addPiutang', 'addReceivable')->middleware('auth');
+    Route::post('/piutang/addPiutang', 'store')->middleware('auth');
+    Route::get('/piutang/{id}/edit', 'edit')->middleware('auth');
+    Route::put('/piutang/{id}/edit', 'update')->name('piutang.update')->middleware('auth');
+    Route::delete('/piutang/{id}/delete', 'destroy')->name('piutang.delete')->middleware('auth');
+    Route::get('/piutang/{id}/detail', 'detail')->middleware('auth');
+
+    Route::post('piutang/payment', 'storePayment')->middleware('auth');
+
+    Route::get('/piutang/addReceivableDeposit', 'addReceivableDeposit')->middleware('auth');
+
+    Route::get('/piutang/addReceivableSales', 'addReceivableSales')->middleware('auth');
+    Route::post('/piutang/addReceivableSales', 'storeReceivableSales')->middleware('auth');
+
+    Route::get('receivable/export/', 'export')->middleware('auth');
+});
+
+// End Piutang Area
 // ========================================================================================================
