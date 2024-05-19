@@ -443,13 +443,13 @@ class AccountTraceController extends Controller
         $request->validate([
             'qty' => 'required|numeric',
             'jual' => 'required|numeric',
-            // 'modal' => 'required|numeric',
+            'modal' => 'required|numeric',
             'trx_type' => 'required',
         ]);
 
         // $modal = $request->modal * $request->qty;
         $jual = $request->jual * $request->qty;
-        $cost = Product::find($request->product_id)->cost;
+        $cost = Product::find($request->product_id)->cost ?? $request->modal;
         $modal = $cost * $request->qty;
 
         $description = $request->description ?? "Transaksi";
