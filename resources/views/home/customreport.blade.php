@@ -111,20 +111,10 @@
                     $totalTarikTunai->sum('fee_amount') +
                     $totalVcr->sum('fee_amount') + $totaldeposit->sum('fee_amount')) }}</th>
             </tr>
+
             <tr>
-                <th colspan="4" class="bg-danger text-light">Pengeluaran (Biaya)</th>
-            </tr>
-            @foreach ($totalBiaya as $c)
-            <tr>
-                <td colspan="3">
-                    <small class="text-muted">{{ $c->date_issued }}</small><br>
-                    {{ ucwords($c->description) }}
-                </td>
-                <td class="text-end text-danger">{{ number_format(-$c->fee_amount) }}</td>
-            </tr>
-            @endforeach
-            <tr>
-                <th colspan="3" class="text-danger">Total Pengeluaran</th>
+                <th colspan="3" class="text-danger"><a href="#" class="text-danger text-decoration-none"
+                        data-bs-toggle="modal" data-bs-target="#exampleModal">Total Pengeluaran</a></th>
                 <th class="text-end text-danger">{{ number_format(-$totalBiaya->sum('fee_amount')) }}</th>
             </tr>
             </tbody>
@@ -207,6 +197,45 @@
         </tfoot>
     </table>
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table display table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="bg-danger text-light">Waktu</th>
+                            <th class="bg-danger text-light">Pengeluaran (Biaya)</th>
+                            <th class="bg-success text-light">Rp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($totalBiaya as $c)
+                        <tr>
+                            <td>{{ $c->created_at }}</td>
+                            <td>
+                                {{ strtoupper($c->description) }} <small class="text-muted">({{ $c->warehouse->w_name
+                                    }})</small>
+                            </td>
+                            <td class="text-end text-danger">{{ number_format(-$c->fee_amount) }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 {{-- End Content --}}
 @endsection

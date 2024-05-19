@@ -443,7 +443,7 @@ class AccountTraceController extends Controller
         $request->validate([
             'qty' => 'required|numeric',
             'jual' => 'required|numeric',
-            'modal' => 'required|numeric',
+            // 'modal' => 'required|numeric',
             'trx_type' => 'required',
         ]);
 
