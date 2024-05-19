@@ -260,8 +260,8 @@ class AccountTraceController extends Controller
         $totalBiaya = $totalTransaksi->where('trx_type', 'Pengeluaran');
         $totalLaba = $totalTransaksi->sum('fee_amount');
 
-        $revenue = $accountTrace->whereBetween('date_issued', [$startDate, $endDate])
-            ->selectRaw('SUM(amount) as total, warehouse_id, SUM(fee_amount) as sumfee')
+        $revenue = $accountTrace->selectRaw('SUM(amount) as total, warehouse_id, SUM(fee_amount) as sumfee')
+            ->whereBetween('date_issued', [$startDate, $endDate])
             ->groupBy('warehouse_id')
             ->orderBy('sumfee', 'desc')
             ->get();

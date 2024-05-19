@@ -114,7 +114,7 @@
 
             <tr>
                 <th colspan="3" class="text-danger"><a href="#" class="text-danger text-decoration-none"
-                        data-bs-toggle="modal" data-bs-target="#exampleModal">Total Pengeluaran</a></th>
+                        data-bs-toggle="modal" data-bs-target="#exampleModal">Total Pengeluaran (Biaya)</a></th>
                 <th class="text-end text-danger">{{ number_format(-$totalBiaya->sum('fee_amount')) }}</th>
             </tr>
             </tbody>
@@ -130,8 +130,8 @@
     <h2>Ringkasan Transaksi</h2>
     <small>{{ \Carbon\Carbon::parse($start_date)->locale('id_ID')->isoFormat('dddd, D MMMM YYYY') }}
         s/d {{ \Carbon\Carbon::parse($end_date)->locale('id_ID')->isoFormat('dddd, D MMMM YYYY') }}</small>
-    <table class="table table-bordered">
-        <thead>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
             <tr>
                 <th>Cabang</th>
                 <th>Transfer</th>
@@ -154,37 +154,31 @@
             @endphp
             @foreach ($revenue as $w)
             @php
-            $rvTransfer += $w->where('trx_type', 'Transfer Uang')->where('warehouse_id',
-            $w->warehouse_id)->sum('amount');
-            $rvTarikTunai += $w->where('trx_type', 'Tarik Tunai')->where('warehouse_id',
-            $w->warehouse_id)->sum('amount');
-            $rvVcr += $w->where('trx_type', 'Voucher & SP')->where('warehouse_id',
-            $w->warehouse_id)->sum('amount');
-            $rvdeposit += $w->where('trx_type', 'Deposit')->where('warehouse_id',
-            $w->warehouse_id)->sum('amount');
+            $rv = $w->whereBetween('date_issued', [\Carbon\Carbon::parse($start_date)->startOfDay(),
+            \Carbon\Carbon::parse($end_date)->endOfDay()])->where('warehouse_id', $w->warehouse_id)->get();
+
+            $rvTransfer += $rv->where('trx_type', 'Transfer Uang')->sum('amount');
+            $rvTarikTunai += $rv->where('trx_type', 'Tarik Tunai')->sum('amount');
+            $rvVcr += $rv->where('trx_type', 'Voucher & SP')->sum('amount');
+            $rvdeposit += $rv->where('trx_type', 'Deposit')->sum('amount');
             $rvLaba += $w->sumfee;
-            $rvBiaya += $w->where('trx_type', 'Pengeluaran')->where('warehouse_id',
-            $w->warehouse_id)->sum('fee_amount');
+            $rvBiaya += $rv->where('trx_type', 'Pengeluaran')->sum('fee_amount');
             @endphp
             <tr>
                 <td>{{ $w->warehouse->w_name }}</td>
-                <td>{{ number_format($w->where('trx_type', 'Transfer Uang')->where('warehouse_id',
-                    $w->warehouse_id)->sum('amount')) }}</td>
-                <td>{{ number_format($w->where('trx_type', 'Tarik Tunai')->where('warehouse_id',
-                    $w->warehouse_id)->sum('amount')) }}</td>
-                <td>{{ number_format($w->where('trx_type', 'Voucher & SP')->where('warehouse_id',
-                    $w->warehouse_id)->sum('amount')) }}</td>
-                <td>{{ number_format($w->where('trx_type', 'Deposit')->where('warehouse_id',
-                    $w->warehouse_id)->sum('amount')) }}</td>
-                <td class="text-danger">{{ number_format(-$w->where('trx_type', 'Pengeluaran')->where('warehouse_id',
-                    $w->warehouse_id)->sum('fee_amount')) }}
+                <td>{{ number_format($rv->where('trx_type', 'Transfer Uang')->sum('amount')) }}</td>
+                <td>{{ number_format($rv->where('trx_type', 'Tarik Tunai')->sum('amount')) }}</td>
+                <td>{{ number_format($rv->where('trx_type', 'Voucher & SP')->sum('amount')) }}</td>
+                <td>{{ number_format($rv->where('trx_type', 'Deposit')->sum('amount')) }}</td>
+                <td class="text-danger">
+                    {{ number_format(-$rv->where('trx_type', 'Pengeluaran')->sum('fee_amount')) }}
                 </td>
                 <td class="text-success fw-bold">{{ number_format($w->sumfee) }}</td>
             </tr>
 
             @endforeach
         </tbody>
-        <tfoot>
+        <tfoot class="table-warning">
             <tr>
                 <th>Total</th>
                 <th>{{ number_format($rvTransfer) }}</th>
