@@ -176,6 +176,7 @@
         </div>
 
     </div>
+    <hr>
     <h2 class="my-3">Penjulalan Vcr & Kartu SP</h2>
     <div class="row">
         <div class="col-sm-5">
@@ -247,7 +248,7 @@
             </table>
         </div>
     </div>
-
+    <hr>
     <div class="row my-3">
         <div class="col-sm-5">
             <h2 class="">Pengeluaran (Biaya)</h2>
