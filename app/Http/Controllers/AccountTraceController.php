@@ -565,6 +565,7 @@ class AccountTraceController extends Controller
         $request->validate([
             'debt_code' => 'required',
             'cred_code' => 'required',
+            'description' => 'required|max:160',
             'amount' => 'required|numeric',
             'fee_amount' => 'required|numeric',
         ]);
