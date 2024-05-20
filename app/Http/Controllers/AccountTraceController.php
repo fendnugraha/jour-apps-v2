@@ -182,7 +182,7 @@ class AccountTraceController extends Controller
             $value->balance = ($value->account->status == "D") ? ($value->st_balance + $debit - $credit) : ($value->st_balance + $credit - $debit);
         }
 
-        $trx = AccountTrace::where('warehouse_id', $cabang)->whereBetween('date_issued', [$startDate, $endDate])->get();
+        $trx = $accountTrace->with(['debt', 'cred', 'warehouse'])->where('warehouse_id', $cabang)->whereBetween('date_issued', [$startDate, $endDate])->get();
 
         $totalTransfer = $trx->where('trx_type', 'Transfer Uang')->sum('amount');
         $totalTarikTunai = $trx->where('trx_type', 'Tarik Tunai')->sum('amount');
@@ -196,10 +196,10 @@ class AccountTraceController extends Controller
         // $actrace = AccountTrace::with(['debt', 'cred'])->where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate]);
         // $sql = $actrace->whereIn('cred_code', $w_account)->toSql();
         // dd($sql);
-        $penambahan = AccountTrace::where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate])->get();
+        $penambahan = $accountTrace->where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate])->get();
         // $pengeluaran = AccountTrace::with(['debt', 'cred'])->where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate])->whereIn('cred_code', $w_account)->get();
 
-        $vcr = Sale::with('product')
+        $vcr = Sale::with(['product'])
             ->selectRaw('SUM(cost * quantity) as total_cost, product_id, sum(quantity) as qty')
             ->whereBetween('date_issued', [$startDate, $endDate])
             ->where('warehouse_id', $cabang)
