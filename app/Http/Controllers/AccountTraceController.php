@@ -71,6 +71,12 @@ class AccountTraceController extends Controller
         $sumtotalCash = $chartOfAccounts->whereIn('account_id', ['1']);
         $sumtotalBank = $chartOfAccounts->whereIn('account_id', ['2']);
 
+        $vcr = Sale::with('product')
+            ->selectRaw('SUM(cost * quantity) as total_cost, product_id, sum(quantity) as qty')
+            ->whereBetween('date_issued', [$startDate, $endDate])
+            ->groupBy('product_id')
+            ->get();
+
 
         return view('home.admin', [
             'title' => 'Administrator',
@@ -87,6 +93,7 @@ class AccountTraceController extends Controller
             'sumtotalCash' => $sumtotalCash,
             'sumtotalBank' => $sumtotalBank,
             'sumendbalance' => $sumtotalCash->sum('balance') + $sumtotalBank->sum('balance'),
+            'vcr' => $vcr
         ]);
     }
 
