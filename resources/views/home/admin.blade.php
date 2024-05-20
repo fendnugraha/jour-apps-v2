@@ -4,29 +4,6 @@
 @section('container')
 {{-- Content Area --}}
 <div class="container mt-3">
-  <div class="row ">
-    <div class="col-sm">
-      <div class="d-grid gap-2">
-        <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#ModalPemasukan">
-          Mutasi Kas
-        </button>
-      </div>
-    </div>
-    <div class="col-sm">
-      <div class="d-grid gap-2">
-        <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#ModalPengeluaran">
-          Pengeluaran
-        </button>
-      </div>
-    </div>
-    <div class="col-sm">
-      <div class="d-grid gap-2">
-        <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#ModalReportCabang">
-          Report Cabang
-        </button>
-      </div>
-    </div>
-  </div>
 
   <div class="daily-report my-3">
     <div class="div1">
@@ -112,6 +89,29 @@
     </div>
   </div>
 
+  <div class="row mb-3">
+    <div class="col-sm">
+      <div class="d-grid gap-2">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalPemasukan">
+          Mutasi Kas
+        </button>
+      </div>
+    </div>
+    <div class="col-sm">
+      <div class="d-grid gap-2">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalPengeluaran">
+          Pengeluaran
+        </button>
+      </div>
+    </div>
+    <div class="col-sm">
+      <div class="d-grid gap-2">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalReportCabang">
+          Report Cabang
+        </button>
+      </div>
+    </div>
+  </div>
   <table class="table display">
     <thead>
       <tr>

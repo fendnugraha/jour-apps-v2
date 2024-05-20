@@ -28,7 +28,7 @@
                     <div class="col-sm-8">
                         <input type="date" class="form-control @error('start_date') is-invalid @enderror"
                             name="start_date" id="start_date"
-                            value="{{old('start_date') == null ? date('Y-m-d') : old('start_date')}}">
+                            value="{{ $start_date == null ? date('Y-m-d') :  $start_date}}">
                         @error('start_date')
                         <div class="invalid-feedback">
                             <small>{{ $message }}</small>
@@ -40,7 +40,7 @@
                     <label for="end_date" class="col-sm col-form-label">Sampai</label>
                     <div class="col-sm-8">
                         <input type="date" class="form-control @error('end_date') is-invalid @enderror" name="end_date"
-                            id="end_date" value="{{old('end_date') == null ? date('Y-m-d') : old('end_date')}}">
+                            id="end_date" value="{{$end_date == null ? date('Y-m-d') : $end_date}}">
                         @error('end_date')
                         <div class="invalid-feedback">
                             <small>{{ $message }}</small>
@@ -145,168 +145,127 @@
             </div>
         </div>
     </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-4">
-                <h2 class="">Saldo Kas & Bank</h2>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Account</th>
-                            <th scope="col">Saldo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($warehouseaccount as $wa)
-
-                        <tr>
-                            <td>{{ $wa->acc_name }}</td>
-                            <td class="text-end">{{ number_format($wa->balance) }}</td>
-                        </tr>
-
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-sm">
-                <div class="row">
-                    <div class="col-sm">
-                        <h2 class="">Mutasi Kas</h2>
-                    </div>
-                    <div class="col-sm">
-                        <button class="btn btn-primary float-end" data-bs-toggle="modal"
-                            data-bs-target="#generalLedger">
-                            History Mutasi Saldo</button>
-                    </div>
-                </div>
-                <table class="table display">
-                    <thead>
-                        <tr>
-                            <th scope="col">Account</th>
-                            <th scope="col">Penambahan</th>
-                            <th scope="col">Pengurangan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($penambahan as $wa)
-                        <tr>
-                            <td>
-                                <small class="text-muted">{{ $wa->date_issued }}</small><br>
-                                {{ $wa->cred->acc_name }} <i class="fa-solid fa-arrow-right"></i> {{ $wa->debt->acc_name
-                                }}
-                            </td>
-                            <td>{{ number_format($wa->amount) }}</td>
-                            <td></td>
-                        </tr>
-                        @endforeach
-                        @foreach ($pengeluaran as $wa)
-                        <tr>
-                            <td>
-                                <small class="text-muted">{{ $wa->date_issued }}</small><br>
-                                {{ $wa->cred->acc_name }} <i class="fa-solid fa-arrow-right"></i> {{ $wa->debt->acc_name
-                                }}
-                            </td>
-                            <td></td>
-                            <td>{{ number_format($wa->amount) }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
+                type="button" role="tab" aria-controls="nav-home" aria-selected="true">Transaksi</button>
+            <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
+                type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Voucher & Kartu</button>
+            <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact"
+                type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Kas & Bank</button>
+            {{-- <button class="nav-link" id="nav-disabled-tab" data-bs-toggle="tab" data-bs-target="#nav-disabled"
+                type="button" role="tab" aria-controls="nav-disabled" aria-selected="false" disabled>Disabled</button>
+            --}}
         </div>
-        <h2 class="">Penjulalan Vcr & Kartu SP</h2>
-        <div class="row">
-            <div class="col-sm-5">
-                <table class="table display">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Qty</th>
-                            <th>Jumlah</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                        $sumtotalcost = 0;
-                        @endphp
-                        @foreach ($vcr as $v)
-                        @php
-                        $sumtotalcost += $v->total_cost;
-                        @endphp
-                        <tr>
-                            <td>{{ $v->product->name }}</td>
-                            <td>{{ $v->qty }}</td>
-                            <td>{{ number_format($v->total_cost) }}</td>
-                            <td>{{ number_format($sumtotalcost) }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-sm">
-                <table class="table display">
-                    <thead>
-                        <tr>
-                            <th scope="col">Waktu</th>
-                            <th scope="col">Invoice</th>
-                            <th scope="col">Product</th>
-                            <th scope="col">Qty</th>
-                            <th scope="col">Jual </th>
-                            <th scope="col">Modal</th>
-                            <th scope="col">Fee</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($sales as $s)
-                        @php
-                        $jual = $s->quantity * $s->price;
-                        $modal = $s->quantity * $s->cost;
-                        $fee = $jual - $modal;
-                        @endphp
-                        <tr>
-                            <td>{{ $s->created_at }}</td>
-                            <td>{{ $s->invoice }}</td>
-                            <td>{{ $s->product->name }}</td>
-                            <td>{{ $s->quantity }}</td>
-                            <td>{{ number_format($jual) }}
-                                <small class="text-muted d-block">{{ number_format($s->quantity) }} * {{
-                                    number_format($s->price)
-                                    }}</small>
-                            </td>
-                            <td>{{ number_format($modal) }}
-                                <small class="text-muted d-block">{{ number_format($s->quantity) }} * {{
-                                    number_format($s->cost)
-                                    }}</small>
-                            </td>
-                            <td>{{ number_format($fee) }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"
+            tabindex="0">
+            <h4 class="mt-3">Transaksi</h4>
+            <table class="table display">
+                <thead>
+                    <tr>
+                        <th>Waktu</th>
+                        <th>Deskripsi</th>
+                        <th>Type</th>
+                        <th>Jumlah</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($trx as $t)
+                    @php
+                    $hidden = $t->trx_type == 'Mutasi Kas' || $t->trx_type == 'Pengeluaran' || $t->trx_type == 'Voucher
+                    & SP' || $t->trx_type == 'Deposit' ? 'hidden' : '' @endphp
+                    <tr class="{{ $t->fee_amount == 0 && $t->description == $t->trx_type ? 'table-danger' : '' }}">
+                        <td>{{ $t->date_issued }}</td>
+                        <td>
+                            <span class="badge text-bg-secondary">{{ $t->invoice }}</span>
+                            <span class="badge text-bg-warning">{{ $t->debt->acc_name ?? '' }} x {{ $t->cred->acc_name
+                                ?? '' }}</span>
+                            <br>
+                            Note: {{ $t->description }}
+                            .
+                            @if ($t->trx_type !== 'Mutasi Kas' && $t->trx_type !== 'Pengeluaran')
+                            Fee (Admin): <span class="text-success fw-bold">{{ $t->fee_amount == 0 ? 'Gratis' :
+                                number_format($t->fee_amount)
+                                }}
+                            </span>
+                            @endif
+                            <br>
+                            <small class="text-muted">#{{ $t->warehouse->w_name }}</small>
+                        </td>
+                        <td class="text-center"><span class="badge text-bg-primary">{{ $t->trx_type }}</span></td>
+                        <td class="text-end">{{ number_format($t->amount) }}</td>
+                        <td class="text-center">
+                            <a href="/home/{{ $t->id }}/edit" class="btn btn-warning btn-sm" {{$hidden}}>
+                                <i class="fa-solid fa-pen-to-square"></i></a>
+                            <form action="{{ route('accounttrace.delete', $t->id) }}" method="post" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" onclick="return confirm('Are you sure?')"
+                                    class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
-        <div class="row my-3">
-            <div class="col-sm-5">
-                <h2 class="">Pengeluaran (Biaya)</h2>
-                <table class="table display">
-                    <thead>
-                        <tr>
-                            <th>Keterangan</th>
-                            <th scope="col">Biaya</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($cost as $c)
-                        <tr>
-                            <td><small class="text-muted">{{ $c->date_issued }}</small><br>
-                                Note: {{ $c->description }}</td>
-                            <td class="text-end">{{ number_format(-$c->fee_amount) }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+            <h4 class="mt-3">Penjualan Vcr & Kartu SP</h4>
+            <table class="table display">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Qty</th>
+                        <th>Jumlah</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                    $sumtotalcost = 0;
+                    @endphp
+                    @foreach ($vcr as $v)
+                    @php
+                    $sumtotalcost += $v->total_cost;
+                    @endphp
+                    <tr>
+                        <td>{{ $v->product->name }}</td>
+                        <td>{{ $v->qty }}</td>
+                        <td>{{ number_format($v->total_cost) }}</td>
+                        <td>{{ number_format($sumtotalcost) }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
+            <h4 class="mt-3">Kas & Bank</h4>
+            <table class="table table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Akun</th>
+                        <th>Saldo Akhir</th>
+                        <th>Total Penambahan</th>
+                        <th>Total Pengurangan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($warehouseaccount as $wa)
+                    <tr>
+                        <td>{{ $wa->acc_name }}</td>
+                        <td>{{ number_format($wa->balance) }}</td>
+                        <td>{{ number_format($penambahan->where('debt_code', $wa->acc_code)->sum('amount')) }}</td>
+                        <td>{{ number_format($penambahan->where('cred_code', $wa->acc_code)->sum('amount')) }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab" tabindex="0">...
         </div>
     </div>
 

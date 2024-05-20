@@ -196,8 +196,8 @@ class AccountTraceController extends Controller
         // $actrace = AccountTrace::with(['debt', 'cred'])->where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate]);
         // $sql = $actrace->whereIn('cred_code', $w_account)->toSql();
         // dd($sql);
-        $penambahan = AccountTrace::with(['debt', 'cred'])->where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate])->whereIn('debt_code', $w_account)->get();
-        $pengeluaran = AccountTrace::with(['debt', 'cred'])->where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate])->whereIn('cred_code', $w_account)->get();
+        $penambahan = AccountTrace::where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate])->get();
+        // $pengeluaran = AccountTrace::with(['debt', 'cred'])->where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate])->whereIn('cred_code', $w_account)->get();
 
         $vcr = Sale::with('product')
             ->selectRaw('SUM(cost * quantity) as total_cost, product_id, sum(quantity) as qty')
@@ -209,6 +209,7 @@ class AccountTraceController extends Controller
         return view('home.report', [
             'title' => 'Report Cabang',
             'subtitle' => 'Report Cabang',
+            'trx' => $trx,
             'totalTransfer' => $totalTransfer,
             'totalTarikTunai' => $totalTarikTunai,
             'totalVcr' => $totalVcr,
@@ -220,9 +221,7 @@ class AccountTraceController extends Controller
             'totalBank' => $chartOfAccounts->whereIn('warehouse_id', [$cabang])->where('account_id', 2)->groupBy('warehouse_id'),
             'warehouseaccount' => $chartOfAccounts->where('warehouse_id', $cabang),
             'penambahan' => $penambahan,
-            'pengeluaran' => $pengeluaran,
             'account' => $chartOfAccounts->where('warehouse_id', $cabang),
-            'sales' => Sale::with('product')->whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', $cabang)->get(),
             'vcr' => $vcr,
             'cabang' => $cabang,
             'warehouse' => Warehouse::all()
