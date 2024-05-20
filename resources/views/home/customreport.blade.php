@@ -126,7 +126,35 @@
             </tfoot>
         </table>
     </div>
-
+    <hr>
+    <h4>Penjualan Voucher & SP</h4>
+    <table class="table display">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Jumlah</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php
+            $sumtotalcost = 0;
+            @endphp
+            @foreach ($vcr as $v)
+            @php
+            $sumtotalcost += $v->total_cost;
+            @endphp
+            <tr>
+                <td>{{ $v->product->name }}</td>
+                <td>{{ $v->qty }}</td>
+                <td>{{ number_format($v->total_cost) }}</td>
+                <td>{{ number_format($sumtotalcost) }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+    <hr>
     <h2>Ringkasan Transaksi</h2>
     <small>{{ \Carbon\Carbon::parse($start_date)->locale('id_ID')->isoFormat('dddd, D MMMM YYYY') }}
         s/d {{ \Carbon\Carbon::parse($end_date)->locale('id_ID')->isoFormat('dddd, D MMMM YYYY') }}</small>

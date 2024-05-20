@@ -273,6 +273,12 @@ class AccountTraceController extends Controller
             ->get();
         // dd($revenue);
 
+        $vcr = Sale::with(['product'])
+            ->selectRaw('SUM(cost * quantity) as total_cost, product_id, sum(quantity) as qty')
+            ->whereBetween('date_issued', [$startDate, $endDate])
+            ->groupBy('product_id')
+            ->get();
+
         return view('home.customreport', [
             'title' => 'Custom Report',
             'subtitle' => 'Custom Report',
@@ -284,7 +290,8 @@ class AccountTraceController extends Controller
             'warehouse_name' => $request->warehouse == null ? "Semua Cabang" : Warehouse::find($request->warehouse)->w_name,
             'warehouses' => Warehouse::all(),
             'totalBiaya' => $totalBiaya,
-            'revenue' => $revenue
+            'revenue' => $revenue,
+            'vcr' => $vcr
         ])->with($request->all());
     }
 
