@@ -131,19 +131,24 @@ class AccountTraceController extends Controller
         $userWarehouseId = Auth()->user()->warehouse_id;
 
         // Retrieve transaction data related to warehouse
-        $trx = AccountTrace::where('warehouse_id', $userWarehouseId)
-            ->whereBetween('date_issued', [$startDate, $endDate])
+        $trx = AccountTrace::whereBetween('date_issued', [$startDate, $endDate])
             ->get();
 
         // Calculate totals for various transaction types
-        $totalTransfer = $trx->where('trx_type', 'Transfer Uang');
-        $totalTarikTunai = $trx->where('trx_type', 'Tarik Tunai');
-        $totalVcr = $trx->where('trx_type', 'Voucher & SP')->sum('amount');
-        $totalDeposit = $trx->where('trx_type', 'Deposit')->sum('amount');
-        $fee = $trx->where('fee_amount', '>', 0)->sum('fee_amount');
+        $totalTransfer = $trx->where('warehouse_id', $userWarehouseId)
+            ->where('trx_type', 'Transfer Uang');
+        $totalTarikTunai = $trx->where('warehouse_id', $userWarehouseId)
+            ->where('trx_type', 'Tarik Tunai');
+        $totalVcr = $trx->where('warehouse_id', $userWarehouseId)
+            ->where('trx_type', 'Voucher & SP')->sum('amount');
+        $totalDeposit = $trx->where('warehouse_id', $userWarehouseId)
+            ->where('trx_type', 'Deposit')->sum('amount');
+        $fee = $trx->where('warehouse_id', $userWarehouseId)
+            ->where('fee_amount', '>', 0)->sum('fee_amount');
 
         // Filter transactions for warehouse-specific operations
         $wAccount = $chartOfAccounts->where('warehouse_id', $userWarehouseId)->pluck('acc_code');
+        // dd($wAccount);
         $penambahan = $trx->where('trx_type', 'Mutasi Kas')->whereIn('debt_code', $wAccount);
         $pengeluaran = $trx->where('trx_type', 'Mutasi Kas')->whereIn('cred_code', $wAccount);
         $cost = $trx->where('fee_amount', '<', 0);
