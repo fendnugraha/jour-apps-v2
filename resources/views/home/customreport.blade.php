@@ -166,6 +166,7 @@
                 <th>Tarik Tunai</th>
                 <th>Voucher & SP</th>
                 <th>Deposit (Pulsa dll)</th>
+                <th>Transaksi</th>
                 <th>Pengeluaran (Biaya)</th>
                 <th>Laba Bersih</th>
             </tr>
@@ -179,6 +180,7 @@
             $rvLaba = 0;
             $rvBiaya = 0;
             $rvLaba = 0;
+            $totaltrx = 0;
             @endphp
             @foreach ($revenue as $w)
             @php
@@ -191,6 +193,7 @@
             $rvdeposit += $rv->where('trx_type', 'Deposit')->sum('amount');
             $rvLaba += $w->sumfee;
             $rvBiaya += $rv->where('trx_type', 'Pengeluaran')->sum('fee_amount');
+            $totaltrx += $rv->count();
             @endphp
             <tr>
                 <td>{{ $w->warehouse->w_name }}</td>
@@ -198,6 +201,7 @@
                 <td>{{ number_format($rv->where('trx_type', 'Tarik Tunai')->sum('amount')) }}</td>
                 <td>{{ number_format($rv->where('trx_type', 'Voucher & SP')->sum('amount')) }}</td>
                 <td>{{ number_format($rv->where('trx_type', 'Deposit')->sum('amount')) }}</td>
+                <td>{{ number_format($rv->count()) }}</td>
                 <td class="text-danger">
                     {{ number_format(-$rv->where('trx_type', 'Pengeluaran')->sum('fee_amount')) }}
                 </td>
@@ -213,6 +217,7 @@
                 <th>{{ number_format($rvTarikTunai) }}</th>
                 <th>{{ number_format($rvVcr) }}</th>
                 <th>{{ number_format($rvdeposit) }}</th>
+                <th>{{ number_format($totaltrx) }}</th>
                 <th>{{ number_format(-$rvBiaya) }}</th>
                 <th>{{ number_format($revenue->sum('sumfee')) }}</th>
             </tr>
