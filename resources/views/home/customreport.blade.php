@@ -128,7 +128,7 @@
     </div>
     <hr>
     <h4>Penjualan Voucher & SP</h4>
-    <table class="table display">
+    <table class="table display-no-order">
         <thead>
             <tr>
                 <th>Product</th>
