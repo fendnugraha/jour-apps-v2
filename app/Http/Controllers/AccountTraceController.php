@@ -101,13 +101,13 @@ class AccountTraceController extends Controller
 
     public function dailyreport()
     {
-        $startDate = Carbon::create(0000, 1, 1, 0, 0, 0)->startOfDay();
+        $startDate = Carbon::now()->startOfDay();
         $endDate = Carbon::now()->endOfDay();
 
         // Retrieve transactions grouped by debt and credit codes
         $transactions = AccountTrace::with(['debt', 'cred'])
             ->selectRaw('debt_code, cred_code, SUM(amount) as total, warehouse_id')
-            ->whereBetween('date_issued', [$startDate, $endDate])
+            ->whereBetween('date_issued', [Carbon::create(0000, 1, 1, 0, 0, 0)->startOfDay(), $endDate])
             ->groupBy('debt_code', 'cred_code', 'warehouse_id')
             ->get();
 
