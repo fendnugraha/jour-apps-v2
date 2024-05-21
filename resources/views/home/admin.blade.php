@@ -3,6 +3,33 @@
 @include('include.topbar')
 @section('container')
 {{-- Content Area --}}
+<div class="submenu bg-secondary">
+  <div class="container">
+    <ul class="nav justify-content-end text-white">
+      {{-- <li class="nav-item">
+        <a class="nav-link text-white" href="#" data-bs-toggle="modal" data-bs-target="#ModalCekSaldo">
+          Lihat Saldo Kas & Bank
+        </a>
+      </li> --}}
+      <li class="nav-item">
+        <a class="nav-link text-white" href="#" data-bs-toggle="modal" data-bs-target="#ModalPemasukan">
+          Mutasi Kas
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" href="#" data-bs-toggle="modal" data-bs-target="#ModalPengeluaran">
+          Pengeluaran (Biaya)
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" href="#" data-bs-toggle="modal" data-bs-target="#ModalReportCabang">
+          Report Cabang
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
 <div class="container mt-3">
 
   <div class="daily-report my-3">
@@ -89,29 +116,7 @@
     </div>
   </div>
 
-  <div class="row mb-3">
-    <div class="col-sm">
-      <div class="d-grid gap-2">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalPemasukan">
-          Mutasi Kas
-        </button>
-      </div>
-    </div>
-    <div class="col-sm">
-      <div class="d-grid gap-2">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalPengeluaran">
-          Pengeluaran
-        </button>
-      </div>
-    </div>
-    <div class="col-sm">
-      <div class="d-grid gap-2">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalReportCabang">
-          Report Cabang
-        </button>
-      </div>
-    </div>
-  </div>
+
   <table class="table display">
     <thead>
       <tr>

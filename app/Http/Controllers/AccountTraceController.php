@@ -20,16 +20,18 @@ class AccountTraceController extends Controller
         $endDate = Carbon::now()->endOfDay();
 
         $chartOfAccounts = new ChartOfAccount();
+        $accountTrace = new AccountTrace();
+        $transactions = $accountTrace->with('debt', 'cred', 'sale', 'user');
 
         return view('home.index', [
             'title' => 'Home',
             'subtitle' => 'Home',
             'warehouseaccount' => $chartOfAccounts->whereIn('account_id', ['1', '2'])->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('account_id', 'desc')->get(),
-            'accounttrace' => AccountTrace::with('debt', 'cred', 'sale', 'user')->whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('id', 'desc')->get(),
+            'accounttrace' => $transactions->whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('id', 'desc')->get(),
             'hqaccount' => $chartOfAccounts->whereIn('account_id', ['1', '2'])->where('warehouse_id', 1)->get(),
             'product' => Product::orderBy('sold', 'desc')->orderBy('name', 'asc')->get(),
             'expense' => $chartOfAccounts->whereIn('account_id', range(33, 45))->get(),
-            'belumdiambil' => AccountTrace::with('debt', 'cred', 'sale', 'user')->where('status', 2)->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('id', 'desc')->get(),
+            'belumdiambil' => $transactions->where('status', 2)->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('id', 'desc')->get(),
 
         ]);
     }
@@ -99,49 +101,65 @@ class AccountTraceController extends Controller
 
     public function dailyreport()
     {
-        $accountTrace = new AccountTrace();
         $startDate = Carbon::now()->startOfDay();
         $endDate = Carbon::now()->endOfDay();
 
-        $transactions = $accountTrace->with(['debt', 'cred'])
+        // Retrieve transactions grouped by debt and credit codes
+        $transactions = AccountTrace::with(['debt', 'cred'])
             ->selectRaw('debt_code, cred_code, SUM(amount) as total, warehouse_id')
-            ->whereBetween('date_issued', [Carbon::create(0000, 1, 1, 0, 0, 0)->startOfDay(), $endDate])
+            ->whereBetween('date_issued', [$startDate, $endDate])
             ->groupBy('debt_code', 'cred_code', 'warehouse_id')
             ->get();
 
-        $chartOfAccounts = ChartOfAccount::with(['account', 'warehouse'])->orderBy('acc_code', 'asc')->get();
+        // Retrieve chart of accounts with related data
+        $chartOfAccounts = ChartOfAccount::with(['account', 'warehouse'])
+            ->orderBy('acc_code', 'asc')
+            ->get();
 
+        // Calculate balances for each account
         foreach ($chartOfAccounts as $value) {
             $debit = $transactions->where('debt_code', $value->acc_code)->sum('total');
             $credit = $transactions->where('cred_code', $value->acc_code)->sum('total');
 
-            // @ts-ignore
-            $value->balance = ($value->account->status == "D") ? ($value->st_balance + $debit - $credit) : ($value->st_balance + $credit - $debit);
+            $balance = ($value->account->status == "D")
+                ? ($value->st_balance + $debit - $credit)
+                : ($value->st_balance + $credit - $debit);
+
+            $value->balance = $balance;
         }
-        $trx = AccountTrace::where('warehouse_id', Auth()->user()->warehouse_id)->whereBetween('date_issued', [$startDate, $endDate])->get();
+
+        $userWarehouseId = Auth()->user()->warehouse_id;
+
+        // Retrieve transaction data related to warehouse
+        $trx = AccountTrace::where('warehouse_id', $userWarehouseId)
+            ->whereBetween('date_issued', [$startDate, $endDate])
+            ->get();
+
+        // Calculate totals for various transaction types
         $totalTransfer = $trx->where('trx_type', 'Transfer Uang');
         $totalTarikTunai = $trx->where('trx_type', 'Tarik Tunai');
         $totalVcr = $trx->where('trx_type', 'Voucher & SP')->sum('amount');
-        $totaldeposit = $trx->where('trx_type', 'Deposit')->sum('amount');
+        $totalDeposit = $trx->where('trx_type', 'Deposit')->sum('amount');
         $fee = $trx->where('fee_amount', '>', 0)->sum('fee_amount');
 
-        $w_account = $chartOfAccounts->where('warehouse_id', Auth()->user()->warehouse_id)->pluck('acc_code');
-        // dd($w_account);
-        // $actrace = AccountTrace::with(['debt', 'cred'])->where('trx_type', 'Mutasi Kas')->whereBetween('date_issued', [$startDate, $endDate]);
-        // $sql = $actrace->whereIn('cred_code', $w_account)->toSql();
-        // dd($sql);
-        $penambahan = AccountTrace::with(['debt', 'cred'])->whereBetween('date_issued', [$startDate, $endDate])->where('trx_type', 'Mutasi Kas')->whereIn('debt_code', $w_account)->get();
-        $pengeluaran = AccountTrace::with(['debt', 'cred'])->whereBetween('date_issued', [$startDate, $endDate])->where('trx_type', 'Mutasi Kas')->whereIn('cred_code', $w_account)->get();
+        // Filter transactions for warehouse-specific operations
+        $wAccount = $chartOfAccounts->where('warehouse_id', $userWarehouseId)->pluck('acc_code');
+        $penambahan = $trx->where('trx_type', 'Mutasi Kas')->whereIn('debt_code', $wAccount);
+        $pengeluaran = $trx->where('trx_type', 'Mutasi Kas')->whereIn('cred_code', $wAccount);
         $cost = $trx->where('fee_amount', '<', 0);
 
-        $vcr = Sale::with('product')
+        // Retrieve sales and related data
+        $sales = Sale::with('product')
             ->selectRaw('SUM(cost * quantity) as total_cost, product_id, sum(quantity) as qty')
             ->whereBetween('date_issued', [$startDate, $endDate])
-            ->where('warehouse_id', Auth()->user()->warehouse_id)
+            ->where('warehouse_id', $userWarehouseId)
             ->groupBy('product_id')
             ->get();
 
-        $account = Auth()->user()->role == 'Administrator' ? $chartOfAccounts : $chartOfAccounts->where('warehouse_id', Auth()->user()->warehouse_id);
+        // Filter chart of accounts based on user role and warehouse access
+        $account = Auth()->user()->role == 'Administrator'
+            ? $chartOfAccounts
+            : $chartOfAccounts->where('warehouse_id', $userWarehouseId);
 
         return view('home.dailyreport', [
             'title' => 'Daily Report',
@@ -149,21 +167,22 @@ class AccountTraceController extends Controller
             'totalTransfer' => $totalTransfer,
             'totalTarikTunai' => $totalTarikTunai,
             'totalVcr' => $totalVcr,
-            'totaldeposit' => $totaldeposit,
+            'totalDeposit' => $totalDeposit,
             'fee' => $fee,
-            'endbalance' => $chartOfAccounts->whereIn('warehouse_id', [Auth()->user()->warehouse_id])->groupBy('warehouse_id'),
-            'totalCash' => $chartOfAccounts->whereIn('warehouse_id', [Auth()->user()->warehouse_id])->where('account_id', 1)->groupBy('warehouse_id'),
-            'totalBank' => $chartOfAccounts->whereIn('warehouse_id', [Auth()->user()->warehouse_id])->where('account_id', 2)->groupBy('warehouse_id'),
-            'warehouseaccount' => $chartOfAccounts->where('warehouse_id', Auth()->user()->warehouse_id),
+            'endbalance' => $chartOfAccounts->whereIn('warehouse_id', [$userWarehouseId])->groupBy('warehouse_id'),
+            'totalCash' => $chartOfAccounts->whereIn('warehouse_id', [$userWarehouseId])->where('account_id', 1)->groupBy('warehouse_id'),
+            'totalBank' => $chartOfAccounts->whereIn('warehouse_id', [$userWarehouseId])->where('account_id', 2)->groupBy('warehouse_id'),
+            'warehouseaccount' => $chartOfAccounts->where('warehouse_id', $userWarehouseId),
             'penambahan' => $penambahan,
             'pengeluaran' => $pengeluaran,
             'account' => $account,
-            'sales' => Sale::whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', Auth()->user()->warehouse_id)->get(),
-            'vcr' => $vcr,
+            'sales' => Sale::whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', $userWarehouseId)->get(),
             'warehouses' => Warehouse::get(),
-            'cost' => $cost
+            'cost' => $cost,
+            'vcr' => $sales
         ]);
     }
+
 
     public function reportCabang(Request $request)
     {

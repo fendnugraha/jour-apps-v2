@@ -3,7 +3,22 @@
 @include('include.topbar')
 @section('container')
 {{-- Content Area --}}
-
+<div class="submenu bg-secondary">
+  <div class="container">
+    <ul class="nav justify-content-end text-white">
+      {{-- <li class="nav-item">
+        <a class="nav-link text-white" href="#" data-bs-toggle="modal" data-bs-target="#ModalCekSaldo">
+          Lihat Saldo Kas & Bank
+        </a>
+      </li> --}}
+      <li class="nav-item">
+        <a class="nav-link text-white" href="#" data-bs-toggle="modal" data-bs-target="#generalLedger">
+          HIstory Mutasi Saldo
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
 <div class="container mt-3">
 
   <div class="row gap-2">
@@ -220,14 +235,35 @@
 
 
 
-
-
-
-
-
-
-
   {{-- Modal Input Area --}}
+  {{-- <div class="modal fade" id="ModalCekSaldo" tabindex="-1" aria-labelledby="ModalCekSaldoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="ModalCekSaldoLabel">Transfer</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Account</th>
+                <th scope="col">Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach ($warehouseaccount as $account)
+              <tr>
+                <td>{{ $account->acc_name }}</td>
+                <td>{{ number_format($account->balance) }}</td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div> --}}
 
   {{-- Transfer --}}
   <div class="modal fade" id="ModalTransfer" tabindex="-1" aria-labelledby="ModalTransferLabel" aria-hidden="true">
@@ -833,6 +869,48 @@
     </div>
   </div>
 </div>
+</div>
+
+
+<div class="modal fade" id="generalLedger" tabindex="-1" aria-labelledby="generalLedgerLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="generalLedgerLabel">History Saldo</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/home/generalledger" method="post">
+          @csrf
+          <div class="form-group mb-3">
+            <label for="accounts">Akun</label>
+            <select name="accounts" id="accounts" class="form-select @error('accounts') is-invalid @enderror">
+              <option value="">Pilih Akun</option>
+              @foreach ($warehouseaccount as $ac)
+              <option value="{{ $ac->acc_code }}">{{ $ac->acc_name }} - {{ $ac->acc_code }}</option>
+              @endforeach
+            </select>
+            @error('accounts')
+            <div class="invalid-feedback">
+              <small>{{ $message }}</small>
+            </div>
+            @enderror
+          </div>
+          <div class="form-group mb-3">
+            <label for="start_date">Dari</label>
+            <input type="date" name="start_date" id="start_date" class="form-control" value="{{ date('Y-m-d') }}">
+          </div>
+          <div class="form-group mb-3">
+            <label for="end_date">Sampai</label>
+            <input type="date" name="end_date" id="end_date" class="form-control" value="{{ date('Y-m-d') }}">
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 {{-- End Modal Area --}}
 

@@ -3,8 +3,27 @@
 @include('include.topbar')
 @section('container')
 {{-- Content Start --}}
+<div class="submenu bg-secondary">
+    <div class="container">
+        <ul class="nav justify-content-end text-white">
+            @can('admin')
+            <li class="nav-item">
+                <a class="nav-link text-white" href="#" data-bs-toggle="modal" data-bs-target="#customReport">Filter
+                    Transaksi</a>
+            </li>
+            @endcan
+            <li class="nav-item">
+                <a class="nav-link text-white" href="#" data-bs-toggle="modal"
+                    data-bs-target="#ModalReportCabang">History Transaksi</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="#" data-bs-toggle="modal" data-bs-target="#generalLedger">History
+                    Mutasi Saldo</a>
+            </li>
+        </ul>
+    </div>
+</div>
 <div class="container mt-3">
-
     <h5>Laporan Harian Cabang {{ date('l, d F Y') }}</h5>
     <div class="daily-report my-3">
         <div class="div1">
@@ -64,7 +83,7 @@
             <div class="card text-bg-dark h-100 rounded-3">
                 <div class="card-body d-flex justify-content-center align-items-center flex-column">
                     <h5>Deposit, Pulsa, Dll</h5>
-                    <h1>{{ number_format($totaldeposit) }}</h1>
+                    <h1>{{ number_format($totalDeposit) }}</h1>
                 </div>
             </div>
         </div>
@@ -123,20 +142,7 @@
                 </div>
 
                 <div class="col-sm-9">
-                    <div class="float-end">
-                        @can('admin')
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#customReport">
-                            Filter Transaksi
-                        </button>
-                        @endcan
-                        <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal"
-                            data-bs-target="#ModalReportCabang">
-                            Lihat History Transaksi
-                        </button>
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#generalLedger">
-                            History Mutasi Saldo
-                        </button>
-                    </div>
+
                 </div>
             </div>
             <table class="table display">
@@ -179,7 +185,7 @@
     <hr>
     <h2 class="my-3">Penjulalan Vcr & Kartu SP</h2>
     <div class="row">
-        <div class="col-sm-5">
+        <div class="col-sm-6">
             <table class="table display">
                 <thead>
                     <tr>
@@ -250,7 +256,7 @@
     </div>
     <hr>
     <div class="row my-3">
-        <div class="col-sm-5">
+        <div class="col-sm-8">
             <h2 class="">Pengeluaran (Biaya)</h2>
             <table class="table display">
                 <thead>
