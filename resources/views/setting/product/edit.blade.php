@@ -4,7 +4,7 @@
 @section('container')
 {{-- Content Area --}}
 
-<div class="container" style="margin-top: 70px">
+<div class="container mt-3">
     <h4>Edit Product</h4>
     <div class="row">
         <div class="col-8">
@@ -32,7 +32,7 @@
                     @enderror
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
-                <a href="/setting/products" class="btn btn-secondary">Cancel</a>
+                <a href="/setting/product" class="btn btn-secondary">Cancel</a>
             </form>
         </div>
     </div>

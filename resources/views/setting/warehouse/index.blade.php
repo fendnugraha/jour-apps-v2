@@ -2,7 +2,7 @@
 
 @include('include.topbar')
 @section('container')
-<div class="container" style="margin-top: 70px">
+<div class="container mt-3">
     @include('include.setting')
     <!-- Content  -->
     <a href="/setting" class="btn btn-primary mb-3"><i class="fa-solid fa-arrow-left"></i> Go back</a>

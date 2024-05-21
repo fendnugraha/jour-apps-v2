@@ -2,7 +2,7 @@
 
 @include('include.topbar')
 @section('container')
-<div class="container" style="margin-top: 70px">
+<div class="container mt-3">
     <!-- Content  -->
     <div class="card">
         <div class="card-body">

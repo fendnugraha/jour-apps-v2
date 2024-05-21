@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Sale;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -48,7 +49,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|unique:products,name',
+            'name' => 'required',
             'cost' => 'required|numeric',
         ]);
 
@@ -62,6 +63,11 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
+        $sales = Sale::where('product_id', $id)->count();
+        if ($sales > 0) {
+            return redirect('/setting/product')->with('error', 'Product cannot be deleted');
+        }
+
         Product::destroy($id);
 
         return redirect('/setting/product')->with('success', 'Product Deleted');
