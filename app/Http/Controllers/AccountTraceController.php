@@ -260,20 +260,13 @@ class AccountTraceController extends Controller
         $startDate = Carbon::parse($request->start_date)->startOfDay();
         $endDate = Carbon::parse($request->end_date)->endOfDay();
 
-        $chartOfAccounts = new ChartOfAccount();
         $accountTrace = new AccountTrace();
         $transactions = $accountTrace->with('debt', 'cred', 'sale', 'user');
 
         return view('home.transaksi', [
-            'title' => 'Home',
+            'title' => 'Report Transaksi Cabang',
             'subtitle' => 'Home',
-            'warehouseaccount' => $chartOfAccounts->whereIn('account_id', ['1', '2'])->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('account_id', 'desc')->get(),
-            'accounttrace' => $transactions->whereBetween('date_issued', [$startDate, $endDate])->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('id', 'desc')->get(),
-            'hqaccount' => $chartOfAccounts->whereIn('account_id', ['1', '2'])->where('warehouse_id', 1)->get(),
-            'product' => Product::orderBy('sold', 'desc')->orderBy('name', 'asc')->get(),
-            'expense' => $chartOfAccounts->whereIn('account_id', range(33, 45))->get(),
-            'belumdiambil' => $transactions->where('status', 2)->where('warehouse_id', Auth()->user()->warehouse_id)->orderBy('id', 'desc')->get(),
-
+            'accounttrace' => $transactions->whereBetween('date_issued', [$startDate, $endDate])->orderBy('id', 'desc')->get()
         ])->with($request->all());
     }
 
