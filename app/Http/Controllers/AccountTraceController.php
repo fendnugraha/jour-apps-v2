@@ -101,7 +101,7 @@ class AccountTraceController extends Controller
 
     public function dailyreport()
     {
-        $startDate = Carbon::now()->startOfDay();
+        $startDate = Carbon::create(0000, 1, 1, 0, 0, 0)->startOfDay();
         $endDate = Carbon::now()->endOfDay();
 
         // Retrieve transactions grouped by debt and credit codes
