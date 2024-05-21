@@ -256,21 +256,25 @@
             <div class="mb-2 row">
               <label for="account" class="col-sm col-form-label">Nomor Rekening</label>
               <div class="col-sm-8">
-                <select name="account" id="account" class="form-select">
+                <select name="account" id="account" class="form-select @error('account') is-invalid @enderror">
                   <option value="">Pilih Akun</option>
                   @foreach ($warehouseaccount as $coa)
-                  <option value="{{ $coa->acc_code }}" @if (old('account')==$coa->acc_code) selected
-
-                    @endif>{{ $coa->acc_name }}</option>
+                  <option value="{{ $coa->acc_code }}" {{old('account')==$coa->acc_code ? 'selected' : ''}}>{{
+                    $coa->acc_name }}</option>
                   @endforeach
                 </select>
+                @error('account')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
               </div>
             </div>
             <div class="mb-2 row">
               <label for="amount" class="col-sm col-form-label">Jumlah</label>
               <div class="col-sm-8">
                 <input type="number" class="form-control @error('amount') is-invalid @enderror" name="amount"
-                  id="amount" value="{{old('amount') == null ? 0 : old('amount')}}">
+                  id="amount" value="{{old('amount') == null ? '' : old('amount')}}" placeholder="Jumlah Transfer">
                 @error('amount')
                 <div class="invalid-feedback">
                   <small>{{ $message }}</small>
@@ -296,7 +300,7 @@
               <div class="col-sm-8">
                 <input type="text" class="form-control @error('description') is-invalid @enderror" name="description"
                   id="description" value="{{old('description') == null ? '' : old('description')}}"
-                  placeholder="Keterangan">
+                  placeholder="Keterangan (opsional)">
                 @error('description')
                 <div class="invalid-feedback">
                   <small>{{ $message }}</small>
@@ -344,19 +348,24 @@
             <div class="mb-2 row">
               <label for="account" class="col-sm col-form-label">Nomor Rekening</label>
               <div class="col-sm-8">
-                <select name="account" id="account" class="form-select">
+                <select name="account" id="account" class="form-select @error('account') is-invalid @enderror">
                   <option value="">Pilih Akun</option>
                   @foreach ($warehouseaccount as $coa)
                   <option value="{{ $coa->acc_code }}">{{ $coa->acc_name }}</option>
                   @endforeach
                 </select>
+                @error('account')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
               </div>
             </div>
             <div class="mb-2 row">
               <label for="amount" class="col-sm col-form-label">Jumlah</label>
               <div class="col-sm-8">
                 <input type="number" class="form-control @error('amount') is-invalid @enderror" name="amount"
-                  id="amount" value="{{old('amount') == null ? 0 : old('amount')}}">
+                  id="amount" value="{{old('amount') == null ? '' : old('amount')}}" placeholder="Jumlah">
                 @error('amount')
                 <div class="invalid-feedback">
                   <small>{{ $message }}</small>
@@ -442,12 +451,17 @@
               <input type="text" name="trx_type" id="trx_type" value="Voucher & SP" hidden>
               <div class="mb-3 col-sm">
                 <label for="product_id" class="form-label">Produk</label>
-                <select class="form-select" name="product_id" id="product_id">
-                  <option>- Pilih Produk -</option>
+                <select name="product_id" id="product_id" class="form-select @error('product_id') is-invalid @enderror">
+                  <option value="">- Pilih Produk -</option>
                   @foreach ($product as $p)
                   <option value="{{ $p->id }}">{{ $p->name }} (Rp. {{ number_format($p->cost) }})</option>
                   @endforeach
                 </select>
+                @error('product_id')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
               </div>
             </div>
             <div class="mb-3">
@@ -457,11 +471,23 @@
             <div class="row">
               <div class="mb-3 col-sm-2">
                 <label for="Qty" class="form-label">Qty</label>
-                <input type="number" class="form-control" id="Qty" name="qty" placeholder="Qty" value="1">
+                <input type="number" class="form-control @error('qty') is-invalid @enderror" id="Qty" name="qty"
+                  placeholder="Qty" value="1">
+                @error('qty')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
               </div>
               <div class="mb-3 col-sm">
                 <label for="jual" class="form-label">Harga Jual</label>
-                <input type="number" class="form-control" id="jual" name="jual" placeholder="Rp">
+                <input type="number" class="form-control @error('jual') is-invalid @enderror" id="jual" name="jual"
+                  placeholder="Rp">
+                @error('jual')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
               </div>
               <div class="mb-3 col-sm">
                 {{-- <label for="modal" class="form-label">Modal</label>
@@ -525,7 +551,13 @@
             </div>
             <div class="mb-3">
               <label for="description" class="form-label">Keterangan</label>
-              <input type="text" class="form-control" id="description" name="description" placeholder="Description">
+              <input type="text" class="form-control @error('description') is-invalid @enderror" id="description"
+                name="description" placeholder="Description">
+              @error('description')
+              <div class="invalid-feedback">
+                <small>{{ $message }}</small>
+              </div>
+              @enderror
             </div>
             <div class="row">
               {{-- <div class="mb-3 col-sm-2">
@@ -535,11 +567,23 @@
               </div> --}}
               <div class="mb-3 col-sm">
                 <label for="jual" class="form-label">Harga Jual</label>
-                <input type="number" class="form-control" id="jual" name="jual" placeholder="Rp">
+                <input type="number" class="form-control @error('jual') is-invalid @enderror" id="jual" name="jual"
+                  placeholder="Rp">
+                @error('jual')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
               </div>
               <div class="mb-3 col-sm">
                 <label for="modal" class="form-label">Modal</label>
-                <input type="number" class="form-control" id="modal" name="modal" placeholder="Rp">
+                <input type="number" class="form-control @error('modal') is-invalid @enderror" id="modal" name="modal"
+                  placeholder="Rp">
+                @error('modal')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
               </div>
             </div>
         </div>
@@ -580,32 +624,42 @@
             <div class="mb-2 row">
               <label for="cred" class="col-sm col-form-label">Dari</label>
               <div class="col-sm-8">
-                <select name="cred" id="cred" class="form-select">
+                <select name="cred" id="cred" class="form-select @error('cred') is-invalid @enderror">
                   <option value="">Pilih Sumber Dana</option>
                   @foreach ($warehouseaccount as $coa)
                   <option value="{{ $coa->acc_code }}" {{old('cred')==$coa->acc_code ? 'selected' : ''}}>{{
                     $coa->acc_name }}</option>
                   @endforeach
                 </select>
+                @error('cred')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
               </div>
             </div>
             <div class="mb-2 row">
               <label for="debt" class="col-sm col-form-label">Ke</label>
               <div class="col-sm-8">
-                <select name="debt" id="debt" class="form-select">
+                <select name="debt" id="debt" class="form-select @error('debt') is-invalid @enderror">
                   <option value="">Pilih Tujuan Mutasi</option>
                   @foreach ($hqaccount as $coa)
                   <option value="{{ $coa->acc_code }}" {{old('debt')==$coa->acc_code ? 'selected' : ''}}>{{
                     $coa->acc_name }}</option>
                   @endforeach
                 </select>
+                @error('debt')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
               </div>
             </div>
             <div class="mb-2 row">
               <label for="amount" class="col-sm col-form-label">Jumlah</label>
               <div class="col-sm-8">
                 <input type="number" class="form-control @error('amount') is-invalid @enderror" name="amount"
-                  id="amount" value="{{old('amount') == null ? 0 : old('amount')}}">
+                  id="amount" value="{{old('amount') == null ? '' : old('amount')}}" placeholder="Rp">
                 @error('amount')
                 <div class="invalid-feedback">
                   <small>{{ $message }}</small>
@@ -654,20 +708,25 @@
             <div class="mb-2 row">
               <label for="debt" class="col-sm col-form-label">Ke</label>
               <div class="col-sm-8">
-                <select name="debt" id="debt" class="form-select">
+                <select name="debt" id="debt" class="form-select @error('debt') is-invalid @enderror">
                   <option value="">Pilih Biaya</option>
                   @foreach ($expense as $coa)
                   <option value="{{ $coa->acc_code }}" {{old('debt')==$coa->acc_code ? 'selected' : ''}}>{{
                     $coa->acc_name }}</option>
                   @endforeach
                 </select>
+                @error('debt')
+                <div class="invalid-feedback">
+                  <small>{{ $message }}</small>
+                </div>
+                @enderror
               </div>
             </div>
             <div class="mb-2 row">
               <label for="amount" class="col-sm col-form-label">Jumlah</label>
               <div class="col-sm-8">
                 <input type="number" class="form-control @error('amount') is-invalid @enderror" name="amount"
-                  id="amount" value="{{old('amount') == null ? 0 : old('amount')}}">
+                  id="amount" value="{{old('amount') == null ? '' : old('amount')}}" placeholder="Rp">
                 @error('amount')
                 <div class="invalid-feedback">
                   <small>{{ $message }}</small>

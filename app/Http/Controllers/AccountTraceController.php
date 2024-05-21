@@ -363,8 +363,8 @@ class AccountTraceController extends Controller
             'amount' => 'required|numeric',
         ]);
 
-        $w_account = Warehouse::with('chartofaccount')->Where('id', Auth()->user()->warehouse_id)->first();
-        $w_account = $w_account->chartofaccount->acc_code;
+        // $w_account = Warehouse::with('chartofaccount')->Where('id', Auth()->user()->warehouse_id)->first();
+        // $w_account = $w_account->chartofaccount->acc_code;
 
         $accountTrace = new AccountTrace();
         $accountTrace->date_issued = $request->date_issued;
@@ -463,6 +463,10 @@ class AccountTraceController extends Controller
 
         if ($request->trx_type == "Voucher & SP" && $request->product_id == null) {
             return redirect()->back()->with('error', 'Please select product.');
+        }
+
+        if ($request->trx_type == "Deposit" && $request->modal == null) {
+            return redirect()->back()->with('error', 'Harga modal harus diisi.');
         }
         // $modal = $request->modal * $request->qty;
         $jual = $request->jual * $request->qty;

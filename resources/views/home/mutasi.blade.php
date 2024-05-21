@@ -28,30 +28,43 @@
                         <div class="mb-2 row">
                             <label for="cred" class="col-sm col-form-label">Dari</label>
                             <div class="col-sm-8">
-                                <select name="cred" id="cred" class="form-select">
-                                    <option value="">Pilih Akun</option>
+                                <select name="cred" id="cred" class="form-select @error('cred') is-invalid @enderror">
+                                    <option value="">-Pilih Sumber Dana-</option>
                                     @foreach ($hqaccount as $coa)
-                                    <option value="{{ $coa->acc_code }}">{{ $coa->acc_name }}</option>
+                                    <option value="{{ $coa->acc_code }}" {{ old('cred')==$coa->acc_code ? 'selected' :
+                                        '' }}>{{ $coa->acc_name }}</option>
                                     @endforeach
                                 </select>
+                                @error('cred')
+                                <div class="invalid-feedback">
+                                    <small>{{ $message }}</small>
+                                </div>
+                                @enderror
                             </div>
                         </div>
                         <div class="mb-2 row">
                             <label for="debt" class="col-sm col-form-label">Ke</label>
                             <div class="col-sm-8">
-                                <select name="debt" id="debt" class="form-select">
-                                    <option value="">Pilih Akun</option>
+                                <select name="debt" id="debt" class="form-select @error('debt') is-invalid @enderror">
+                                    <option value="">-Pilih Akun Tujuan-</option>
                                     @foreach ($warehouseaccount as $coa)
-                                    <option value="{{ $coa->acc_code }}">{{ $coa->acc_name }}</option>
+                                    <option value="{{ $coa->acc_code }}" {{ old('debt')==$coa->acc_code ? 'selected' :
+                                        '' }}>{{ $coa->acc_name }}</option>
                                     @endforeach
                                 </select>
+                                @error('debt')
+                                <div class="invalid-feedback">
+                                    <small>{{ $message }}</small>
+                                </div>
+                                @enderror
                             </div>
                         </div>
                         <div class="mb-2 row">
                             <label for="amount" class="col-sm col-form-label">Jumlah</label>
                             <div class="col-sm-8">
                                 <input type="number" class="form-control @error('amount') is-invalid @enderror"
-                                    name="amount" id="amount" value="{{old('amount') == null ? 0 : old('amount')}}">
+                                    name="amount" id="amount" value="{{old('amount') == null ? '' : old('amount')}}"
+                                    placeholder="Jumlah Transfer">
                                 @error('amount')
                                 <div class="invalid-feedback">
                                     <small>{{ $message }}</small>
@@ -64,7 +77,8 @@
                             <div class="col-sm-8">
                                 <input type="text" class="form-control @error('description') is-invalid @enderror"
                                     name="description" id="description"
-                                    value="{{old('description') == null ? '' : old('description')}}">
+                                    value="{{old('description') == null ? '' : old('description')}}"
+                                    placeholder="Keterangan">
                                 @error('description')
                                 <div class="invalid-feedback">
                                     <small>{{ $message }}</small>
