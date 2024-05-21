@@ -26,6 +26,11 @@
           Report Cabang
         </a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" href="#" data-bs-toggle="modal" data-bs-target="#ModalReportTrxCabang">
+          Report Transaksi Cabang
+        </a>
+      </li>
     </ul>
   </div>
 </div>
@@ -352,6 +357,53 @@
               </select>
             </div>
           </div>
+          <div class="mb-2 row">
+            <label for="start_date" class="col-sm col-form-label">Dari</label>
+            <div class="col-sm-8">
+              <input type="date" class="form-control @error('start_date') is-invalid @enderror" name="start_date"
+                id="start_date" value="{{old('start_date') == null ? date('Y-m-d') : old('start_date')}}">
+              @error('start_date')
+              <div class="invalid-feedback">
+                <small>{{ $message }}</small>
+              </div>
+              @enderror
+            </div>
+          </div>
+          <div class="mb-2 row">
+            <label for="end_date" class="col-sm col-form-label">Sampai</label>
+            <div class="col-sm-8">
+              <input type="date" class="form-control @error('end_date') is-invalid @enderror" name="end_date"
+                id="end_date" value="{{old('end_date') == null ? date('Y-m-d') : old('end_date')}}">
+              @error('end_date')
+              <div class="invalid-feedback">
+                <small>{{ $message }}</small>
+              </div>
+              @enderror
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" onclick="this.disabled=true;this.value='Sending, please wait...';this.form.submit();"
+          class="btn btn-primary">Simpan</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="ModalReportTrxCabang" tabindex="-1" aria-labelledby="ModalReportTrxCabangLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="ModalReportTrxCabangLabel">Report Transaksi Cabang</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/home/reporttrxcabang" method="post">
+          @csrf
           <div class="mb-2 row">
             <label for="start_date" class="col-sm col-form-label">Dari</label>
             <div class="col-sm-8">

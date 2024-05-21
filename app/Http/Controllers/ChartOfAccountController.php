@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
+use App\Models\AccountTrace;
 use Illuminate\Http\Request;
 use App\Models\ChartOfAccount;
 
@@ -77,6 +78,13 @@ class ChartOfAccountController extends Controller
     public function destroy($id)
     {
         $ChartOfAccount = ChartOfAccount::find($id);
+        $accountTrace = AccountTrace::where('debt_code', $ChartOfAccount->acc_code)->orWhere('cred_code', $ChartOfAccount->acc_code)->count();
+        // dd($accountTrace);
+
+        if ($accountTrace > 0) {
+            return redirect('/setting/accounts')->with('error', 'Akun tidak bisa dihapus, terdapat transaksi');
+        }
+
         $ChartOfAccount->delete();
         return redirect('/setting/accounts')->with('success', 'Data Deleted Successfully');
     }
