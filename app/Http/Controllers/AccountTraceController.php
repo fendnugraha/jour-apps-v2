@@ -151,7 +151,7 @@ class AccountTraceController extends Controller
         // dd($wAccount);
         $penambahan = $trx->where('trx_type', 'Mutasi Kas')->whereIn('debt_code', $wAccount);
         $pengeluaran = $trx->where('trx_type', 'Mutasi Kas')->whereIn('cred_code', $wAccount);
-        $cost = $trx->where('fee_amount', '<', 0);
+        $cost = $trx->where('warehouse_id', $userWarehouseId)->where('fee_amount', '<', 0);
 
         // Retrieve sales and related data
         $sales = Sale::with('product')
