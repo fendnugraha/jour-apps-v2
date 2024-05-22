@@ -435,6 +435,7 @@ class AccountTraceController extends Controller
         $accountTrace = AccountTrace::with(['warehouse', 'cred', 'debt'])
             ->whereIn('debt_code', $wAccount)
             ->whereBetween('date_issued', [Carbon::now()->startOfDay(), Carbon::now()->endOfDay()])
+            ->where('trx_type', 'Mutasi Kas')
             ->orWhereIn('cred_code', $wAccount)
             ->whereBetween('date_issued', [Carbon::now()->startOfDay(), Carbon::now()->endOfDay()])
             ->where('trx_type', 'Mutasi Kas')
