@@ -87,7 +87,9 @@
                             </div>
                         </div>
                         <div class="d-flex mt-3 justify-content-start gap-2 align-items-center">
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="submit"
+                                onclick="this.disabled=true;this.value='Sending, please wait...';this.form.submit();"
+                                class="btn btn-primary">Simpan</button>
                             <a href="/home/administrator" class="btn btn-danger">Kembali</a>
                         </div>
                     </form>
@@ -95,6 +97,33 @@
             </div>
         </div>
     </div>
+    <h4 class="my-3">History Saldo</h4>
+    <table class="table display-no-order">
+        <thead>
+            <tr>
+                <th>Tanggal</th>
+                <th>Akun</th>
+                <th>Penambahan</th>
+                <th>Pengurangan</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($accountTrace as $ac)
+            @php
+            $debt_amount = $hq->contains($ac->debt_code) ? number_format($ac->amount) : '';
+            $cred_amount = $hq->contains($ac->cred_code) ? number_format($ac->amount) : '';
+            @endphp
+            <tr>
+                <td>
+                    {{ $ac->date_issued }}</td>
+                <td>{{ $ac->cred->acc_name }} <i class="fa-solid fa-arrow-right"></i> {{ $ac->debt->acc_name }}
+                </td>
+                <td class="text-end">{{ $cred_amount }}</td>
+                <td class="text-end">{{ $debt_amount }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 </div>
 
 </div>

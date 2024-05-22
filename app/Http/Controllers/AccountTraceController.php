@@ -426,15 +426,31 @@ class AccountTraceController extends Controller
     public function transfersaldo($id)
     {
         $warehouse = Warehouse::find($id);
-
+        // dd($warehouse);
+        $warehouseaccount = ChartOfAccount::whereIn('account_id', ['1', '2'])->where('warehouse_id', $id)->get();
+        $wAccount = $warehouseaccount->pluck('acc_code');
+        // dd($wAccount);
+        $hqaccount = ChartOfAccount::whereIn('account_id', ['1', '2'])->where('warehouse_id', 1)->get();
+        $hq = $hqaccount->pluck('acc_code');
+        $accountTrace = AccountTrace::with(['warehouse', 'cred', 'debt'])
+            ->whereIn('debt_code', $wAccount)
+            ->whereBetween('date_issued', [Carbon::now()->startOfDay(), Carbon::now()->endOfDay()])
+            ->orWhereIn('cred_code', $wAccount)
+            ->whereBetween('date_issued', [Carbon::now()->startOfDay(), Carbon::now()->endOfDay()])
+            ->where('trx_type', 'Mutasi Kas')
+            ->orderBy('id', 'desc')
+            ->get();
+        // dd($accountTrace);
         return view('home.mutasi', [
             'title' => 'Transfer Saldo',
             'active' => 'reports',
             'subtitle' => 'Transfer Saldo',
+            'accountTrace' => $accountTrace,
             'warehouse' => $warehouse,
             'warehouse_name' => $warehouse->w_name,
-            'hqaccount' => ChartOfAccount::whereIn('account_id', ['1', '2'])->where('warehouse_id', 1)->get(),
-            'warehouseaccount' => ChartOfAccount::whereIn('account_id', ['1', '2'])->where('warehouse_id', $id)->get(),
+            'hqaccount' => $hqaccount,
+            'warehouseaccount' => $warehouseaccount,
+            'hq' => $hq,
         ]);
     }
 

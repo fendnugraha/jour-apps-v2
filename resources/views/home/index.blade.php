@@ -268,7 +268,7 @@
   {{-- Transfer --}}
   <div class="modal fade" id="ModalTransfer" tabindex="-1" aria-labelledby="ModalTransferLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
+      <div class="modal-content text-bg-success">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="ModalTransferLabel">Transfer</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -350,7 +350,7 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <button type="submit" onclick="this.disabled=true;this.value='Sending, please wait...';this.form.submit();"
-            class="btn btn-primary">Transfer</button>
+            class="btn btn-primary">Simpan</button>
           </form>
         </div>
       </div>
@@ -360,7 +360,7 @@
   {{-- TarikTunai --}}
   <div class="modal fade" id="ModalTarikTunai" tabindex="-1" aria-labelledby="ModalTarikTunaiLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
+      <div class="modal-content text-bg-danger">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="ModalTarikTunaiLabel">Tarik Tunai</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
