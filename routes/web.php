@@ -1,14 +1,18 @@
 <?php
 
+use Livewire\Livewire;
+use App\Livewire\SearchTable;
+use App\Livewire\DisplayCashBank;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PayableController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\ReceivableController;
 use App\Http\Controllers\AccountTraceController;
 use App\Http\Controllers\ChartOfAccountController;
-use App\Http\Controllers\ReceivableController;
 use App\Http\Controllers\WarehouseAccountController;
 
 /*
@@ -21,6 +25,10 @@ use App\Http\Controllers\WarehouseAccountController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+// Livewire::routes();
+Livewire::component('search-table', SearchTable::class);
+Route::get('/testing', fn () => view('home.oldadmin', ['title' => 'Testing']))->middleware('auth');
 
 // Login Area
 Route::get('/', [AuthController::class, 'index'])->middleware('guest');

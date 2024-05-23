@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="/assets/css/fontawesome.min.css">
     <link rel="stylesheet" href="/assets/css/mycss.css">
     {{-- @vite('resources/css/app.css') --}}
+    @livewireStyles
 </head>
 
 <body>
@@ -58,6 +59,8 @@
     <script src="/assets/js/fontawesome.min.js"></script>
     <script src="/assets/js/sidebars.js"></script>
     <script src="/assets/js/myjs.js"></script>
+
+    @livewireScripts
 </body>
 
 
