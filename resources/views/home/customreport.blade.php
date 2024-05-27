@@ -128,13 +128,13 @@
     </div>
     <hr>
     <h4>Penjualan Voucher & SP</h4>
-    <table class="table display-no-order">
+    <h5>Total: Rp <span class="text-success fw-bold">{{ number_format($vcr->sum('total_cost')) }}</span></h5>
+    <table class="table display">
         <thead>
             <tr>
                 <th>Product</th>
                 <th>Qty</th>
                 <th>Jumlah</th>
-                <th>Total</th>
             </tr>
         </thead>
         <tbody>
@@ -148,8 +148,7 @@
             <tr>
                 <td>{{ $v->product->name }}</td>
                 <td>{{ $v->qty }}</td>
-                <td>{{ number_format($v->total_cost) }}</td>
-                <td>{{ number_format($sumtotalcost) }}</td>
+                <td class="text-end">{{ number_format($v->total_cost) }}</td>
             </tr>
             @endforeach
         </tbody>

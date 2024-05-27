@@ -317,7 +317,6 @@ class AccountTraceController extends Controller
             ->selectRaw('SUM(cost * quantity) as total_cost, product_id, sum(quantity) as qty')
             ->whereBetween('date_issued', [$startDate, $endDate])
             ->groupBy('product_id')
-            ->orderBy('product_id', 'asc')
             ->get();
 
         return view('home.customreport', [
