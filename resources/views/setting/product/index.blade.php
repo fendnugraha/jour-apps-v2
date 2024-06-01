@@ -79,6 +79,11 @@
                             <input type="number" name="cost" class="form-control" id="cost" value="{{ old('cost') }}"
                                 required>
                         </div>
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Jual</label>
+                            <input type="number" name="price" class="form-control" id="price" value="{{ old('price') }}"
+                                required>
+                        </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

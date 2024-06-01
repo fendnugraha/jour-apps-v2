@@ -12,7 +12,8 @@ class Product extends Model
     protected $fillable = [
         'name',
         'cost',
-        'sold'
+        'sold',
+        'price'
     ];
 
     public function sale()

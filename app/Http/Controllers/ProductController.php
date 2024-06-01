@@ -39,6 +39,7 @@ class ProductController extends Controller
         $validate = $request->validate([
             'name' => 'required|unique:products,name',
             'cost' => 'required|numeric',
+            'price' => 'required|numeric',
         ]);
 
         Product::create($validate);
@@ -51,11 +52,13 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required',
             'cost' => 'required|numeric',
+            'price' => 'required|numeric',
         ]);
 
         $product = Product::find($id);
         $product->name = $request->name;
         $product->cost = $request->cost;
+        $product->cost = $request->price;
         $product->save();
 
         return redirect('/setting/product')->with('success', 'Product Updated');
