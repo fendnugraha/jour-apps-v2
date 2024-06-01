@@ -11,6 +11,7 @@ class AccountTrace extends Model
 {
     use HasFactory;
 
+    protected $table = 'journals';
     protected $guarded = ['id'];
 
     protected $casts = [
@@ -54,7 +55,7 @@ class AccountTrace extends Model
 
     public function invoice_journal()
     {
-        $lastInvoice = DB::table('account_traces')
+        $lastInvoice = DB::table('journals')
             ->select(DB::raw('MAX(RIGHT(invoice,7)) AS kd_max'))
             ->where([
                 ['user_id', Auth()->user()->id],
