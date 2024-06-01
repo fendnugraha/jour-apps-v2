@@ -108,7 +108,7 @@
                             <br>
                             <small class="text-muted">{{ $at->cred->acc_name }} <i class="fa-solid fa-arrow-right"></i>
                                 {{
-                                $at->debt->acc_name }} #{{ $at->warehouse->w_name }}</small>
+                                $at->debt->acc_name }} #{{ $at->warehouse->name }}</small>
                         </td>
                         <td>{{ number_format($at->amount) }}</td>
                         <td>{{ number_format($at->fee_amount) }}</td>

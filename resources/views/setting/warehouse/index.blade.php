@@ -27,8 +27,8 @@
             @foreach ($warehouse as $w)
             <tr>
                 <td>{{ $w->id }}</td>
-                <td>{{ $w->w_code }}</td>
-                <td>{{ $w->w_name }}</td>
+                <td>{{ $w->code }}</td>
+                <td>{{ $w->name }}</td>
                 <td>{{ $w->address }}</td>
                 <td>{{ $w->chartofaccount->acc_name }}</td>
                 <td>{{ $w->created_at }}</td>
@@ -63,20 +63,20 @@
                     <form action="/setting/warehouse/add" method="post">
                         @csrf
                         <div class="mb-3">
-                            <label for="w_code" class="form-label">Warehouse code</label>
-                            <input type="text" class="form-control {{ $errors->has('w_code') ? 'is-invalid' : '' }}"
-                                id="w_code" name="w_code" value="{{ old('w_code') }}">
-                            @error('w_code')
+                            <label for="code" class="form-label">Warehouse code</label>
+                            <input type="text" class="form-control {{ $errors->has('code') ? 'is-invalid' : '' }}"
+                                id="code" name="code" value="{{ old('code') }}">
+                            @error('code')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
                             @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="w_name" class="form-label">Warehouse name</label>
-                            <input type="text" class="form-control {{ $errors->has('w_name') ? 'is-invalid' : '' }}"
-                                id="w_name" name="w_name" value="{{ old('w_name') }}">
-                            @error('w_name')
+                            <label for="name" class="form-label">Warehouse name</label>
+                            <input type="text" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}"
+                                id="name" name="name" value="{{ old('name') }}">
+                            @error('name')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>

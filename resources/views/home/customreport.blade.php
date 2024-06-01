@@ -17,7 +17,7 @@
                             <option value="">Semua Cabang</option>
                             @foreach ($warehouses as $wh)
                             <option value="{{ $wh->id }}" {{ $warehouse==$wh->id ? 'selected' : '' }}>{{
-                                $wh->w_name
+                                $wh->name
                                 }}</option>
                             @endforeach
                         </select>
@@ -195,7 +195,7 @@
             $totaltrx += $rv->count();
             @endphp
             <tr>
-                <td>{{ $w->warehouse->w_name }}</td>
+                <td>{{ $w->warehouse->name }}</td>
                 <td>{{ number_format($rv->where('trx_type', 'Transfer Uang')->sum('amount')) }}</td>
                 <td>{{ number_format($rv->where('trx_type', 'Tarik Tunai')->sum('amount')) }}</td>
                 <td>{{ number_format($rv->where('trx_type', 'Voucher & SP')->sum('amount')) }}</td>
@@ -247,7 +247,7 @@
                         <tr>
                             <td>{{ $c->created_at }}</td>
                             <td>
-                                {{ strtoupper($c->description) }} <small class="text-muted">({{ $c->warehouse->w_name
+                                {{ strtoupper($c->description) }} <small class="text-muted">({{ $c->warehouse->name
                                     }})</small>
                             </td>
                             <td class="text-end text-danger">{{ number_format(-$c->fee_amount) }}</td>

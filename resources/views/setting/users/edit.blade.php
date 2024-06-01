@@ -45,7 +45,7 @@
                                     is-invalid @enderror>
                                     @foreach ($warehouses as $wh)
                                     <option value="{{ $wh->id }}" {{ $user->warehouse_id == $wh->id ? 'selected' : ''
-                                        }}>{{ $wh->w_name }}</option>
+                                        }}>{{ $wh->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('warehouse')

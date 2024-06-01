@@ -139,7 +139,7 @@
       $bank = $sumtotalBank->where('warehouse_id', $w->id)->sum('balance');
       @endphp
       <tr>
-        <td>{{ $w->w_name }}</td>
+        <td>{{ $w->name }}</td>
         <td>{{ number_format($cash) }}</td>
         <td>{{ number_format($bank) }}</td>
         <th>{{ number_format($bank+$cash) }}</th>
@@ -352,7 +352,7 @@
             <div class="col-sm-8">
               <select name="cabang" id="cabang" class="form-select">
                 @foreach ($warehouse as $wh)
-                <option value="{{ $wh->id }}">{{ $wh->w_name }}</option>
+                <option value="{{ $wh->id }}">{{ $wh->name }}</option>
                 @endforeach
               </select>
             </div>

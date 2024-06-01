@@ -101,7 +101,7 @@
                 <td>
                     <span class="badge text-bg-success">{{ $ac->debt->acc_name ?? ''}} x {{ $ac->cred->acc_name ??
                         ''}}</span>
-                    <span class="badge text-bg-warning">{{ $ac->warehouse->w_name}}</span>
+                    <span class="badge text-bg-warning">{{ $ac->warehouse->name}}</span>
                     <span class="badge text-bg-dark">{{ $ac->user->name}}</span>
                     <br>
                     Note: {{ $ac->description }}

@@ -10,20 +10,20 @@
                 @csrf
                 @method('PUT')
                 <div class="mb-3">
-                    <label for="w_code" class="form-label">Warehouse Code</label>
-                    <input type="text" class="form-control {{ $errors->has('w_code') ? 'is-invalid' : '' }}" id="w_code"
-                        name="w_code" value="{{ old('w_code') ?? $warehouse->w_code }}">
-                    @error('w_code')
+                    <label for="code" class="form-label">Warehouse Code</label>
+                    <input type="text" class="form-control {{ $errors->has('code') ? 'is-invalid' : '' }}" id="code"
+                        name="code" value="{{ old('code') ?? $warehouse->code }}">
+                    @error('code')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="w_name" class="form-label">Warehouse Name</label>
-                    <input type="text" class="form-control {{ $errors->has('w_name') ? 'is-invalid' : '' }}" id="w_name"
-                        name="w_name" value="{{ old('w_name') ?? $warehouse->w_name }}">
-                    @error('w_name')
+                    <label for="name" class="form-label">Warehouse Name</label>
+                    <input type="text" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" id="name"
+                        name="name" value="{{ old('name') ?? $warehouse->name }}">
+                    @error('name')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>

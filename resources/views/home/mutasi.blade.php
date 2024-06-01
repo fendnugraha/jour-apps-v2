@@ -4,7 +4,7 @@
 @section('container')
 {{-- Content Area --}}
 <div class="container mt-3">
-    <h2>Transfer Saldo ke Cabang <span class="text-primary">{{ $warehouse->w_name }}</span></h2>
+    <h2>Transfer Saldo ke Cabang <span class="text-primary">{{ $warehouse->name }}</span></h2>
     <div class="row">
         <div class="col-sm-7">
             <div class="card text-bg-dark rounded-3">

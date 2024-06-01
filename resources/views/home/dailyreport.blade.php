@@ -343,7 +343,7 @@
                         <select name="warehouse" id="warehouse" class="form-select">
                             <option value="">Semua Cabang</option>
                             @foreach ($warehouses as $w)
-                            <option value="{{ $w->id }}">{{ $w->w_name }}</option>
+                            <option value="{{ $w->id }}">{{ $w->name }}</option>
                             @endforeach
                         </select>
                     </div>

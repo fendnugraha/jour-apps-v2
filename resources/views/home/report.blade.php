@@ -16,7 +16,7 @@
                     <div class="col-sm-8">
                         <select name="cabang" id="cabang" class="form-select">
                             @foreach ($warehouse as $wh)
-                            <option value="{{ $wh->id }}" {{$cabang==$wh->id ? 'selected' : ''}}>{{ $wh->w_name }}
+                            <option value="{{ $wh->id }}" {{$cabang==$wh->id ? 'selected' : ''}}>{{ $wh->name }}
                             </option>
                             @endforeach
                         </select>
@@ -193,7 +193,7 @@
                             </span>
                             @endif
                             <br>
-                            <small class="text-muted">#{{ $t->warehouse->w_name }}</small>
+                            <small class="text-muted">#{{ $t->warehouse->name }}</small>
                         </td>
                         <td class="text-center"><span class="badge text-bg-primary">{{ $t->trx_type }}</span></td>
                         <td class="text-end">{{ number_format($t->amount) }}</td>

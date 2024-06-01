@@ -11,7 +11,7 @@
             <table class="table">
                 <tr>
                     <th>Nama Cabang</th>
-                    <td>{{$warehouse->w_name}}</td>
+                    <td>{{$warehouse->name}}</td>
                 </tr>
                 <tr>
                     <th>Alamat</th>
